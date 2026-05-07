@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="onboarding_post_notification_text">
+        show onboarding reason why we request this permission
+    </string>
+
+    <string name="onboarding_introduction_text">
+      introduce pause, mayke it maybe funny?? or professional, which is better
+    </string>
+
+    <string name="onboarding_battery_text">
+        show onboarding reason why we request this permission
+    </string>
+    <string name="action_request_permission">
+        Grant permission or similar
+    </string>
+    <string name="permission_granted">Permission has already been given</string>
+</resources>
