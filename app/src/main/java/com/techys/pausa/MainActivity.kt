@@ -19,39 +19,32 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.techys.core.model.TimerType
+import com.techys.core.service.PausaService
+import com.techys.designsystem.theme.AppTheme
 import com.techys.pausa.navigation.Route
-import com.techys.pausa.tmp.focus.FocusViewModel
-import com.techys.pausa.tmp.focus.component.FocusScreen
-import com.techys.pausa.tmp.home.HomeViewModel
-import com.techys.pausa.tmp.home.component.HomeScreen
-import com.techys.pausa.tmp.model.TimerStateType
-import com.techys.pausa.tmp.model.TimerType
-import com.techys.pausa.tmp.quick.QuickViewModel
-import com.techys.pausa.tmp.quick.component.QuickScreen
-import com.techys.pausa.tmp.receiver.PausaServiceReceiver
-import com.techys.pausa.tmp.service.PausaService
-import com.techys.pausa.tmp.util.TimerConstants
-import com.techys.pausa.ui.theme.AppTheme
+import com.techys.home.HomeViewModel
+import com.techys.home.component.HomeScreen
+import com.techys.pausa.focus.FocusViewModel
+import com.techys.pausa.focus.component.FocusScreen
+import com.techys.pausa.quick.QuickViewModel
+import com.techys.pausa.quick.component.QuickScreen
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class MainActivity : ComponentActivity() {
 
     private val _state = MutableStateFlow<Route>(Route.Home)
-    var activityStarted = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         startService()
+
         enableEdgeToEdge()
         setContent {
             AppTheme {
@@ -65,7 +58,6 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        Log.e("tagtag", "on create")
         checkIntentForDeepLink(intent, false)
     }
 
@@ -80,7 +72,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        Log.e("tagtag", "on new intent")
         checkIntentForDeepLink(intent, true)
     }
 

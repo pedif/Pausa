@@ -5,11 +5,19 @@ import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
+import com.techys.core.model.PausaState
+import com.techys.core.model.TimerStateType
+import com.techys.core.notification.NotificationActionContract
 import com.techys.core.notification.NotificationManager
+import com.techys.core.receiver.PausaServiceReceiver
 import com.techys.core.util.EyeTimerHelper
 import com.techys.core.util.FocusTimerHelper
-import com.techys.core.util.ShortTimerHelper
+import com.techys.core.util.QuickTimerHelper
 import com.techys.core.util.TimerHelperManager
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 class PausaService : Service() {
     /**
@@ -29,66 +37,23 @@ class PausaService : Service() {
      *
      * where to startforeground service?? on start command or oncreate? multiple onstart commands
      *
-     * foreground notification cancellable on android 15+
      *
-     * do we need this service is no timer is running?
-     * make the notificaiton minimal style to contain all 3 in one notif?? -> we still need separet actions for all 3,
      *
-     * define service in another android manifest with no application
-     *
-     * one timer in service to control all 3 features with onTick helper funciton, might sometimes start with 1 second start of 0 but that's not big deal is it?
-     *
-     * update notificaiton messess up chronometer!! save the orignal time we start the notificaiotn and set when??
-     * scheduleAtFixedRate deprecated?!??!?!?
-     *
-     * we could use broadcasts for features but start service for fopregound service only but how can we
-     * know if the service is already running if a feature is requested??
-     *
-     * keep the timer running even when the service is destroyed??
-     * are we going to have multiple quick/focus timers? I dont think so, so we can keep the timer
-     * classes fixed at 3
-     *
-     * enum into intent extras?
-     *
-     * foreground service notif has 3 actions for all 3 featrures, should we change the action based on timer state? or only start if not started already
-     *
-     * show the timer statuus/ prgressbar when the app opens on the home cards?
-     *
-     * differnece between val state = _state.collectAsState(_) and state by _State,collectAsState((?)???
-     *
-     * Use  ringtones for events??
-     *
-     * showing the same description text for onboarding permission requests and under settings permission items?
-     *
-     * believe me bro i always forget what style use for what text/component basde on material designs.... like what for settings title, body, description etc
-     *
-     * default tjeme color is reversed?? uisually bg is not pure white and the overlay is but the deaful theme is otherwise
-     *
-     * for history maybe show something like you've done x minutes of deep work (calculated with focus mode) and other similar things for other features like you took care of your eyes x times (the times eye timer has fired)
-     * also what shall we show for the history? what about stats?
-     * do we need graphs for the histiory section? might be useless but I think quite captivating
-     * even if history and stats are for v2, we should have the database store the info for the later ui update i gues sso the user data is not lost when the feature comes or users might think we're spying on them?!?!?
-     *
-     * dnd mode option for focus mode??
-     *
-     * buttons on fg service, should it open popups- or use default values??? what if user is pro?
      */
     companion object {
         private const val SERVICE_ID = 1010
-        private var eyeTimerRunning = false
-        private var shortTimerRunning = false
-        private var focusTimerRunning = false
-        const val EYE_TIMER_KEY = "eye_timer"
-        const val SHORT_TIMER_KEY = "short_timer"
-        const val FOCUS_TIMER_KEY = "focus_timer"
-        const val TIMER_STATE_KEY = "timer_state"
-        const val TIMER_STATE_START = "start"
-        const val TIMER_STATE_PAUSE = "pause"
-        const val TIMER_STATE_STOP = "stop"
+
+        //maybe we could make hilt inject this as singleton across app?? can we update it that way? is that better??
+        private var _state = MutableStateFlow<PausaState>(PausaState())
+        val state: StateFlow<PausaState> = _state.asStateFlow()
+        fun updatePausaState(transform: PausaState.() -> PausaState) {
+            _state.update { it.transform() }
+        }
     }
 
     lateinit var timerManager: TimerHelperManager
     lateinit var notificationManager: NotificationManager
+    var pausaReceiver: PausaServiceReceiver? = null
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -96,32 +61,63 @@ class PausaService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        timerManager = TimerHelperManager(
-            eyeTimer = EyeTimerHelper(this),
-            shortTimer = ShortTimerHelper(this),
-            focusTimer = FocusTimerHelper(this)
+        val actionContract = object : NotificationActionContract {
+            override fun getOpenAppIntent(): Intent {
+                return Intent("")
+            }
+
+            override fun getStartFocusTimerIntent(): Intent {
+                return Intent("")
+            }
+
+            override fun getStartQuickTimerIntent(): Intent {
+                return Intent("")
+            }
+        }
+        notificationManager = NotificationManager(
+            context = this,
+            actionContract = actionContract
         )
-        notificationManager = NotificationManager(this)
+        timerManager = TimerHelperManager(
+            eyeTimer = EyeTimerHelper(this, notificationManager),
+            focusTimer = FocusTimerHelper(this, notificationManager),
+            quickTimers = mutableListOf(QuickTimerHelper(this, notificationManager))
+        )
+        timerManager.start()
+        pausaReceiver = PausaServiceReceiver(
+            onTimerStateUpdateRequested = this::updateTimerState,
+            onTimerInfoUpdateRequested = this::updateTimerInfo
+        )
+        pausaReceiver?.registerReceiver(this)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        processIntent(intent)
         startForeground()
+        updatePausaState {
+            copy(isServiceRunning = true)
+        }
         return super.onStartCommand(intent, flags, startId)
     }
 
-    private fun processIntent(intent: Intent?) {
-        intent?.let { intent ->
-            val timerName = intent.action ?: return@let
-            val stateId = intent.extras?.getString(TIMER_STATE_KEY) ?: return@let
-            timerManager.updateTimerState(
-                timerName = timerName,
-                stateId = stateId
-            )
-        }
+    private fun updateTimerState(id: Int, state: TimerStateType) {
+        timerManager.updateTimerState(
+            id = id,
+            state = state
+        )
     }
 
-    private fun startForeground(){
+    private fun updateTimerInfo(
+        id: Int,
+        title: String?,
+        interval: Int?,
+        shouldStartImmediately: Boolean
+    ) {
+        timerManager.updateTimerInfo(id, title, interval)
+        if (shouldStartImmediately)
+            timerManager.updateTimerState(id, TimerStateType.STARTED)
+    }
+
+    private fun startForeground() {
         val notification = notificationManager.getPausaServiceNotification()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             startForeground(
@@ -131,6 +127,17 @@ class PausaService : Service() {
             )
         } else {
             startForeground(SERVICE_ID, notification)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        updatePausaState {
+            copy(isServiceRunning = false)
+        }
+        pausaReceiver?.let {
+            unregisterReceiver(pausaReceiver)
+            pausaReceiver = null
         }
     }
 

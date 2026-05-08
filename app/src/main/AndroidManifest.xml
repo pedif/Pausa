@@ -34,10 +34,10 @@
             android:theme="@style/Theme.Pausa.Dialog" />
 
         <service
-            android:name=".tmp.service.PausaService"
+            android:name="com.techys.core.service.PausaService"
             android:foregroundServiceType="mediaPlayback" />
         <receiver
-            android:name=".tmp.receiver.PausaServiceReceiver"
+            android:name="com.techys.core.receiver.PausaServiceReceiver"
             android:exported="false" />
     </application>
 
