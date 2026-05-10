@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.techys.core.model.TimerState
 import com.techys.core.model.TimerStateType
+import com.techys.core.util.TimeUtil
 import com.techys.designsystem.theme.AppTheme
 import com.techys.designsystem.theme.Dimen
 import com.techys.designsystem.theme.NeonBlue
@@ -55,7 +56,7 @@ fun EyeTimerComponent(
                     color = TextPrimary
                 )
                 Text(
-                    text = " 00:21/15:00",
+                    text = TimeUtil.getElapsedTimeLabel(state.remainingTime),
                     color = TextPrimary
                 )
             }

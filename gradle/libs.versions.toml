@@ -13,6 +13,7 @@ material = "1.13.0"
 jetbrainsKotlinJvm = "2.0.21"
 phosphor = "1.0.0"
 timber = "5.0.1"
+wheel = "2.0.5"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -32,8 +33,30 @@ androidx-compose-material3 = { group = "androidx.compose.material3", name = "mat
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 timber = {group = "com.jakewharton.timber", name="timber", version.ref = "timber"}
-#phosphor-icons = {group = "com.compositions.icons", name= "phosphor" , version.ref = "phosphor"}
-
+wheel = {group = "com.github.ozcanalasalvar.picker", name= "wheelview", version.ref = "wheel"}
+phosphor-icons = {group = "com.github.alrra", name= "phosphor-icons-android" , version.ref = "phosphor"}
+###// In libs.versions.toml or build.gradle.kts
+#plugins {
+#    id("com.google.dagger.hilt.android") version "2.51.1"
+#    id("com.google.devtools.ksp") version "2.0.21-1.0.27"
+#}
+#
+#dependencies {
+#    implementation("com.google.dagger:hilt-android:2.51.1")
+#    ksp("com.google.dagger:hilt-compiler:2.51.1")
+#
+#    // Compose integration
+#    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+#}
+#// Lucide Compose
+#implementation("com.github.mohamedrejeb.compose-icons:lucide:1.0.0")
+#
+#// Usage
+#Icon(
+#imageVector = Lucide.Play,
+#contentDescription = "Play"
+#)
+###
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

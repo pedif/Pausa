@@ -1,5 +1,6 @@
 package com.techys.home.component
 
+import android.text.format.DateUtils
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.techys.core.model.TimerState
 import com.techys.core.model.TimerStateType
+import com.techys.core.util.TimeUtil
 import com.techys.designsystem.theme.AppTheme
 import com.techys.designsystem.theme.Dimen
 import com.techys.designsystem.theme.NeonBlue
@@ -56,7 +58,7 @@ fun FocusTimerComponent(
                     style = MaterialTheme.typography.titleMedium,
                     color = TextPrimary
                 )
-                Text(text = "1 min and 30 sec",
+                Text(text = TimeUtil.getElapsedTimeLabel(state.remainingTime),
                     color = TextPrimary)
             }
             Spacer(modifier = Modifier.height(Dimen.medium))

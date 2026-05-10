@@ -41,10 +41,11 @@ abstract class TimerHelper(
      * COuld be an edge case where the state is set but the timer/notif is not the same state as ??
      */
     fun updateTimerState(newState: TimerStateType) {
-        if(runningState == TimerStateType.STOPPED && newState == TimerStateType.STARTED)
+        if (runningState == TimerStateType.STOPPED && newState == TimerStateType.STARTED)
             startTime = System.currentTimeMillis()
-        if (newState == TimerStateType.STARTED)
-            updateNotification(updateStartTime = true)
+        if (newState == TimerStateType.STARTED || newState == TimerStateType.COOLDOWN)
+            runningState = newState
+        updateNotification(updateStartTime = true)
         if (newState == TimerStateType.STOPPED) {
             progress = 0
             cancelNotification()
@@ -63,7 +64,7 @@ abstract class TimerHelper(
         updateNotification(false)
     }
 
-    private fun updateNotification(updateStartTime: Boolean = false) {
+    open fun updateNotification(updateStartTime: Boolean = false) {
         val builder = notificationManager.setupTimerNotification(notificationTitle, startTime)
         builder.setProgress(interval, interval - progress, false)
         if (updateStartTime)

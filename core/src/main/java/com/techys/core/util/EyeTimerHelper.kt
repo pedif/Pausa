@@ -1,7 +1,11 @@
 package com.techys.core.util
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationManagerCompat
 import com.techys.core.model.TimerStateType
 import com.techys.core.model.TimerType
 import com.techys.core.notification.NotificationManager
@@ -72,6 +76,25 @@ class EyeTimerHelper(
             delay(DEFAULT_COOLDOWN_INTERVAL.toLong() * 100)
             progress = 0
             updateTimerState(TimerStateType.STARTED)
+        }
+    }
+
+    override fun updateNotification(updateStartTime: Boolean){
+        if(runningState != TimerStateType.COOLDOWN){
+            super.updateNotification(updateStartTime)
+            return
+        }
+
+        val builder = notificationManager.setupTimerNotification(notificationTitle + " - Take a rest", startTime)
+        builder.setProgress(interval, interval - progress, false)
+        if (updateStartTime)
+            builder.setWhen(System.currentTimeMillis())
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            NotificationManagerCompat.from(context).notify(notificationId, builder.build())
         }
     }
 }

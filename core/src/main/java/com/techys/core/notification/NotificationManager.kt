@@ -26,9 +26,10 @@ class NotificationManager(val context: Context,
 
     companion object {
         private const val CHANNEL_ID = "TimerService"
+        private const val GROUP_KEY = "groupKey"
     }
 
-    fun setupNotification(title: String): NotificationCompat.Builder {
+    private fun setupNotification(title: String): NotificationCompat.Builder {
         val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel()
             NotificationCompat.Builder(context, CHANNEL_ID)
@@ -44,7 +45,7 @@ class NotificationManager(val context: Context,
             .setOngoing(true)
             .setAutoCancel(false)
             .setColorized(true)
-            .setGroup("keykey")
+            .setGroup(GROUP_KEY)
 
         return notification
     }
@@ -68,7 +69,7 @@ class NotificationManager(val context: Context,
             .setOngoing(true)
             .setAutoCancel(false)
             .setColorized(true)
-            .setGroup("keykey")
+            .setGroup(GROUP_KEY)
 
         return notification
     }

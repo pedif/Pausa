@@ -44,8 +44,8 @@ android {
 dependencies {
     implementation(project(":designsystem"))
     implementation(project(":core"))
-    implementation(project(":onboarding"))
-    implementation(project(":settings"))
+    implementation(project(":feature:onboarding"))
+    implementation(project(":feature:settings"))
     implementation(project(":feature:home"))
     implementation(project(":feature:focus"))
     implementation(project(":feature:quick"))
