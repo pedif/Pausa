@@ -31,7 +31,7 @@ fun TimerPicker(
     onTimeChanged: (Int) -> Unit = {}
 ) {
     val minutes = remember {
-        (0..120).toList()
+        (1..120).toList()
     }
     val hours = remember {
         (0..11).toList()

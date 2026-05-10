@@ -55,4 +55,6 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     //
+    implementation(libs.wheel)
+//    implementation("com.adamglin:phosphor-icon:1.0.0")
 }

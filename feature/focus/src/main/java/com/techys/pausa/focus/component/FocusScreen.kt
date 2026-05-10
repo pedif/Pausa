@@ -1,11 +1,18 @@
 package com.techys.pausa.focus.component
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,6 +31,8 @@ import com.techys.core.util.TimerConstants
 import com.techys.designsystem.theme.AppTheme
 import com.techys.pausa.focus.FocusViewModel
 import com.techys.pausa.focus.model.FocusState
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.ozcanalasalvar.wheelview.WheelView
 
 @Composable
 fun FocusScreen(
@@ -70,6 +79,11 @@ private fun FocusScreen(
         label = "pb animation"
     )
     Box(modifier = modifier.fillMaxSize()) {
+        NightSkyBackground(
+            modifier = Modifier.fillMaxSize(),
+            staticStarCount = 100,
+            maxShootingStars = 5
+        )
         CircularProgressIndicator(
             progress = { progress },
             color = MaterialTheme.colorScheme.primary,
@@ -88,25 +102,55 @@ private fun FocusScreen(
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier.align(Alignment.Center)
         )
+//        Image(imageVector = Icons.Filled.P)
 
-
-        if (state.progress == 1f) {
+        val isNew = state.progress == 1f
+        // First composable
+        AnimatedVisibility(
+            visible = isNew,
+            enter = fadeIn() + slideInVertically(),
+            exit = fadeOut() + slideOutVertically(),
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+        ) {
             StartFocusComponent(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter),
                 onTimerStartedClicked = onStartNewTimer,
                 onTimeChanged = onTimeChanged
             )
-        } else {
+        }
+
+        // Second composable (mutually exclusive)
+        AnimatedVisibility(
+            visible = !isNew,
+            enter = fadeIn() + slideInVertically(),
+            exit = fadeOut() + slideOutVertically(),
+                    modifier = Modifier
+                    .align(Alignment.BottomCenter)
+        ) {
             RunningFocusComponent(
                 isTimerPaused = state.runningState == TimerStateType.PAUSED,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter),
                 onTimerStopClicked = { onTimerRunningStateChange(TimerStateType.STOPPED) },
                 onTimerPauseClicked = { onTimerRunningStateChange(TimerStateType.PAUSED) },
                 onTimerResumeClicked = { onTimerRunningStateChange(TimerStateType.STARTED) }
             )
         }
+//        if (state.progress == 1f) {
+//            StartFocusComponent(
+//                modifier = Modifier
+//                    .align(Alignment.BottomCenter),
+//                onTimerStartedClicked = onStartNewTimer,
+//                onTimeChanged = onTimeChanged
+//            )
+//        } else {
+//            RunningFocusComponent(
+//                isTimerPaused = state.runningState == TimerStateType.PAUSED,
+//                modifier = Modifier
+//                    .align(Alignment.BottomCenter),
+//                onTimerStopClicked = { onTimerRunningStateChange(TimerStateType.STOPPED) },
+//                onTimerPauseClicked = { onTimerRunningStateChange(TimerStateType.PAUSED) },
+//                onTimerResumeClicked = { onTimerRunningStateChange(TimerStateType.STARTED) }
+//            )
+//        }
     }
 }
 
