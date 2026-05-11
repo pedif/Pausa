@@ -7,13 +7,10 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.annotation.RequiresPermission
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -25,12 +22,15 @@ import javax.inject.Inject
 
 class NotificationManager @Inject constructor(
     @param:ApplicationContext val context: Context,
-    val actionContract: NotificationActionContract
+    val actionContract: NotificationActionContract,
+    val timerEndContract: TimerEndActionContract
 ) {
 
     companion object {
         private const val CHANNEL_ID = "TimerService"
         private const val GROUP_KEY = "groupKey"
+
+        private const val CHANNEL_TIMER_END_ID = "TimerEnd"
     }
 
     private fun setupNotification(title: String): NotificationCompat.Builder {
@@ -54,7 +54,9 @@ class NotificationManager @Inject constructor(
         return notification
     }
 
-    fun setupTimerNotification(title: String, startTime: Long): NotificationCompat.Builder {
+    fun showTimerNotification(
+        id: Int, title: String, startTime: Long, progress: Int, max: Int, updateStartTime: Boolean
+    ) {
         val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel()
             NotificationCompat.Builder(context, CHANNEL_ID)
@@ -66,8 +68,7 @@ class NotificationManager @Inject constructor(
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setContentTitle(title)
             .setUsesChronometer(true)
-            .setWhen(startTime)
-            .setProgress(100, 1, false)
+            .setProgress(max, progress, false)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setOnlyAlertOnce(true)
             .setOngoing(true)
@@ -75,7 +76,10 @@ class NotificationManager @Inject constructor(
             .setColorized(true)
             .setGroup(GROUP_KEY)
 
-        return notification
+        if (updateStartTime)
+            notification.setWhen(startTime)
+
+        showNotification(notification.build(), id)
     }
 
 
@@ -137,15 +141,85 @@ class NotificationManager @Inject constructor(
         return builder.build()
     }
 
-//    private fun getStartFocusTimerIntent(): Intent {
-//        return getStartFocusTimerIntent().apply {
-//            action = TimerType.Focus.id
-//        }
-//    }
-//
-//    private fun getStartQuickTimerIntent(): Intent {
-//        return getStartQuickTimerIntent().apply {
-//            action = TimerType.Quick.id
-//        }
-//    }
+    fun showNotification(notification: Notification, notificationId: Int) {
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            NotificationManagerCompat.from(context).notify(notificationId, notification)
+        }
+    }
+
+    fun cancelNotification(notificationId: Int) {
+        NotificationManagerCompat.from(context).cancel(notificationId)
+    }
+
+    fun getTimerEndNotification(title: String): NotificationCompat.Builder {
+        val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createNotificationChannel(
+                CHANNEL_TIMER_END_ID,
+                importance = NotificationManager.IMPORTANCE_MAX
+            )
+            NotificationCompat.Builder(context, CHANNEL_TIMER_END_ID)
+        } else {
+            NotificationCompat.Builder(context, "")
+        }
+        val notification: NotificationCompat.Builder = builder
+            .setSmallIcon(R.drawable.btn_plus)
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setContentTitle(title)
+            .setCategory(NotificationCompat.CATEGORY_ALARM)
+            .setOnlyAlertOnce(true)
+            .setColorized(true)
+            .setGroup(GROUP_KEY)
+
+        return notification
+
+    }
+
+    fun showEyeTimerEndNotification(id: Int, title: String) {
+        val notif = getTimerEndNotification(title)
+        val intent = PendingIntent.getActivity(
+            context,
+            10,
+            timerEndContract.getEyeTimerEndAction(),
+            PendingIntent.FLAG_IMMUTABLE
+        )
+        notif.setFullScreenIntent(
+            intent, false
+        )
+        notif.setContentIntent(intent)
+        showNotification(notif.build(), id)
+    }
+
+    fun showQuickTimerEndNotification(id: Int, title: String) {
+        val notif = getTimerEndNotification(title)
+        val intent = PendingIntent.getActivity(
+            context,
+            10,
+            timerEndContract.getQuickTimerEndAction(),
+            PendingIntent.FLAG_IMMUTABLE
+        )
+        notif.setFullScreenIntent(
+            intent, true
+        )
+        notif.setContentIntent(intent)
+        showNotification(notif.build(), id)
+    }
+
+    fun showFocusTimerEndNotification(id: Int, title: String) {
+        val notif = getTimerEndNotification(title)
+        val intent = PendingIntent.getActivity(
+            context,
+            10,
+            timerEndContract.getFocusTimerEndAction(),
+            PendingIntent.FLAG_IMMUTABLE
+        )
+        notif.setFullScreenIntent(
+            intent, true
+        )
+        notif.setContentIntent(intent)
+        showNotification(notif.build(), id)
+    }
 }

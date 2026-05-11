@@ -1,10 +1,5 @@
 package com.techys.core.util
 
-import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
-import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationManagerCompat
 import com.techys.core.model.TimerState
 import com.techys.core.model.TimerStateType
 import com.techys.core.model.TimerType
@@ -21,7 +16,6 @@ abstract class TimerHelper(
     var interval: Int = 0,
     var title: String = "",
     val type: TimerType,
-    val context: Context,
     val notificationManager: NotificationManager
 ) {
 
@@ -65,21 +59,20 @@ abstract class TimerHelper(
     }
 
     open fun updateNotification(updateStartTime: Boolean = false) {
-        val builder = notificationManager.setupTimerNotification(notificationTitle, startTime)
-        builder.setProgress(interval, interval - progress, false)
-        if (updateStartTime)
-            builder.setWhen(System.currentTimeMillis())
-        if (ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            NotificationManagerCompat.from(context).notify(notificationId, builder.build())
-        }
+       notificationManager.showTimerNotification(
+            id = notificationId,
+            title = notificationTitle,
+            startTime = startTime,
+            progress = interval - progress,
+            max = interval,
+            updateStartTime = updateStartTime
+        )
+//        if (updateStartTime)
+//            builder.setWhen(System.currentTimeMillis())
     }
 
     protected fun cancelNotification() {
-        NotificationManagerCompat.from(context).cancel(notificationId)
+        notificationManager.cancelNotification(notificationId)
     }
 
     /**

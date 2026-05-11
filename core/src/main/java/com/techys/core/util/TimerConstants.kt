@@ -17,5 +17,10 @@ object TimerConstants {
     const val DEFAULT_FOCUS_INTERVAL = 45
     const val DEFAULT_QUICK_INTERVAL = 30
 
+    /**
+     * We will use this id to display the end of the eye timer event to the user
+     */
+    const val EYE_TIMER_END_ID = 10001
+
 
 }

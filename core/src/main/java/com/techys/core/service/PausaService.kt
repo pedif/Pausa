@@ -65,27 +65,10 @@ class PausaService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-//        val actionContract = object : NotificationActionContract {
-//            override fun getOpenAppIntent(): Intent {
-//                return Intent("")
-//            }
-//
-//            override fun getStartFocusTimerIntent(): Intent {
-//                return Intent("")
-//            }
-//
-//            override fun getStartQuickTimerIntent(): Intent {
-//                return Intent("")
-//            }
-//        }
-//        notificationManager = NotificationManager(
-//            context = this,
-//            actionContract = actionContract
-//        )
         timerManager = TimerHelperManager(
-            eyeTimer = EyeTimerHelper(this, notificationManager),
-            focusTimer = FocusTimerHelper(this, notificationManager),
-            quickTimers = mutableListOf(QuickTimerHelper(this, notificationManager))
+            eyeTimer = EyeTimerHelper( notificationManager),
+            focusTimer = FocusTimerHelper( notificationManager),
+            quickTimers = mutableListOf(QuickTimerHelper(notificationManager))
         )
         timerManager.start()
         pausaReceiver = PausaServiceReceiver(

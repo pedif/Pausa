@@ -1,21 +1,14 @@
 package com.techys.core.util
 
-import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationManagerCompat
 import com.techys.core.model.TimerStateType
 import com.techys.core.model.TimerType
 import com.techys.core.notification.NotificationManager
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlin.contracts.contract
+import kotlin.random.Random
 
 /**
  * child class to provide the field to parent in kotlin same name error,
@@ -23,7 +16,6 @@ import kotlin.contracts.contract
  *
  */
 class EyeTimerHelper(
-    context: Context,
     notificationManager: NotificationManager,
     interval: Int = TimerConstants.DEFAULT_EYE_INTERVAL,
     id: Int = TimerConstants.EYE_TIMER_ID,
@@ -34,7 +26,6 @@ class EyeTimerHelper(
         interval,
         notificationTitle,
         TimerType.EyeBreak,
-        context,
         notificationManager,
     ) {
     /**
@@ -47,9 +38,7 @@ class EyeTimerHelper(
     }
 
     override fun onTimeUp() {
-        CoroutineScope(Dispatchers.Main).launch {
-            Toast.makeText(context, "on eye timer up", Toast.LENGTH_SHORT).show()
-        }
+        showTimerEndNotification()
         /**
          * We have two modes for an eye care timer we either have just finished the actual duration
          * of an eye care timer which means we need to have a cooldown duration for the user to rest their eyes
@@ -79,22 +68,23 @@ class EyeTimerHelper(
         }
     }
 
-    override fun updateNotification(updateStartTime: Boolean){
-        if(runningState != TimerStateType.COOLDOWN){
+    override fun updateNotification(updateStartTime: Boolean) {
+        if (runningState != TimerStateType.COOLDOWN) {
             super.updateNotification(updateStartTime)
             return
         }
 
-        val builder = notificationManager.setupTimerNotification(notificationTitle + " - Take a rest", startTime)
-        builder.setProgress(interval, interval - progress, false)
-        if (updateStartTime)
-            builder.setWhen(System.currentTimeMillis())
-        if (ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            NotificationManagerCompat.from(context).notify(notificationId, builder.build())
-        }
+        notificationManager.showTimerNotification(
+            id= notificationId,
+            title = notificationTitle + " - Take a rest",
+            startTime = startTime,
+            progress = interval - progress,
+            max = interval,
+            updateStartTime
+        )
+    }
+
+    private fun showTimerEndNotification(){
+        notificationManager.showEyeTimerEndNotification(TimerConstants.EYE_TIMER_END_ID, notificationTitle)
     }
 }
