@@ -64,7 +64,7 @@ fun FocusTimerComponent(
             Spacer(modifier = Modifier.height(Dimen.medium))
 
             TimerPB(
-                progress = state.progressElapsed
+                progress = state.progress
             )
 
             Spacer(modifier = Modifier.height(Dimen.medium))
