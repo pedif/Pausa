@@ -8,11 +8,9 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,19 +23,18 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.techys.core.model.TimerStateType
 import com.techys.core.receiver.PausaServiceReceiver
 import com.techys.core.util.TimerConstants
 import com.techys.designsystem.theme.AppTheme
 import com.techys.pausa.focus.FocusViewModel
 import com.techys.pausa.focus.model.FocusState
-import com.google.android.material.timepicker.MaterialTimePicker
-import com.ozcanalasalvar.wheelview.WheelView
 
 @Composable
 fun FocusScreen(
-    viewModel: FocusViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: FocusViewModel = hiltViewModel(),
 ) {
 
     val state by viewModel.state.collectAsState()

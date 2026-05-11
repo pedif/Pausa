@@ -14,11 +14,14 @@ import com.techys.core.util.EyeTimerHelper
 import com.techys.core.util.FocusTimerHelper
 import com.techys.core.util.QuickTimerHelper
 import com.techys.core.util.TimerHelperManager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class PausaService : Service() {
     /**
      * If the service is destroyed lets save the current state of the timers and run them again????
@@ -52,6 +55,7 @@ class PausaService : Service() {
     }
 
     lateinit var timerManager: TimerHelperManager
+    @Inject
     lateinit var notificationManager: NotificationManager
     var pausaReceiver: PausaServiceReceiver? = null
 
@@ -61,23 +65,23 @@ class PausaService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        val actionContract = object : NotificationActionContract {
-            override fun getOpenAppIntent(): Intent {
-                return Intent("")
-            }
-
-            override fun getStartFocusTimerIntent(): Intent {
-                return Intent("")
-            }
-
-            override fun getStartQuickTimerIntent(): Intent {
-                return Intent("")
-            }
-        }
-        notificationManager = NotificationManager(
-            context = this,
-            actionContract = actionContract
-        )
+//        val actionContract = object : NotificationActionContract {
+//            override fun getOpenAppIntent(): Intent {
+//                return Intent("")
+//            }
+//
+//            override fun getStartFocusTimerIntent(): Intent {
+//                return Intent("")
+//            }
+//
+//            override fun getStartQuickTimerIntent(): Intent {
+//                return Intent("")
+//            }
+//        }
+//        notificationManager = NotificationManager(
+//            context = this,
+//            actionContract = actionContract
+//        )
         timerManager = TimerHelperManager(
             eyeTimer = EyeTimerHelper(this, notificationManager),
             focusTimer = FocusTimerHelper(this, notificationManager),

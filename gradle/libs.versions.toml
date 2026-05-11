@@ -14,6 +14,9 @@ jetbrainsKotlinJvm = "2.0.21"
 phosphor = "1.0.0"
 timber = "5.0.1"
 wheel = "2.0.5"
+hilt = "2.51.1"
+hiltCompose = "1.2.0"
+ksp = "2.0.21-1.0.27"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -35,6 +38,11 @@ material = { group = "com.google.android.material", name = "material", version.r
 timber = {group = "com.jakewharton.timber", name="timber", version.ref = "timber"}
 wheel = {group = "com.github.ozcanalasalvar.picker", name= "wheelview", version.ref = "wheel"}
 phosphor-icons = {group = "com.github.alrra", name= "phosphor-icons-android" , version.ref = "phosphor"}
+hilt-android = {group = "com.google.dagger", name="hilt-android", version.ref = "hilt"}
+hilt-compiler = {group = "com.google.dagger", name="hilt-compiler", version.ref = "hilt"}
+hilt-compose = {group = "androidx.hilt", name="hilt-navigation-compose", version.ref = "hiltCompose"}
+
+
 ###// In libs.versions.toml or build.gradle.kts
 #plugins {
 #    id("com.google.dagger.hilt.android") version "2.51.1"
@@ -63,5 +71,7 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+android-hilt = {id = "com.google.dagger.hilt.android", version.ref = "hilt"}
+ksp = {id = "com.google.devtools.ksp", version.ref = "ksp"}
 
 #implementation("com.adamglin:phosphor-icon:$version")

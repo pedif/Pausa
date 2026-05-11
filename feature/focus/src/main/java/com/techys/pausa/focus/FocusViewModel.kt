@@ -10,8 +10,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FocusViewModel : ViewModel() {
+class FocusViewModel @Inject constructor() : ViewModel() {
 
     val _state = MutableStateFlow<FocusState>(FocusState())
 

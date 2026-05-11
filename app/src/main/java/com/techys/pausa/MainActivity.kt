@@ -4,7 +4,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.LocalActivity
@@ -21,7 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -29,7 +27,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.view.WindowCompat
 import com.techys.core.model.TimerType
 import com.techys.core.service.PausaService
 import com.techys.designsystem.theme.AppTheme
@@ -41,8 +38,10 @@ import com.techys.pausa.focus.FocusViewModel
 import com.techys.pausa.focus.component.FocusScreen
 import com.techys.pausa.quick.QuickViewModel
 import com.techys.pausa.quick.component.QuickScreen
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val _state = MutableStateFlow<Route>(Route.Home)
@@ -108,20 +107,10 @@ fun AppNavigation(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = { TopAppBar() }) { innerPadding ->
-        val viewModel = remember {
-            HomeViewModel()
-        }
-        val fvm = remember {
-            FocusViewModel()
-        }
-        val context = LocalActivity.current?.application?.applicationContext!!
-        val qvm = remember {
-            QuickViewModel(context)
-        }
+
         when (dest) {
             Route.Focus -> {
                 FocusScreen(
-                    viewModel = fvm,
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding)
@@ -130,9 +119,7 @@ fun AppNavigation(
 
 
             Route.Quick -> {
-                QuickScreen(
-                    viewModel = qvm,
-                    onDismissed = { onDestChanged(Route.Home) })
+                QuickScreen() { onDestChanged(Route.Home) }
             }
 
             else -> {
@@ -140,7 +127,6 @@ fun AppNavigation(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding),
-                    viewModel = viewModel,
                     onStartFocusClick = { onDestChanged(Route.Focus) },
                     onStartQuickClick = { onDestChanged(Route.Quick) }
 

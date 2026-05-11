@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.techys.designsystem.theme.AppTheme
 import com.techys.designsystem.theme.Dimen
 import com.techys.pausa.quick.QuickState
@@ -25,8 +26,8 @@ import com.techys.pausa.quick.QuickViewModel
 
 @Composable
 fun QuickScreen(
-    viewModel: QuickViewModel,
     modifier: Modifier = Modifier,
+    viewModel: QuickViewModel = hiltViewModel(),
     onDismissed: () -> Unit = {}
 ) {
 

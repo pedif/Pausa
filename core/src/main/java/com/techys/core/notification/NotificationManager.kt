@@ -20,9 +20,13 @@ import androidx.core.app.NotificationManagerCompat
 import com.techys.core.model.TimerStateType
 import com.techys.core.receiver.PausaServiceReceiver
 import com.techys.core.util.TimerConstants
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
-class NotificationManager(val context: Context,
-    val actionContract: NotificationActionContract) {
+class NotificationManager @Inject constructor(
+    @param:ApplicationContext val context: Context,
+    val actionContract: NotificationActionContract
+) {
 
     companion object {
         private const val CHANNEL_ID = "TimerService"

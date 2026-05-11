@@ -1,22 +1,23 @@
 package com.techys.pausa.quick
 
 import android.content.Context
+import androidx.lifecycle.ViewModel
 import com.techys.core.receiver.PausaServiceReceiver
 import com.techys.core.util.TimerConstants
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
-class QuickViewModel(val context: Context) {
+@HiltViewModel
+class QuickViewModel @Inject constructor(@param:ApplicationContext val context: Context): ViewModel() {
 
     private var _state = MutableStateFlow<QuickState>(QuickState())
     val state: StateFlow<QuickState>
         get() = _state.asStateFlow()
-
-    init {
-
-    }
 
     fun onTitleChanged(title: String) {
         _state.update {

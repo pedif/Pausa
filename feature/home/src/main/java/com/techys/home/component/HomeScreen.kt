@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.techys.core.model.PausaState
 import com.techys.core.model.TimerState
 import com.techys.core.model.TimerStateType
@@ -24,8 +25,8 @@ import com.techys.home.model.HomeState
 //to keep this separation fo concerns
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel,
     modifier: Modifier = Modifier,
+    viewModel: HomeViewModel = hiltViewModel(),
     onStartFocusClick: () -> Unit = {},
     onStartQuickClick: () -> Unit = {}
 ) {
