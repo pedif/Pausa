@@ -1,6 +1,7 @@
 package com.techys.pausa.di
 
 import com.techys.core.notification.NotificationActionContract
+import com.techys.core.notification.TimerEndActionContract
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -13,4 +14,8 @@ abstract class NotificationModule {
     @Singleton
     @Binds
     abstract fun bindNotificationActionContract(contractActionImpl: NotificationContractActionImpl): NotificationActionContract
+
+    @Singleton
+    @Binds
+    abstract fun bindTimerEndActionContract(timerEndActionContractImpl: TimerEndActionContractImpl): TimerEndActionContract
 }

@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -14,8 +15,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Pausa"
-        android:name=".App">
+        android:theme="@style/Theme.Pausa">
+        <activity
+            android:name=".TimerEndActivity"
+            android:exported="false"
+            android:label="@string/title_activity_timer_end"
+            android:theme="@style/Theme.Pausa" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -28,7 +33,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".DialogActivity"
             android:exported="false"
@@ -38,6 +42,7 @@
         <service
             android:name="com.techys.core.service.PausaService"
             android:foregroundServiceType="mediaPlayback" />
+
         <receiver
             android:name="com.techys.core.receiver.PausaServiceReceiver"
             android:exported="false" />
