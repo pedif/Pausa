@@ -1,9 +1,6 @@
 package com.techys.pausa
 
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
@@ -11,13 +8,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import com.techys.pausa.navigation.Route
+import com.techys.pausa.navigation.NavRoutes
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class DialogActivity : ComponentActivity() {
 
-    private val _state = MutableStateFlow<Route>(Route.Home)
+    private val _state = MutableStateFlow<NavRoutes>(NavRoutes.Home)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +51,7 @@ class DialogActivity : ComponentActivity() {
 }
 
 @Composable
-fun DialogNavigation(dest: Route,
+fun DialogNavigation(dest: NavRoutes,
                      onDialogDismissed:()-> Unit = {}) {
     val context = LocalActivity.current?.application?.applicationContext!!
 //    val qvm = remember {

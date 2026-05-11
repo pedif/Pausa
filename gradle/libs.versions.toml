@@ -18,6 +18,11 @@ hilt = "2.51.1"
 hiltCompose = "1.2.0"
 ksp = "2.0.21-1.0.27"
 
+permission-accompanist = "0.37.3"
+kotlinxSerializationCore = "1.7.1"
+nav3Core = "1.0.0"
+lifecycleViewmodelNav3 = "2.10.0"
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -36,11 +41,25 @@ androidx-compose-material3 = { group = "androidx.compose.material3", name = "mat
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 timber = {group = "com.jakewharton.timber", name="timber", version.ref = "timber"}
+
 wheel = {group = "com.github.ozcanalasalvar.picker", name= "wheelview", version.ref = "wheel"}
 phosphor-icons = {group = "com.github.alrra", name= "phosphor-icons-android" , version.ref = "phosphor"}
+##hilt
 hilt-android = {group = "com.google.dagger", name="hilt-android", version.ref = "hilt"}
 hilt-compiler = {group = "com.google.dagger", name="hilt-compiler", version.ref = "hilt"}
 hilt-compose = {group = "androidx.hilt", name="hilt-navigation-compose", version.ref = "hiltCompose"}
+##
+
+
+#Permission
+permission = {module = "com.google.accompanist:accompanist-permissions", version.ref = "permission-accompanist"}
+
+
+#Navigation
+androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3Core" }
+androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
+androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
+kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinxSerializationCore" }
 
 
 ###// In libs.versions.toml or build.gradle.kts

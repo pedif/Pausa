@@ -6,7 +6,6 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
-import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,27 +23,21 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.techys.core.model.TimerType
 import com.techys.core.service.PausaService
 import com.techys.designsystem.theme.AppTheme
 import com.techys.designsystem.theme.NeonBlue
-import com.techys.pausa.navigation.Route
-import com.techys.home.HomeViewModel
-import com.techys.home.component.HomeScreen
-import com.techys.pausa.focus.FocusViewModel
-import com.techys.pausa.focus.component.FocusScreen
-import com.techys.pausa.quick.QuickViewModel
-import com.techys.pausa.quick.component.QuickScreen
+import com.techys.pausa.navigation.NavHost
+import com.techys.pausa.navigation.NavRoutes
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val _state = MutableStateFlow<Route>(Route.Home)
+    private val _state = MutableStateFlow<NavRoutes>(NavRoutes.Home)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,19 +45,16 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge(
             navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT)
         )
+        checkIntentForDeepLink(intent, false)
         setContent {
             AppTheme {
                 val dest by _state.collectAsState()
-//                if (activityStarted)
                 AppNavigation(dest = dest) {
                     _state.value = it
                 }
-//                else if (dest == Route.Quick)
-//                    DialogNavigation(dest, { finish() })
             }
         }
 
-        checkIntentForDeepLink(intent, false)
     }
 
     private fun startService() {
@@ -82,59 +72,33 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun checkIntentForDeepLink(intent: Intent, activityPresent: Boolean) {
+
         val action = intent.action ?: return
         if (action == TimerType.Focus.id)
-            _state.value = Route.Focus
+            _state.value = NavRoutes.Focus
         else if (action == TimerType.Quick.id) {
-            setContent {
-                AppTheme {
-                    val dest by _state.collectAsState()
-                    DialogNavigation(dest) {
-                        finish()
-                    }
-
-                }
-            }
+            if (activityPresent)
+                _state.value = NavRoutes.Quick
+            else
+                _state.value = NavRoutes.QuickDialog
         }
     }
 }
 
 @Composable
 fun AppNavigation(
-    dest: Route,
-    onDestChanged: (Route) -> Unit = {}
+    dest: NavRoutes,
+    onDestChanged: (NavRoutes) -> Unit = {}
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = { TopAppBar() }) { innerPadding ->
-
-        when (dest) {
-            Route.Focus -> {
-                FocusScreen(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                )
-            }
-
-
-            Route.Quick -> {
-                QuickScreen() { onDestChanged(Route.Home) }
-            }
-
-            else -> {
-                HomeScreen(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                    onStartFocusClick = { onDestChanged(Route.Focus) },
-                    onStartQuickClick = { onDestChanged(Route.Quick) }
-
-                )
-            }
-        }
-
-
+        NavHost(
+            dest = dest,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        )
     }
 }
 
@@ -162,6 +126,6 @@ fun TopAppBar(modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     AppTheme {
-        AppNavigation(Route.Home)
+        AppNavigation(NavRoutes.Home)
     }
 }
