@@ -10,11 +10,12 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.DialogProperties
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.scene.Scene
 import androidx.navigation3.scene.SceneStrategy
@@ -47,19 +48,34 @@ private fun <T : Any> defaultPredictivePopTransitionSpec():
 
 @Composable
 fun NavHost(
-    dest: NavRoutes,
-    modifier: Modifier = Modifier
+    dest: NavKey,
+    modifier: Modifier = Modifier,
+    onDestChanged: (NavRoutes) -> Unit = {}
 ) {
-    val backStack = remember { mutableStateListOf<Any>(dest) }
+    val navStack = rememberNavBackStack(dest)
     val dialogStrategy: SceneStrategy<Any> = remember { DialogSceneStrategy<Any>() }
+    /**
+     * Destination comes from the activity and the custom intents that start the activity
+     * this means that we should take different behavior based on the target destination
+     * that has been requested
+     */
     LaunchedEffect(dest) {
+        if (dest == navStack.last())
+            return@LaunchedEffect
         if (dest != NavRoutes.Quick)
-            backStack.clear()
-        backStack.add(dest)
+            navStack.clear()
+        navStack.add(dest)
     }
+
+    LaunchedEffect(navStack.size) {
+        navStack.lastOrNull()?.let { navRoute ->
+            onDestChanged(navRoute as NavRoutes)
+        }
+    }
+
     NavDisplay(
-        backStack = backStack,
-        onBack = { backStack.removeLastOrNull() },
+        backStack = navStack,
+        onBack = { navStack.removeLastOrNull() },
         transitionSpec = appTransitionSpec(),
         popTransitionSpec = defaultPredictivePopTransitionSpec(),
         sceneStrategy = dialogStrategy,
@@ -67,16 +83,28 @@ fun NavHost(
             entry<NavRoutes.Home> {
                 HomeScreen(
                     modifier = modifier,
-                    onStartFocusClick = { backStack.add(NavRoutes.Focus) },
-                    onStartQuickClick = { backStack.add(NavRoutes.Quick) },
-                    onSettingsClick = { backStack.add(NavRoutes.Settings) },
+                    onStartFocusClick = { navStack.add(NavRoutes.Focus) },
+                    onStartQuickClick = { navStack.add(NavRoutes.Quick) },
+                    onSettingsClick = { navStack.add(NavRoutes.Settings) },
                 )
             }
             entry<NavRoutes.Focus> {
                 FocusScreen(
                     modifier = modifier,
-                    onSettingsClick = { backStack.add(NavRoutes.Settings) },
-                    onBackClick = { backStack.removeLastOrNull() }
+                    onSettingsClick = { navStack.add(NavRoutes.Settings) },
+                    onBackClick = {
+                        /**
+                         * The focus screen should always navigate back to the home screen but
+                         * we can start the focus screen as the starting destination from the
+                         * notification so in that case we manually add the home screen
+                         * as the backstack screen
+                         */
+                        if (navStack.size == 1) {
+                            navStack.removeLastOrNull()
+                            navStack.add(NavRoutes.Home)
+                        }else
+                            navStack.removeLastOrNull()
+                    }
                 )
             }
 
@@ -86,7 +114,7 @@ fun NavHost(
                 )
             ) {
                 QuickScreen() {
-                    backStack.removeLastOrNull()
+                    navStack.removeLastOrNull()
                 }
             }
             entry<NavRoutes.QuickDialog>(
@@ -101,7 +129,7 @@ fun NavHost(
             entry<NavRoutes.Settings> {
                 SettingsScreen(
                     modifier = modifier,
-                    onBackClick = { backStack.removeLastOrNull() })
+                    onBackClick = { navStack.removeLastOrNull() })
             }
         }
     )

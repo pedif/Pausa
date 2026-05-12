@@ -1,9 +1,10 @@
 package com.techys.pausa.navigation
 
+import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class NavRoutes {
+sealed class NavRoutes: NavKey {
 
     @Serializable
     object Home: NavRoutes()
