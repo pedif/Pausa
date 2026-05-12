@@ -49,9 +49,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             AppTheme {
                 val dest by _state.collectAsState()
-                AppNavigation(dest = dest) {
-                    _state.value = it
-                }
+                AppNavigation(
+                    dest = dest,
+                    onDestChanged = {
+                        _state.value = it
+                    },
+                    onSettingsClick = { _state.value = NavRoutes.Settings })
             }
         }
 
@@ -88,11 +91,16 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppNavigation(
     dest: NavRoutes,
-    onDestChanged: (NavRoutes) -> Unit = {}
+    onDestChanged: (NavRoutes) -> Unit = {},
+    onSettingsClick: () -> Unit = {}
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { TopAppBar() }) { innerPadding ->
+        topBar = {
+            TopAppBar(
+                onSettingsClick = onSettingsClick
+            )
+        }) { innerPadding ->
         NavHost(
             dest = dest,
             modifier = Modifier
@@ -104,13 +112,16 @@ fun AppNavigation(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopAppBar(modifier: Modifier = Modifier) {
+fun TopAppBar(
+    modifier: Modifier = Modifier,
+    onSettingsClick: () -> Unit = {}
+) {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(containerColor = NeonBlue.copy(alpha = 0.1f)),
         title = { Text(text = "Pausa") },
         actions = {
             IconButton(
-                onClick = {},
+                onClick = onSettingsClick,
             ) {
                 Icon(
                     imageVector = Icons.Default.Settings,

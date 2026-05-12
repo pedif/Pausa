@@ -12,6 +12,8 @@ sealed class NavRoutes {
     @Serializable
     object Quick: NavRoutes()
 
+    @Serializable
+    object Settings: NavRoutes()
 
     @Serializable
     object QuickDialog: NavRoutes()

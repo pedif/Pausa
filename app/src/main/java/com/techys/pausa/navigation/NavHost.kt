@@ -14,6 +14,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.techys.home.component.HomeScreen
 import com.techys.pausa.focus.component.FocusScreen
 import com.techys.pausa.quick.component.QuickScreen
+import com.techys.settings.screen.SettingsScreen
 
 
 @Composable
@@ -50,7 +51,7 @@ fun NavHost(
 
             entry<NavRoutes.Quick>(
                 metadata = DialogSceneStrategy.dialog(
-                    DialogProperties(windowTitle = "Route B dialog")
+                    DialogProperties()
                 )
             ) {
                 QuickScreen() {
@@ -64,6 +65,10 @@ fun NavHost(
                 QuickScreen() {
                     act?.finish()
                 }
+            }
+
+            entry<NavRoutes.Settings> {
+                SettingsScreen(modifier = modifier)
             }
         }
     )

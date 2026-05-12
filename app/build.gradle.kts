@@ -51,6 +51,7 @@ dependencies {
     implementation(project(":feature:home"))
     implementation(project(":feature:focus"))
     implementation(project(":feature:quick"))
+    implementation(project(":feature:eye"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -79,4 +80,6 @@ dependencies {
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(libs.kotlinx.serialization.core)
+
+    implementation(libs.permission)
 }

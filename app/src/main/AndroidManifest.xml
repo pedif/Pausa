@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"
+        tools:ignore="ForegroundServicesPolicy" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
 
     <application
@@ -17,14 +18,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Pausa">
         <activity
-            android:name=".TimerEndActivity"
+            android:name=".end.TimerEndActivity"
             android:exported="false"
-            android:label="@string/title_activity_timer_end"
             android:theme="@style/Theme.Pausa" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/Theme.Pausa.Dialog">
             <intent-filter>
@@ -36,7 +35,6 @@
         <activity
             android:name=".DialogActivity"
             android:exported="false"
-            android:label="@string/app_name"
             android:theme="@style/Theme.Pausa.Dialog" />
 
         <service
