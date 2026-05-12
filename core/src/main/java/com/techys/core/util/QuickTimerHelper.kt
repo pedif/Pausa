@@ -8,8 +8,8 @@ import kotlin.random.Random
 
 class QuickTimerHelper(
     notificationManager: NotificationManager,
-    interval: Int = TimerConstants.QUICK_TIMER_ID,
-    id: Int = TimerConstants.DEFAULT_QUICK_INTERVAL,
+    interval: Int = TimerConstants.DEFAULT_QUICK_INTERVAL,
+    id: Int =TimerConstants.QUICK_TIMER_ID ,
     notificationTitle: String = "Quick Timer"
 ) :
     TimerHelper(
