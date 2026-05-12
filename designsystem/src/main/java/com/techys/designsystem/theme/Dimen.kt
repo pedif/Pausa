@@ -15,7 +15,7 @@ object Dimen {
     val buttonMedium = 48.dp
     val iconMedium = 32.dp
 
-    val paddingScreenHorizontal = large
+    val paddingScreen = large
 
     val TimeWheelItemHeight = 50.dp
     val FocusActionAreaHeight = 200.dp
