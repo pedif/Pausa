@@ -10,9 +10,11 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -35,31 +37,44 @@ import com.techys.pausa.focus.model.FocusState
 fun FocusScreen(
     modifier: Modifier = Modifier,
     viewModel: FocusViewModel = hiltViewModel(),
+    onSettingsClick: () -> Unit = {},
+    onBackClick: () -> Unit = {}
 ) {
 
     val state by viewModel.state.collectAsState()
     val context = LocalContext.current
-    FocusScreen(
-        state = state,
-        modifier = modifier,
-        onTimeChanged = viewModel::onTimeChanged,
-        onStartNewTimer = {
-            PausaServiceReceiver.sendTimerInfoUpdateBroadcast(
-                context,
-                TimerConstants.FOCUS_TIMER_ID,
-                interval = state.time,
-                shouldStartImmediately = true,
-                title = null
-            )
-        },
-        onTimerRunningStateChange = { runningState ->
-            PausaServiceReceiver.sendTimerStateUpdateBroadcast(
-                context,
-                id = TimerConstants.FOCUS_TIMER_ID,
-                state = runningState
+    Scaffold(
+        topBar = {
+            FocusTopBar(
+                onSettingsClick = onSettingsClick,
+                onBackClick = onBackClick
             )
         }
-    )
+    ) { innerPadding ->
+        FocusScreen(
+            state = state,
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            onTimeChanged = viewModel::onTimeChanged,
+            onStartNewTimer = {
+                PausaServiceReceiver.sendTimerInfoUpdateBroadcast(
+                    context,
+                    TimerConstants.FOCUS_TIMER_ID,
+                    interval = state.time,
+                    shouldStartImmediately = true,
+                    title = null
+                )
+            },
+            onTimerRunningStateChange = { runningState ->
+                PausaServiceReceiver.sendTimerStateUpdateBroadcast(
+                    context,
+                    id = TimerConstants.FOCUS_TIMER_ID,
+                    state = runningState
+                )
+            }
+        )
+    }
 }
 
 @Composable
@@ -121,8 +136,8 @@ private fun FocusScreen(
             visible = !isNew,
             enter = fadeIn() + slideInVertically(),
             exit = fadeOut() + slideOutVertically(),
-                    modifier = Modifier
-                    .align(Alignment.BottomCenter)
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
         ) {
             RunningFocusComponent(
                 isTimerPaused = state.runningState == TimerStateType.PAUSED,

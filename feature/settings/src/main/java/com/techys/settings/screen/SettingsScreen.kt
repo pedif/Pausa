@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,10 +25,21 @@ import com.techys.settings.viewModel.SettingsViewModel
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
-    viewModel: SettingsViewModel = hiltViewModel()
+    viewModel: SettingsViewModel = hiltViewModel(),
+    onBackClick: () -> Unit = {}
 ) {
 
-    SettingsScreen(modifier = modifier)
+    Scaffold(
+        topBar = {
+            SettingsTopBar(
+                onBackClick = onBackClick
+            )
+        }
+    ) { innerPadding ->
+        SettingsScreen(modifier = modifier
+            .fillMaxSize()
+            .padding(innerPadding))
+    }
 }
 
 //Why not lazy colum instead of colum with scrollable modifier??
@@ -36,7 +48,8 @@ private fun SettingsScreen(modifier: Modifier = Modifier) {
     val scroll = rememberScrollState()
     //Make composable not clip its children to it's padding jsut at the top and bottom
     Column(
-        modifier = modifier.scrollable(scroll, orientation = Orientation.Vertical)
+        modifier = modifier
+            .scrollable(scroll, orientation = Orientation.Vertical)
             .fillMaxSize()
             .padding(
                 horizontal = Dimen.paddingScreen,
@@ -45,8 +58,10 @@ private fun SettingsScreen(modifier: Modifier = Modifier) {
     ) {
         PermissionsComponent(modifier = Modifier.fillMaxWidth())
         Spacer(modifier = Modifier.weight(1f))
-        Text(text = stringResource(R.string.version),
-            modifier = Modifier.padding(top = Dimen.large))
+        Text(
+            text = stringResource(R.string.version),
+            modifier = Modifier.padding(top = Dimen.large)
+        )
     }
 }
 

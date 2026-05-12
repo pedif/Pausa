@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -77,6 +78,7 @@ class MainActivity : ComponentActivity() {
     private fun checkIntentForDeepLink(intent: Intent, activityPresent: Boolean) {
 
         val action = intent.action ?: return
+        Log.e("tagtag","aciton is $action")
         if (action == TimerType.Focus.id)
             _state.value = NavRoutes.Focus
         else if (action == TimerType.Quick.id) {
@@ -94,42 +96,10 @@ fun AppNavigation(
     onDestChanged: (NavRoutes) -> Unit = {},
     onSettingsClick: () -> Unit = {}
 ) {
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            TopAppBar(
-                onSettingsClick = onSettingsClick
-            )
-        }) { innerPadding ->
-        NavHost(
-            dest = dest,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TopAppBar(
-    modifier: Modifier = Modifier,
-    onSettingsClick: () -> Unit = {}
-) {
-    TopAppBar(
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = NeonBlue.copy(alpha = 0.1f)),
-        title = { Text(text = "Pausa") },
-        actions = {
-            IconButton(
-                onClick = onSettingsClick,
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Settings,
-                    contentDescription = "",
-                    tint = MaterialTheme.colorScheme.primary,
-                )
-            }
-        }
+    NavHost(
+        dest = dest,
+        modifier = Modifier
+            .fillMaxSize()
     )
 }
 

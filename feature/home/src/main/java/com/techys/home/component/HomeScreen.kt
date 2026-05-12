@@ -3,7 +3,9 @@ package com.techys.home.component
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -28,43 +30,50 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
     onStartFocusClick: () -> Unit = {},
-    onStartQuickClick: () -> Unit = {}
+    onStartQuickClick: () -> Unit = {},
+    onSettingsClick: () -> Unit = {}
 ) {
     val timerState by PausaService.state.collectAsState()
     val homeState by viewModel.state.collectAsState()
     val context = LocalContext.current
-    HomeScreen(
-        timerState = timerState,
-        homeState = homeState,
-        modifier = modifier,
-        onEyeTimerRunningStateChange = { state ->
-            PausaServiceReceiver.sendTimerStateUpdateBroadcast(
-                context,
-                id = TimerConstants.EYE_TIMER_ID,
-                state = state
-            )
-        },
-        onFocusTimerRunningStateChange = { state ->
-            if (state == TimerStateType.STARTED)
-                onStartFocusClick()
-            else
+    Scaffold(
+        topBar = { HomeTopBar(onSettingsClick = onSettingsClick) }
+    ) { innerPadding ->
+        HomeScreen(
+            timerState = timerState,
+            homeState = homeState,
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            onEyeTimerRunningStateChange = { state ->
                 PausaServiceReceiver.sendTimerStateUpdateBroadcast(
                     context,
-                    id = TimerConstants.FOCUS_TIMER_ID,
+                    id = TimerConstants.EYE_TIMER_ID,
                     state = state
                 )
-        },
-        onQuickTimerRunningStateChange = { id, state ->
-            if (state == TimerStateType.STARTED)
-                onStartQuickClick()
-            else
-                PausaServiceReceiver.sendTimerStateUpdateBroadcast(
-                    context,
-                    id = id,
-                    state = state
-                )
-        }
-    )
+            },
+            onFocusTimerRunningStateChange = { state ->
+                if (state == TimerStateType.STARTED)
+                    onStartFocusClick()
+                else
+                    PausaServiceReceiver.sendTimerStateUpdateBroadcast(
+                        context,
+                        id = TimerConstants.FOCUS_TIMER_ID,
+                        state = state
+                    )
+            },
+            onQuickTimerRunningStateChange = { id, state ->
+                if (state == TimerStateType.STARTED)
+                    onStartQuickClick()
+                else
+                    PausaServiceReceiver.sendTimerStateUpdateBroadcast(
+                        context,
+                        id = id,
+                        state = state
+                    )
+            }
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
