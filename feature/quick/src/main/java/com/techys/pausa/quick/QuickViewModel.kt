@@ -31,7 +31,8 @@ class QuickViewModel @Inject constructor(@param:ApplicationContext val context: 
                 context = context,
                 id = TimerConstants.QUICK_TIMER_ID,
                 title = this.title,
-                interval = this.timeList[timeIndex]
+                interval = this.timeList[timeIndex],
+                shouldStartImmediately = true
             )
         }
     }
