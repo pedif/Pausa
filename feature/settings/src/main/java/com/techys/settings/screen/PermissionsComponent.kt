@@ -1,14 +1,13 @@
 package com.techys.settings.screen
 
-import android.Manifest
 import android.util.Log
-import android.webkit.PermissionRequest
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -20,6 +19,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,7 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.techys.core.permission.PermissionUtil
 import com.techys.designsystem.component.NotificationPermissionHandler
-import com.techys.designsystem.component.PermissionHandler
 import com.techys.designsystem.component.SettingsRedirectComponent
 import com.techys.designsystem.theme.AppTheme
 import com.techys.designsystem.theme.Dimen
@@ -51,23 +50,8 @@ fun PermissionsComponent(modifier: Modifier = Modifier) {
 
             HorizontalDivider(modifier = Modifier.padding(horizontal = Dimen.medium))
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(Dimen.small)
-            ) {
-                Text(text = stringResource(R.string.permission_battery))
-                Spacer(modifier = Modifier.weight(1f))
-                VerticalDivider(
-                    modifier = Modifier
-                        .height(48.dp)
-                        .padding(vertical = Dimen.medium)
-                )
-                Spacer(modifier = Modifier.width(Dimen.medium))
-                Switch(
-                    checked = true, onCheckedChange = {})
-            }
+            BatteryItem()
+
             HorizontalDivider(modifier = Modifier.padding(horizontal = Dimen.medium))
 
             Row(
@@ -92,12 +76,53 @@ fun PermissionsComponent(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun NotificationItem(modifier: Modifier = Modifier) {
-
+fun NotificationItem(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     var hasPermission by remember {
         mutableStateOf(PermissionUtil.hasNotificationPermission(context))
     }
+    PermissionItem(
+        title = stringResource(R.string.permission_notification),
+        description = stringResource(R.string.permission_notification_desc),
+        hasPermission = hasPermission,
+        onPermissionChanged = { hasPermission = it },
+        onPermissionSettingsRequested = { PermissionUtil.openNotificationSettings(context) }
+    )
+    LaunchedEffect(Unit) {
+        hasPermission = PermissionUtil.hasNotificationPermission(context)
+    }
+}
+
+@Composable
+fun BatteryItem(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    var hasPermission by remember {
+        mutableStateOf(PermissionUtil.hasBatteryPermission(context))
+    }
+    Log.e("tagtag","has battery $hasPermission")
+    PermissionItem(
+        title = stringResource(R.string.permission_battery),
+        description = stringResource(R.string.permission_battery),
+        hasPermission = hasPermission,
+        onPermissionChanged = { hasPermission = it },
+        onPermissionSettingsRequested = {
+            Log.e("tagtag","request battery intent")
+            PermissionUtil.openBatterySettings(context) }
+    )
+    LaunchedEffect(Unit) {
+        hasPermission = PermissionUtil.hasBatteryPermission(context)
+    }
+}
+
+@Composable
+private fun PermissionItem(
+    title: String,
+    description: String,
+    hasPermission: Boolean,
+    modifier: Modifier = Modifier,
+    onPermissionChanged: (Boolean) -> Unit = {},
+    onPermissionSettingsRequested: () -> Unit = {}
+) {
     var requestPermission by remember { mutableStateOf(false) }
     var requestScreenIntent by remember {
         mutableStateOf(false)
@@ -105,11 +130,12 @@ private fun NotificationItem(modifier: Modifier = Modifier) {
     if (requestPermission) {
         NotificationPermissionHandler(
             onAllGranted = {
-                hasPermission = true
+                onPermissionChanged(true)
                 requestPermission = false
+                Log.e("tagtag","has granted $title")
             },
             onDenied = {
-                hasPermission = false
+                onPermissionChanged(false)
                 requestPermission = false
                 requestScreenIntent = true
             }
@@ -120,14 +146,14 @@ private fun NotificationItem(modifier: Modifier = Modifier) {
             permissionName = "Motification",
             onRedirectClick = {
                 requestScreenIntent = false
-                PermissionUtil.openNotificationSettings(context)
+                onPermissionSettingsRequested()
             },
             onDismissed = { requestScreenIntent = false }
         )
     }
-    PermissionItem(
-        title = stringResource(R.string.permission_notification),
-        description = stringResource(R.string.permission_notification_desc),
+    PermissionUi(
+        title = title,
+        description = description,
         hasPermission = hasPermission,
         modifier = modifier,
         onRequestPermission = { requestPermission = true }
@@ -135,7 +161,7 @@ private fun NotificationItem(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun PermissionItem(
+private fun PermissionUi(
     title: String,
     description: String,
     hasPermission: Boolean,
@@ -149,8 +175,14 @@ private fun PermissionItem(
             .padding(Dimen.small)
             .wrapContentHeight()
     ) {
-        Text(text = title)
-        Spacer(modifier = Modifier.weight(1f))
+        Column(modifier = Modifier.weight(1f).padding(end = 50.dp)) {
+            Text(text = title)
+            Text(
+                text = description,
+                modifier = Modifier.offset(x = Dimen.small),
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
         //compose version of fill parent not max size but what other component take and this would fill
         VerticalDivider(
             modifier = Modifier
@@ -165,23 +197,6 @@ private fun PermissionItem(
             })
     }
 }
-
-//@Composable
-//fun PermissionRequest(modifier: Modifier = Modifier) {
-//    val permissions = buildList {
-//        add(Manifest.permission.POST_NOTIFICATIONS)
-//        // USE_FULL_SCREEN_INTENT is normal permission, auto-granted
-//    }
-//
-//    val permissionState = rememberMultiplePermissionsState(permissions)
-//
-//    when {
-//        permissionState.allPermissionsGranted -> onPermissionGranted()
-//        else -> PermissionScreen(
-//            onRequest = { permissionState.launchMultiplePermissionRequest() }
-//        )
-//    }
-//}
 
 @Preview
 @Composable
