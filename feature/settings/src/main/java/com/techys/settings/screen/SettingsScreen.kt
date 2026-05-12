@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.techys.designsystem.theme.AppTheme
 import com.techys.designsystem.theme.Dimen
 import com.techys.settings.R
@@ -22,11 +23,11 @@ import com.techys.settings.viewModel.SettingsViewModel
 
 @Composable
 fun SettingsScreen(
-    viewModel: SettingsViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: SettingsViewModel = hiltViewModel()
 ) {
 
-    SettingsScreen()
+    SettingsScreen(modifier = modifier)
 }
 
 //Why not lazy colum instead of colum with scrollable modifier??
@@ -38,8 +39,8 @@ private fun SettingsScreen(modifier: Modifier = Modifier) {
         modifier = modifier.scrollable(scroll, orientation = Orientation.Vertical)
             .fillMaxSize()
             .padding(
-                horizontal = Dimen.paddingScreenHorizontal,
-                vertical = Dimen.paddingScreenHorizontal
+                horizontal = Dimen.paddingScreen,
+                vertical = Dimen.paddingScreen
             )
     ) {
         PermissionsComponent(modifier = Modifier.fillMaxWidth())

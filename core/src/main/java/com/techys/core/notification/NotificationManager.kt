@@ -172,6 +172,7 @@ class NotificationManager @Inject constructor(
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setOnlyAlertOnce(true)
             .setColorized(true)
+            .setAutoCancel(true)
             .setGroup(GROUP_KEY)
 
         return notification
