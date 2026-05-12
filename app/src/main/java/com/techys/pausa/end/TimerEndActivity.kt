@@ -1,0 +1,82 @@
+package com.techys.pausa.end
+
+import android.content.Intent
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.techys.core.model.TimerType
+import com.techys.designsystem.theme.AppTheme
+import com.techys.pausa.end.navigation.EndNavHost
+import com.techys.pausa.end.navigation.EndNavRoute
+import com.techys.pausa.navigation.NavRoutes
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+
+@AndroidEntryPoint
+class TimerEndActivity : ComponentActivity() {
+
+    private var _state = MutableStateFlow<EndNavRoute>(EndNavRoute.Eye)
+    private val state: StateFlow<EndNavRoute>
+        get() = _state.asStateFlow()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        checkIntentForDeepLink(intent)
+        setContent {
+            AppTheme {
+                val dest by state.collectAsState()
+                val backStack = remember { mutableStateListOf(dest) }
+                LaunchedEffect(dest) {
+                    backStack.clear()
+                    backStack.add(dest)
+                }
+                MessageComponent(backStack)
+            }
+        }
+    }
+
+    private fun checkIntentForDeepLink(intent: Intent) {
+        val action = intent.action ?: return
+        when (action) {
+            TimerType.Focus.id -> _state.value = EndNavRoute.Focus
+            TimerType.Quick.id -> _state.value = EndNavRoute.Quick
+            TimerType.EyeBreak.id -> _state.value == EndNavRoute.Eye
+            else -> finish()
+        }
+    }
+}
+
+
+@Composable
+fun MessageComponent(backStack: SnapshotStateList<EndNavRoute>, modifier: Modifier = Modifier) {
+    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+        EndNavHost(
+            backStack = backStack,
+            modifier = modifier.padding(innerPadding)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview2() {
+    AppTheme {
+        MessageComponent(SnapshotStateList())
+    }
+}

@@ -64,7 +64,7 @@ fun QuickScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(Dimen.paddingScreenHorizontal)
+                    .padding(Dimen.paddingScreen)
             ) {
                 Text(
                     text = "Setup a Quick Timer",

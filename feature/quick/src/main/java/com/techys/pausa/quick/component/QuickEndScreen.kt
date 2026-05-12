@@ -55,7 +55,7 @@ fun QuickEndScreen(
 ) {
 
     Column(
-        modifier = modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).padding(Dimen.paddingScreenHorizontal),
+        modifier = modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).padding(Dimen.paddingScreen),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

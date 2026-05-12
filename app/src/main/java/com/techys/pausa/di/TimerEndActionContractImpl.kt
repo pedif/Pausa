@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import com.techys.core.model.TimerType
 import com.techys.core.notification.TimerEndActionContract
-import com.techys.pausa.TimerEndActivity
+import com.techys.pausa.end.TimerEndActivity
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
