@@ -32,10 +32,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".DialogActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Pausa.Dialog" />
 
         <service
             android:name="com.techys.core.service.PausaService"
