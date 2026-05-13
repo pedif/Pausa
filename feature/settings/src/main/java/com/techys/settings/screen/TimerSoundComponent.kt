@@ -3,7 +3,6 @@ package com.techys.settings.screen
 import android.content.Context.MODE_PRIVATE
 import android.media.RingtoneManager
 import android.net.Uri
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,7 +17,6 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,7 +24,6 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -40,7 +37,6 @@ import androidx.compose.ui.platform.LocalContext
 import com.techys.designsystem.theme.CardBackground
 import com.techys.designsystem.theme.Dimen
 import com.techys.settings.model.SoundItem
-import com.techys.settings.util.TimerSoundManager
 
 @Composable
 fun TimerSoundSettings(
@@ -104,25 +100,6 @@ fun TimerSoundSettings(
                 colors = ListItemDefaults.colors(containerColor = Color.Transparent),
             )
         }
-    }
-    // Dialogs
-    if (showPomodoroPicker) {
-        SoundPickerDialog(
-            sounds = sounds,
-            currentSoundUri = prefs.getString(TimerSoundManager.KEY_POMODORO_SOUND, null)
-                ?.let { Uri.parse(it) },
-            onSoundSelected = { uri ->
-                val uriString = uri?.toString()
-                prefs.edit().putString(TimerSoundManager.KEY_POMODORO_SOUND, uriString).apply()
-//                soundManager.updateChannel(
-//                    TimerSoundManager.CHANNEL_POMODORO,
-//                    "Pomodoro Timer",
-//                    uriString
-//                )
-                showPomodoroPicker = false
-            },
-            onDismiss = { showPomodoroPicker = false }
-        )
     }
 
     // ... similar for other pickers
