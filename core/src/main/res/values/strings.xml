@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="channel_pausa_name">Pausa Service Channel</string>
+    <string name="channel_timer_end_eye_name">Eye Care Channel</string>
+    <string name="channel_timer_end_focus_name">Zen Mode Channel</string>
+    <string name="channel_timer_end_quick_name">Quick Channel</string>
+</resources>

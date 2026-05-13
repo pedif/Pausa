@@ -1,7 +1,6 @@
 package com.techys.core.notification
 
 import android.Manifest
-import android.R
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -19,6 +18,9 @@ import com.techys.core.receiver.PausaServiceReceiver
 import com.techys.core.util.TimerConstants
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import androidx.core.net.toUri
+import com.techys.core.model.TimerType
+import com.techys.pausa.core.R
 
 class NotificationManager @Inject constructor(
     @param:ApplicationContext val context: Context,
@@ -30,18 +32,24 @@ class NotificationManager @Inject constructor(
         private const val CHANNEL_ID = "TimerService"
         private const val GROUP_KEY = "groupKey"
 
-        private const val CHANNEL_TIMER_END_ID = "TimerEnd"
+        const val CHANNEL_TIMER_END_EYE_ID = "end_eye_time"
+        const val CHANNEL_TIMER_END_QUICK_ID = "end_quick_timer"
+        const val CHANNEL_TIMER_END_FOCUS_ID = "end_focus_mode"
     }
 
-    private fun setupNotification(title: String): NotificationCompat.Builder {
+    private fun setupForegroundServiceNotification(title: String): NotificationCompat.Builder {
         val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createNotificationChannel()
+            val (channelId, name) = getNotificationChannelInfoByType(null)
+            createNotificationChannel(
+                channelId = channelId,
+                name = name
+            )
             NotificationCompat.Builder(context, CHANNEL_ID)
         } else {
             NotificationCompat.Builder(context, "")
         }
         val notification: NotificationCompat.Builder = builder
-            .setSmallIcon(R.drawable.btn_plus)
+//            .setSmallIcon(R.drawable.btn_plus)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setContentTitle(title)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
@@ -58,13 +66,17 @@ class NotificationManager @Inject constructor(
         id: Int, title: String, startTime: Long, progress: Int, max: Int, updateStartTime: Boolean
     ) {
         val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createNotificationChannel()
-            NotificationCompat.Builder(context, CHANNEL_ID)
+            val (channelId, name) = getNotificationChannelInfoByType(null)
+            createNotificationChannel(
+                channelId = channelId,
+                name = name
+            )
+            NotificationCompat.Builder(context, channelId)
         } else {
             NotificationCompat.Builder(context, "")
         }
         val notification: NotificationCompat.Builder = builder
-            .setSmallIcon(R.drawable.btn_plus)
+//            .setSmallIcon(R.drawable.btn_plus)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setContentTitle(title)
             .setUsesChronometer(true)
@@ -85,13 +97,14 @@ class NotificationManager @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannel(
-        channelId: String = CHANNEL_ID,
+        channelId: String,
+        name: String,
         importance: Int = NotificationManager.IMPORTANCE_LOW
     ) {
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notificationChannel = NotificationChannel(
             channelId,
-            channelId,
+            name,
             importance
         )
         notificationChannel.apply {
@@ -101,13 +114,63 @@ class NotificationManager @Inject constructor(
                 setAllowBubbles(true)
             }
             lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-            setSound(null, null)
         }
         manager.createNotificationChannel(notificationChannel)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun updateNotificationChannel(timerType: TimerType, soundUri: String? = null) {
+        val (channelId, name) = getNotificationChannelInfoByType(timerType)
+        val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        // Delete existing
+        manager.deleteNotificationChannel(channelId)
+
+        // Create new with selected sound
+        val uri = soundUri?.toUri()
+
+        val channel =
+            NotificationChannel(channelId, name, NotificationManager.IMPORTANCE_HIGH).apply {
+                description = "Timer notifications"
+                enableVibration(true)
+                setBypassDnd(true)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    setAllowBubbles(true)
+                }
+                lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+                setSound(uri, Notification.AUDIO_ATTRIBUTES_DEFAULT)
+            }
+
+        manager.createNotificationChannel(channel)
+    }
+
+    private fun getNotificationChannelInfoByType(type: TimerType?): Pair<String, String> {
+        return when (type) {
+            TimerType.EyeBreak -> Pair(
+                CHANNEL_TIMER_END_EYE_ID,
+                context.getString(R.string.channel_timer_end_eye_name)
+            )
+
+            TimerType.Quick -> Pair(
+                CHANNEL_TIMER_END_QUICK_ID,
+                context.getString(R.string.channel_timer_end_quick_name)
+            )
+
+            TimerType.Focus -> Pair(
+                CHANNEL_TIMER_END_FOCUS_ID,
+                context.getString(R.string.channel_timer_end_focus_name)
+            )
+
+            else -> {
+                Pair(
+                    CHANNEL_ID,
+                    context.getString(R.string.channel_pausa_name)
+                )
+            }
+        }
+    }
+
     fun getPausaServiceNotification(): Notification {
-        val builder = setupNotification(title = "Pausa")
+        val builder = setupForegroundServiceNotification(title = "Pausa")
         builder.setContentText("start a timer")
         val activityIntent =
             PendingIntent.getActivities(
@@ -135,9 +198,9 @@ class NotificationManager @Inject constructor(
             actionContract.getStartQuickTimerIntent(),
             PendingIntent.FLAG_IMMUTABLE
         )
-        builder.addAction(R.drawable.star_on, "Eye Care", eyeCareIntent)
-        builder.addAction(R.drawable.star_on, "Zen Mode", focusIntent)
-        builder.addAction(R.drawable.star_on, " Quick", quickIntent)
+        builder.addAction(android.R.drawable.ic_input_add, "Eye Care", eyeCareIntent)
+        builder.addAction(android.R.drawable.ic_input_add, "Zen Mode", focusIntent)
+        builder.addAction(android.R.drawable.ic_input_add, " Quick", quickIntent)
         return builder.build()
     }
 
@@ -155,18 +218,20 @@ class NotificationManager @Inject constructor(
         NotificationManagerCompat.from(context).cancel(notificationId)
     }
 
-    fun getTimerEndNotification(title: String): NotificationCompat.Builder {
+    fun getTimerEndNotification(timerType: TimerType, title: String): NotificationCompat.Builder {
         val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val (channelId, name) = getNotificationChannelInfoByType(timerType)
             createNotificationChannel(
-                CHANNEL_TIMER_END_ID,
+                channelId = channelId,
+                name = name,
                 importance = NotificationManager.IMPORTANCE_MAX
             )
-            NotificationCompat.Builder(context, CHANNEL_TIMER_END_ID)
+            NotificationCompat.Builder(context, CHANNEL_ID)
         } else {
             NotificationCompat.Builder(context, "")
         }
         val notification: NotificationCompat.Builder = builder
-            .setSmallIcon(R.drawable.btn_plus)
+//            .setSmallIcon(R.drawable.btn_plus)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setContentTitle(title)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
@@ -180,7 +245,10 @@ class NotificationManager @Inject constructor(
     }
 
     fun showEyeTimerEndNotification(id: Int, title: String) {
-        val notif = getTimerEndNotification(title)
+        val notif = getTimerEndNotification(
+            TimerType.EyeBreak,
+            title = title
+        )
         val intent = PendingIntent.getActivity(
             context,
             10,
@@ -195,7 +263,10 @@ class NotificationManager @Inject constructor(
     }
 
     fun showQuickTimerEndNotification(id: Int, title: String) {
-        val notif = getTimerEndNotification(title)
+        val notif = getTimerEndNotification(
+            timerType = TimerType.Quick,
+            title = title
+        )
         val intent = PendingIntent.getActivity(
             context,
             10,
@@ -210,7 +281,10 @@ class NotificationManager @Inject constructor(
     }
 
     fun showFocusTimerEndNotification(id: Int, title: String) {
-        val notif = getTimerEndNotification(title)
+        val notif = getTimerEndNotification(
+            timerType = TimerType.Focus,
+            title = title
+        )
         val intent = PendingIntent.getActivity(
             context,
             10,
