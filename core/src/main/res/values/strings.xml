@@ -4,4 +4,9 @@
     <string name="channel_timer_end_eye_name">Eye Care Channel</string>
     <string name="channel_timer_end_focus_name">Zen Mode Channel</string>
     <string name="channel_timer_end_quick_name">Quick Channel</string>
+    <string name="notification_pausa_name">Pausa</string>
+    <string name="notification_pausa_description">Start a timer</string>
+    <string name="notification_action_eye">Eye Care</string>
+    <string name="notification_action_focus">Zen Mode</string>
+    <string name="notification_action_quick">Quick</string>
 </resources>

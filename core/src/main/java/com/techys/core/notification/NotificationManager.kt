@@ -170,8 +170,9 @@ class NotificationManager @Inject constructor(
     }
 
     fun getPausaServiceNotification(): Notification {
-        val builder = setupForegroundServiceNotification(title = "Pausa")
-        builder.setContentText("start a timer")
+        val builder =
+            setupForegroundServiceNotification(title = context.getString(R.string.notification_pausa_name))
+        builder.setContentText(context.getString(R.string.notification_pausa_description))
         val activityIntent =
             PendingIntent.getActivities(
                 context, 0, arrayOf(actionContract.getOpenAppIntent()),
@@ -198,9 +199,18 @@ class NotificationManager @Inject constructor(
             actionContract.getStartQuickTimerIntent(),
             PendingIntent.FLAG_IMMUTABLE
         )
-        builder.addAction(android.R.drawable.ic_input_add, "Eye Care", eyeCareIntent)
-        builder.addAction(android.R.drawable.ic_input_add, "Zen Mode", focusIntent)
-        builder.addAction(android.R.drawable.ic_input_add, " Quick", quickIntent)
+        builder.addAction(
+            android.R.drawable.ic_input_add,
+            context.getString(R.string.notification_action_eye), eyeCareIntent
+        )
+        builder.addAction(
+            android.R.drawable.ic_input_add,
+            context.getString(R.string.notification_action_focus), focusIntent
+        )
+        builder.addAction(
+            android.R.drawable.ic_input_add,
+            context.getString(R.string.notification_action_quick), quickIntent
+        )
         return builder.build()
     }
 
