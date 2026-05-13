@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.PowerManager
 import android.provider.Settings
 import androidx.core.app.ActivityCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -37,4 +38,14 @@ object PermissionUtil {
 
     fun openNotificationSettings(context: Context) =
         openSettings(context, Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+
+    fun hasBatteryPermission(context: Context): Boolean {
+        val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+        val isIgnoringBatteryOptimizations =
+            powerManager.isIgnoringBatteryOptimizations(context.packageName)
+        return isIgnoringBatteryOptimizations
+    }
+
+    fun openBatterySettings(context: Context) =
+        openSettings(context, Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
 }
