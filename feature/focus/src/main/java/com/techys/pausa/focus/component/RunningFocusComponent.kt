@@ -38,41 +38,41 @@ fun RunningFocusComponent(
         if(isTimerPaused){
             IconButton(
                 onClick = onTimerResumeClicked,
-                modifier = Modifier.size(80.dp),
+                modifier = Modifier.size(Dimen.largeIconButtonSize),
                 colors = IconButtonDefaults.iconButtonColors(containerColor = Color.DarkGray)
             ) {
                 Icon(
                     imageVector = Icons.Default.PlayArrow,
                     contentDescription = "",
                     tint = NeonBlue,
-                    modifier = Modifier.size(64.dp)
+                    modifier = Modifier.size(Dimen.largeIconButtonImage)
                 )
             }
         }else {
             IconButton(
                 onClick = onTimerPauseClicked,
-                modifier = Modifier.size(80.dp),
+                modifier = Modifier.size(Dimen.largeIconButtonSize),
                 colors = IconButtonDefaults.iconButtonColors(containerColor = Color.DarkGray)
             ) {
                 Icon(
                     imageVector = Icons.Default.ShoppingCart,
                     contentDescription = "",
                     tint = NeonBlue,
-                    modifier = Modifier.size(64.dp)
+                    modifier = Modifier.size(Dimen.largeIconButtonImage)
                 )
             }
         }
         Spacer(modifier = Modifier.width(Dimen.large))
         IconButton(
             onClick = onTimerStopClicked,
-            modifier = Modifier.size(80.dp),
+            modifier = Modifier.size(Dimen.largeIconButtonSize),
             colors = IconButtonDefaults.iconButtonColors(containerColor = Color.DarkGray)
         ) {
             Icon(
                 imageVector = Icons.Default.Delete,
                 contentDescription = "",
                 tint = NeonBlue,
-                modifier = Modifier.size(64.dp)
+                modifier = Modifier.size(Dimen.largeIconButtonImage)
             )
         }
     }

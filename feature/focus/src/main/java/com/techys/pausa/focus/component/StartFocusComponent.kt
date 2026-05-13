@@ -35,14 +35,14 @@ fun StartFocusComponent(modifier: Modifier = Modifier,
     ) {
         IconButton(
             onClick = onTimerStartedClicked,
-            modifier = Modifier.size(80.dp),
+            modifier = Modifier.size(Dimen.largeIconButtonSize),
             colors = IconButtonDefaults.iconButtonColors(containerColor = Color.DarkGray)
         ) {
             Icon(
                 imageVector = Icons.Default.PlayArrow,
                 contentDescription = "",
                 tint = NeonBlue,
-                modifier = Modifier.size(64.dp)
+                modifier = Modifier.size(Dimen.largeIconButtonImage)
             )
         }
         Spacer(modifier = Modifier.width(Dimen.medium))

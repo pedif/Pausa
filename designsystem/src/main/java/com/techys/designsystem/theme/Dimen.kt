@@ -20,4 +20,7 @@ object Dimen {
     val TimeWheelItemHeight = 50.dp
     val FocusActionAreaHeight = 200.dp
 
+    val largeIconButtonSize = 72.dp
+    val largeIconButtonImage = 48.dp
+
 }
