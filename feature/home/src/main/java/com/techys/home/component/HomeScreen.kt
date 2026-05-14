@@ -91,23 +91,6 @@ private fun HomeScreen(
 ) {
 
     Box(modifier = modifier) {
-        ParticleAnimation(modifier = Modifier.fillMaxSize())
-//        Row(
-//            modifier = Modifier.fillMaxWidth(),
-//            horizontalArrangement = Arrangement.End
-//        ) {
-//            IconButton(
-//                onClick = {},
-//                modifier = Modifier.size(Dimen.buttonMedium)
-//            ) {
-//                Icon(
-//                    imageVector = Icons.Default.Settings,
-//                    contentDescription = "",
-//                    tint = MaterialTheme.colorScheme.primary,
-//                    modifier = Modifier.size(Dimen.iconMedium)
-//                )
-//            }
-//        }
         Column(modifier = Modifier.fillMaxSize()) {
             EyeTimerComponent(
                 state = timerState.eyeTimer,

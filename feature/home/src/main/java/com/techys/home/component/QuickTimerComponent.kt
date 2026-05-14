@@ -96,47 +96,12 @@ private fun QuickTimerListItem(
         TimerPB(
             progress = state.progress
         )
-
         Spacer(modifier = Modifier.height(Dimen.medium))
-        Row() {
-            if(state.state == TimerStateType.STARTED){
-                IconButton(
-                    onClick = { onRunningStateChange(TimerStateType.STARTED) },
-                    modifier = Modifier.size(64.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Info,
-                        contentDescription = "",
-                        tint = NeonBlue,
-                        modifier = Modifier.size(48.dp)
-                    )
-                }
-            }else {
-                IconButton(
-                    onClick = { onRunningStateChange(TimerStateType.STARTED) },
-                    modifier = Modifier.size(64.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.PlayArrow,
-                        contentDescription = "",
-                        tint = NeonBlue,
-                        modifier = Modifier.size(48.dp)
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.width(Dimen.medium))
-            IconButton(
-                onClick = { onRunningStateChange(TimerStateType.STOPPED) },
-                modifier = Modifier.size(64.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "",
-                    tint = NeonBlue,
-                    modifier = Modifier.size(48.dp)
-                )
-            }
-        }
+        TimerControlComponent(
+            state = state.state,
+            modifier= Modifier,
+            onRunningStateChange = onRunningStateChange
+        )
     }
 }
 

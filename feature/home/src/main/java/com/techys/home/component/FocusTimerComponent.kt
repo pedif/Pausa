@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.techys.core.model.TimerState
@@ -30,6 +31,7 @@ import com.techys.designsystem.theme.AppTheme
 import com.techys.designsystem.theme.Dimen
 import com.techys.designsystem.theme.NeonBlue
 import com.techys.designsystem.theme.TextPrimary
+import com.techys.pausa.core.R
 
 @Composable
 fun FocusTimerComponent(
@@ -48,6 +50,15 @@ fun FocusTimerComponent(
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Row(modifier= Modifier.fillMaxWidth()) {
+                Icon(
+                    painter = painterResource(R.drawable.radix_ic_timer),
+                    contentDescription = "",
+                    tint = NeonBlue,
+                    modifier = Modifier.size(32.dp)
+                )
+            }
+            Spacer(modifier = Modifier.height(Dimen.medium))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -66,47 +77,12 @@ fun FocusTimerComponent(
             TimerPB(
                 progress = state.progress
             )
-
             Spacer(modifier = Modifier.height(Dimen.medium))
-            Row() {
-                if(state.state == TimerStateType.STARTED){
-                    IconButton(
-                        onClick = { onRunningStateChange(TimerStateType.STARTED) },
-                        modifier = Modifier.size(64.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Info,
-                            contentDescription = "",
-                            tint = NeonBlue,
-                            modifier = Modifier.size(48.dp)
-                        )
-                    }
-                }else {
-                    IconButton(
-                        onClick = { onRunningStateChange(TimerStateType.STARTED) },
-                        modifier = Modifier.size(64.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.PlayArrow,
-                            contentDescription = "",
-                            tint = NeonBlue,
-                            modifier = Modifier.size(48.dp)
-                        )
-                    }
-                }
-                Spacer(modifier = Modifier.width(Dimen.medium))
-                IconButton(
-                    onClick = { onRunningStateChange(TimerStateType.STOPPED) },
-                    modifier = Modifier.size(64.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = "",
-                        tint = NeonBlue,
-                        modifier = Modifier.size(48.dp)
-                    )
-                }
-            }
+            TimerControlComponent(
+                state = state.state,
+                modifier= Modifier,
+                onRunningStateChange = onRunningStateChange
+            )
         }
     }
 }
