@@ -1,6 +1,5 @@
 package com.techys.settings.screen
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,7 +18,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,6 +29,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.techys.core.permission.PermissionUtil
 import com.techys.designsystem.component.NotificationPermissionHandler
 import com.techys.designsystem.component.SettingsRedirectComponent
@@ -88,8 +90,18 @@ fun NotificationItem(modifier: Modifier = Modifier) {
         onPermissionChanged = { hasPermission = it },
         onPermissionSettingsRequested = { PermissionUtil.openNotificationSettings(context) }
     )
-    LaunchedEffect(Unit) {
-        hasPermission = PermissionUtil.hasNotificationPermission(context)
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                hasPermission = PermissionUtil.hasNotificationPermission(context)
+            }
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
     }
 }
 
@@ -99,18 +111,26 @@ fun BatteryItem(modifier: Modifier = Modifier) {
     var hasPermission by remember {
         mutableStateOf(PermissionUtil.hasBatteryPermission(context))
     }
-    Log.e("tagtag","has battery $hasPermission")
     PermissionItem(
         title = stringResource(R.string.permission_battery),
         description = stringResource(R.string.permission_battery),
         hasPermission = hasPermission,
         onPermissionChanged = { hasPermission = it },
         onPermissionSettingsRequested = {
-            Log.e("tagtag","request battery intent")
             PermissionUtil.openBatterySettings(context) }
     )
-    LaunchedEffect(Unit) {
-        hasPermission = PermissionUtil.hasBatteryPermission(context)
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                hasPermission = PermissionUtil.hasBatteryPermission(context)
+            }
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
     }
 }
 
@@ -132,7 +152,6 @@ private fun PermissionItem(
             onAllGranted = {
                 onPermissionChanged(true)
                 requestPermission = false
-                Log.e("tagtag","has granted $title")
             },
             onDenied = {
                 onPermissionChanged(false)
@@ -143,7 +162,7 @@ private fun PermissionItem(
     }
     if (requestScreenIntent) {
         SettingsRedirectComponent(
-            permissionName = "Motification",
+            permissionName = "Notification",
             onRedirectClick = {
                 requestScreenIntent = false
                 onPermissionSettingsRequested()

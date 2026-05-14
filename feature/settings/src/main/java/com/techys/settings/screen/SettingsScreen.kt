@@ -3,6 +3,7 @@ package com.techys.settings.screen
 
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -62,28 +63,30 @@ private fun SettingsScreen(
 
     val scroll = rememberScrollState()
     //Make composable not clip its children to it's padding jsut at the top and bottom
-    Column(
-        modifier = modifier
-            .scrollable(scroll, orientation = Orientation.Vertical)
-            .fillMaxSize()
-            .padding(
-                horizontal = Dimen.paddingScreen,
-                vertical = Dimen.paddingScreen
+    Box(modifier = modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .scrollable(scroll, orientation = Orientation.Vertical)
+                .fillMaxSize()
+                .padding(
+                    horizontal = Dimen.paddingScreen,
+                    vertical = Dimen.paddingScreen
+                )
+        ) {
+            PermissionsComponent(modifier = Modifier.fillMaxWidth())
+            Spacer(modifier = Modifier.height(Dimen.large))
+            TimerSoundSettings(
+                sounds = soundList,
+                eyeSoundItem = eyeSoundItem,
+                focusSoundItem = focusSoundItem,
+                quickSoundItem = quickSoundItem
             )
-    ) {
-        PermissionsComponent(modifier = Modifier.fillMaxWidth())
-        Spacer(modifier = Modifier.height(Dimen.large))
-        TimerSoundSettings(
-            sounds = soundList,
-            eyeSoundItem = eyeSoundItem,
-            focusSoundItem = focusSoundItem,
-            quickSoundItem = quickSoundItem
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        Text(
-            text = stringResource(R.string.version),
-            modifier = Modifier.padding(top = Dimen.large)
-        )
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = stringResource(R.string.version),
+                modifier = Modifier.padding(top = Dimen.large)
+            )
+        }
     }
 }
 
