@@ -117,7 +117,6 @@ private fun FocusScreen(
 //        Image(imageVector = Icons.Filled.P)
 
         val isNew = state.progress == 1f
-        // First composable
         AnimatedVisibility(
             visible = isNew,
             enter = fadeIn() + slideInVertically(),
@@ -131,7 +130,6 @@ private fun FocusScreen(
             )
         }
 
-        // Second composable (mutually exclusive)
         AnimatedVisibility(
             visible = !isNew,
             enter = fadeIn() + slideInVertically(),
@@ -146,23 +144,6 @@ private fun FocusScreen(
                 onTimerResumeClicked = { onTimerRunningStateChange(TimerStateType.STARTED) }
             )
         }
-//        if (state.progress == 1f) {
-//            StartFocusComponent(
-//                modifier = Modifier
-//                    .align(Alignment.BottomCenter),
-//                onTimerStartedClicked = onStartNewTimer,
-//                onTimeChanged = onTimeChanged
-//            )
-//        } else {
-//            RunningFocusComponent(
-//                isTimerPaused = state.runningState == TimerStateType.PAUSED,
-//                modifier = Modifier
-//                    .align(Alignment.BottomCenter),
-//                onTimerStopClicked = { onTimerRunningStateChange(TimerStateType.STOPPED) },
-//                onTimerPauseClicked = { onTimerRunningStateChange(TimerStateType.PAUSED) },
-//                onTimerResumeClicked = { onTimerRunningStateChange(TimerStateType.STARTED) }
-//            )
-//        }
     }
 }
 
