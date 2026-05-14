@@ -20,7 +20,10 @@
         <activity
             android:name=".end.TimerEndActivity"
             android:exported="false"
-            android:theme="@style/Theme.Pausa" />
+            android:theme="@style/Theme.Pausa"
+            android:showOnLockScreen="true"
+            android:turnScreenOn="true"
+            tools:targetApi="27" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
