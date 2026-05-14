@@ -26,6 +26,7 @@ class FocusTimerHelper(
     }
 
     override fun onTimerStarted() {}
+    override fun onTimerEnded() {}
 
     private fun showTimerEndNotification(){
         /**

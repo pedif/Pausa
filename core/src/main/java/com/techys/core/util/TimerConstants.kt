@@ -13,7 +13,7 @@ object TimerConstants {
     /**
      * Default intervals for the timers
      */
-    const val DEFAULT_EYE_INTERVAL = 15
+    const val DEFAULT_EYE_INTERVAL = 7
     const val DEFAULT_FOCUS_INTERVAL = 45
     const val DEFAULT_QUICK_INTERVAL = 30
 

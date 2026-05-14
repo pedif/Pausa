@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.IBinder
 import com.techys.core.model.PausaState
 import com.techys.core.model.TimerStateType
-import com.techys.core.notification.NotificationActionContract
 import com.techys.core.notification.NotificationManager
 import com.techys.core.receiver.PausaServiceReceiver
 import com.techys.core.util.EyeTimerHelper
@@ -15,10 +14,16 @@ import com.techys.core.util.FocusTimerHelper
 import com.techys.core.util.QuickTimerHelper
 import com.techys.core.util.TimerHelperManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -53,7 +58,8 @@ class PausaService : Service() {
             _state.update { it.transform() }
         }
     }
-
+    private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+    private var collectJob: Job? = null
     lateinit var timerManager: TimerHelperManager
     @Inject
     lateinit var notificationManager: NotificationManager
@@ -76,6 +82,19 @@ class PausaService : Service() {
             onTimerInfoUpdateRequested = this::updateTimerInfo
         )
         pausaReceiver?.registerReceiver(this)
+        collectJob = serviceScope.launch {
+           state.collect { pausaState ->
+               val isFocusRunning =  (pausaState.focusTimer.state != TimerStateType.STOPPED)
+               val isEyeRunning = (pausaState.eyeTimer.state != TimerStateType.STOPPED)
+               var isQuickTimerRunning = false
+               pausaState.quickTimers.map { it.state }.forEach {
+                   isQuickTimerRunning = isQuickTimerRunning or (it != TimerStateType.STOPPED)
+               }
+               if(!(isFocusRunning && isEyeRunning && isQuickTimerRunning) )
+                   notificationManager.hideGroupSummary()
+            }
+        }
+
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -119,6 +138,9 @@ class PausaService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        timerManager.stop()
+        serviceScope.cancel()
+        collectJob?.cancel()
         updatePausaState {
             copy(isServiceRunning = false)
         }

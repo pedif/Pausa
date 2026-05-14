@@ -26,6 +26,7 @@ class QuickTimerHelper(
     }
 
     override fun onTimerStarted() {}
+    override fun onTimerEnded() {}
 
     private fun showTimerEndNotification(){
 
