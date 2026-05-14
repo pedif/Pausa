@@ -1,5 +1,6 @@
 package com.techys.home.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -71,7 +72,8 @@ fun HomeScreen(
                         id = id,
                         state = state
                     )
-            }
+            },
+            onFocusClick = onStartFocusClick
         )
     }
 }
@@ -88,6 +90,7 @@ private fun HomeScreen(
     onFocusTimerRunningStateChange: (TimerStateType) -> Unit = {},
     onQuickTimerStateChange: (Int, Boolean) -> Unit = { _, _ -> },
     onQuickTimerRunningStateChange: (Int, TimerStateType) -> Unit = { _, _ -> },
+    onFocusClick: () -> Unit = {}
 ) {
 
     Box(modifier = modifier) {
@@ -100,7 +103,7 @@ private fun HomeScreen(
             )
             FocusTimerComponent(
                 state = timerState.focusTimer,
-                modifier = Modifier,
+                modifier = Modifier.clickable { onFocusClick() },
                 onStateChange = onFocusTimerStateChange,
                 onRunningStateChange = onFocusTimerRunningStateChange
             )

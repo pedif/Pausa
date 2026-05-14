@@ -1,7 +1,10 @@
 package com.techys.home.component
 
+import android.R
 import android.os.Build
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -18,9 +21,12 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.BlurEffect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -36,15 +42,26 @@ import com.techys.designsystem.theme.NeonBlue
 @Composable
 fun TimerPB(
     progress: Float,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    useCont: Boolean = false
 ) {
 
     val p by animateFloatAsState(targetValue = progress,
         animationSpec = tween(durationMillis = 1200, easing = FastOutSlowInEasing),
         label =  "pb animation"
     )
+    val animatable = remember { Animatable(100f) }
+
+    LaunchedEffect(progress) {
+        animatable.animateTo(
+            targetValue = progress,
+            animationSpec = tween(durationMillis = 950, easing = LinearEasing)
+        )
+    }
+
+    val pp = if(useCont) animatable.value else p
     LinearProgressIndicator(
-        progress = { p },
+        progress = { pp },
         modifier = modifier
             .fillMaxWidth()
             .height(Dimen.progressbarHeight),
