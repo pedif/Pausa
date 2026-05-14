@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
+import android.util.Log
 import com.techys.core.model.PausaState
 import com.techys.core.model.TimerStateType
 import com.techys.core.notification.NotificationManager
@@ -58,9 +59,11 @@ class PausaService : Service() {
             _state.update { it.transform() }
         }
     }
+
     private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private var collectJob: Job? = null
     lateinit var timerManager: TimerHelperManager
+
     @Inject
     lateinit var notificationManager: NotificationManager
     var pausaReceiver: PausaServiceReceiver? = null
@@ -72,8 +75,8 @@ class PausaService : Service() {
     override fun onCreate() {
         super.onCreate()
         timerManager = TimerHelperManager(
-            eyeTimer = EyeTimerHelper( notificationManager),
-            focusTimer = FocusTimerHelper( notificationManager),
+            eyeTimer = EyeTimerHelper(notificationManager),
+            focusTimer = FocusTimerHelper(notificationManager),
             quickTimers = mutableListOf(QuickTimerHelper(notificationManager))
         )
         timerManager.start()
@@ -83,15 +86,15 @@ class PausaService : Service() {
         )
         pausaReceiver?.registerReceiver(this)
         collectJob = serviceScope.launch {
-           state.collect { pausaState ->
-               val isFocusRunning =  (pausaState.focusTimer.state != TimerStateType.STOPPED)
-               val isEyeRunning = (pausaState.eyeTimer.state != TimerStateType.STOPPED)
-               var isQuickTimerRunning = false
-               pausaState.quickTimers.map { it.state }.forEach {
-                   isQuickTimerRunning = isQuickTimerRunning or (it != TimerStateType.STOPPED)
-               }
-               if(!(isFocusRunning && isEyeRunning && isQuickTimerRunning) )
-                   notificationManager.hideGroupSummary()
+            state.collect { pausaState ->
+                val isFocusRunning = (pausaState.focusTimer.state != TimerStateType.STOPPED)
+                val isEyeRunning = (pausaState.eyeTimer.state != TimerStateType.STOPPED)
+                var isQuickTimerRunning = false
+                pausaState.quickTimers.map { it.state }.forEach {
+                    isQuickTimerRunning = isQuickTimerRunning or (it != TimerStateType.STOPPED)
+                }
+                if (!(isFocusRunning or isEyeRunning or isQuickTimerRunning))
+                    notificationManager.hideGroupSummary()
             }
         }
 
