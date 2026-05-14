@@ -24,6 +24,17 @@ class TimerHelperManager(
         const val TICK_IN_MILLIS = 1_000L
     }
 
+    init {
+        //We immediately update the pausa state to expose  the current timers to the ui layer
+        PausaService.updatePausaState {
+            copy(
+                eyeTimer = this@TimerHelperManager.eyeTimer.getState(),
+                focusTimer = this@TimerHelperManager.focusTimer.getState(),
+                quickTimers = this@TimerHelperManager.quickTimers.map { quickTimer -> quickTimer.getState() }
+            )
+        }
+    }
+
     fun updateTimerState(id: Int, state: TimerStateType) {
         when (id) {
             TimerConstants.EYE_TIMER_ID ->
