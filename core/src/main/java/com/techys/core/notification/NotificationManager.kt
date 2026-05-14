@@ -37,6 +37,10 @@ class NotificationManager @Inject constructor(
         const val CHANNEL_TIMER_END_EYE_ID = "end_eye_time"
         const val CHANNEL_TIMER_END_QUICK_ID = "end_quick_timer"
         const val CHANNEL_TIMER_END_FOCUS_ID = "end_focus_mode"
+
+        const val REQUEST_CODE_PLAY_PAUSE_TIMER = 30000
+        const val REQUEST_CODE_PLAY_TIMER = 40000
+        const val REQUEST_CODE_STOP_TIMER = 50000
     }
 
     private fun setupForegroundServiceNotification(title: String): NotificationCompat.Builder {
@@ -81,6 +85,32 @@ class NotificationManager @Inject constructor(
                 context, 0, arrayOf(actionContract.getOpenAppIntent()),
                 PendingIntent.FLAG_IMMUTABLE
             )
+        val playIntent = PendingIntent.getBroadcast(
+            context,
+            REQUEST_CODE_PLAY_TIMER + id,
+            PausaServiceReceiver.getTimerStateUpdateBroadcast(
+                context, id = id, state = TimerStateType.STARTED
+            ),
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        val pauseIntent = PendingIntent.getBroadcast(
+            context,
+            REQUEST_CODE_PLAY_PAUSE_TIMER + id,
+            PausaServiceReceiver.getTimerStateUpdateBroadcast(
+                context, id = id, state = TimerStateType.PAUSED
+            ),
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        val stopIntent = PendingIntent.getBroadcast(
+            context,
+            REQUEST_CODE_STOP_TIMER + id,
+            PausaServiceReceiver.getTimerStateUpdateBroadcast(
+                context, id = id, state = TimerStateType.STOPPED
+            ),
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
         val notification: NotificationCompat.Builder = builder
             .setSmallIcon(R.drawable.radix_ic_stopwatch)
@@ -96,6 +126,21 @@ class NotificationManager @Inject constructor(
             .setUsesChronometer(true)
             .setWhen(startTime)
             .setContentIntent(activityIntent)
+            .addAction(
+                R.drawable.radix_ic_stopwatch,
+                context.getString(R.string.action_resume),
+                playIntent
+            )
+            .addAction(
+                R.drawable.radix_ic_stopwatch,
+                context.getString(R.string.action_pause),
+                pauseIntent
+            )
+            .addAction(
+                R.drawable.radix_ic_stopwatch,
+                context.getString(R.string.action_stop),
+                stopIntent
+            )
 
         if (updateStartTime) {
             showGroupSummary()
@@ -335,10 +380,24 @@ class NotificationManager @Inject constructor(
         showNotification(builder.build(), TIMER_END_GROUP_ID)
     }
 
-    fun hideGroupSummary(){
+    fun hideGroupSummary() {
         cancelNotification(TIMER_GROUP_ID)
     }
-    fun hideEndGroupSummary(){
+
+    fun hideEndGroupSummary() {
         cancelNotification(TIMER_END_GROUP_ID)
+    }
+
+    fun showEyeTimerNotification(
+        id: Int,
+        title: String,
+        startTime: Long,
+        progress: Int,
+        max: Int,
+        updateStartTime: Boolean
+    ) {
+        showTimerNotification(
+            id, title, startTime, progress, max, updateStartTime
+        )
     }
 }
