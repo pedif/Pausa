@@ -16,11 +16,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.techys.designsystem.theme.AppTheme
 import com.techys.designsystem.theme.Dimen
 import com.techys.designsystem.theme.NeonBlue
+import com.techys.pausa.core.R
 
 @Composable
 fun RunningFocusComponent(
@@ -42,7 +44,7 @@ fun RunningFocusComponent(
                 colors = IconButtonDefaults.iconButtonColors(containerColor = Color.DarkGray)
             ) {
                 Icon(
-                    imageVector = Icons.Default.PlayArrow,
+                    painter = painterResource(R.drawable.radix_ic_play),
                     contentDescription = "",
                     tint = NeonBlue,
                     modifier = Modifier.size(Dimen.largeIconButtonImage)
@@ -55,7 +57,7 @@ fun RunningFocusComponent(
                 colors = IconButtonDefaults.iconButtonColors(containerColor = Color.DarkGray)
             ) {
                 Icon(
-                    imageVector = Icons.Default.ShoppingCart,
+                    painter = painterResource(R.drawable.radix_ic_pause),
                     contentDescription = "",
                     tint = NeonBlue,
                     modifier = Modifier.size(Dimen.largeIconButtonImage)
@@ -69,7 +71,7 @@ fun RunningFocusComponent(
             colors = IconButtonDefaults.iconButtonColors(containerColor = Color.DarkGray)
         ) {
             Icon(
-                imageVector = Icons.Default.Delete,
+                painter = painterResource(R.drawable.radix_ic_stop),
                 contentDescription = "",
                 tint = NeonBlue,
                 modifier = Modifier.size(Dimen.largeIconButtonImage)
