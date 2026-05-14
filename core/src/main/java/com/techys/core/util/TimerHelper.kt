@@ -37,17 +37,18 @@ abstract class TimerHelper(
     fun updateTimerState(newState: TimerStateType) {
         if (runningState == TimerStateType.STOPPED && newState == TimerStateType.STARTED)
             startTime = System.currentTimeMillis()
-        if (newState == TimerStateType.STARTED || newState == TimerStateType.COOLDOWN)
+        if (newState == TimerStateType.STARTED || newState == TimerStateType.COOLDOWN) {
             runningState = newState
-        updateNotification(updateStartTime = true)
+            updateNotification(updateStartTime = true)
+        }
+        runningState = newState
         if (newState == TimerStateType.STOPPED) {
             progress = 0
             cancelNotification()
+//            onTimerEnded()
+        } else if(newState == TimerStateType.STARTED){
+            onTimerStarted()
         }
-        if (runningState == newState)
-            return
-        onTimerStarted()
-        runningState = newState
     }
 
     fun updateTimerInfo(newTitle: String?, newInterval: Int?) {
@@ -71,7 +72,7 @@ abstract class TimerHelper(
 //            builder.setWhen(System.currentTimeMillis())
     }
 
-    protected fun cancelNotification() {
+    protected open fun cancelNotification() {
         notificationManager.cancelNotification(notificationId)
     }
 
@@ -84,6 +85,8 @@ abstract class TimerHelper(
      * The event to be execute when the timer has just received the start command
      */
     abstract fun onTimerStarted()
+
+    abstract fun onTimerEnded()
 
     /**
      * executes on each tick of the timer

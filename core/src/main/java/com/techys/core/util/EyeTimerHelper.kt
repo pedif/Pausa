@@ -38,7 +38,6 @@ class EyeTimerHelper(
     }
 
     override fun onTimeUp() {
-        showTimerEndNotification()
         /**
          * We have two modes for an eye care timer we either have just finished the actual duration
          * of an eye care timer which means we need to have a cooldown duration for the user to rest their eyes
@@ -49,7 +48,9 @@ class EyeTimerHelper(
         if (runningState == TimerStateType.STARTED) {
             interval = DEFAULT_COOLDOWN_INTERVAL
             updateTimerState(TimerStateType.COOLDOWN)
+            showTimerEndNotification()
         } else if (runningState == TimerStateType.COOLDOWN) {
+            dismissTimerEndNotification()
             interval = timerInterval
             updateTimerState(TimerStateType.STARTED)
         }
@@ -58,6 +59,16 @@ class EyeTimerHelper(
     override fun onTimerStarted() {
 //        interval = DEFAULT_INTERVAL
 //        progress = 0
+    }
+
+    override fun onTimerEnded() {
+        interval = timerInterval
+        progress = 0
+    }
+
+    override fun cancelNotification() {
+        super.cancelNotification()
+        dismissTimerEndNotification()
     }
 
     private fun restartTimer() {
@@ -86,5 +97,8 @@ class EyeTimerHelper(
 
     private fun showTimerEndNotification(){
         notificationManager.showEyeTimerEndNotification(TimerConstants.EYE_TIMER_END_ID, notificationTitle)
+    }
+    private fun dismissTimerEndNotification(){
+        notificationManager.cancelNotification(TimerConstants.EYE_TIMER_END_ID)
     }
 }
