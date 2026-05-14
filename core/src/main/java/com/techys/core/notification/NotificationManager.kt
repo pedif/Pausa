@@ -7,7 +7,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -30,7 +29,10 @@ class NotificationManager @Inject constructor(
 
     companion object {
         private const val CHANNEL_ID = "TimerService"
-        private const val GROUP_KEY = "groupKey"
+        private const val TIMER_GROUP_KEY = "groupKey"
+        private const val TIMER_GROUP_ID = 99998
+        private const val TIMER_END_GROUP_KEY = "EndGroupKey"
+        private const val TIMER_END_GROUP_ID = 99999
 
         const val CHANNEL_TIMER_END_EYE_ID = "end_eye_time"
         const val CHANNEL_TIMER_END_QUICK_ID = "end_quick_timer"
@@ -44,12 +46,12 @@ class NotificationManager @Inject constructor(
                 channelId = channelId,
                 name = name
             )
-            NotificationCompat.Builder(context, CHANNEL_ID)
+            NotificationCompat.Builder(context, channelId)
         } else {
             NotificationCompat.Builder(context, "")
         }
         val notification: NotificationCompat.Builder = builder
-//            .setSmallIcon(R.drawable.btn_plus)
+            .setSmallIcon(R.drawable.radix_ic_stopwatch)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setContentTitle(title)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
@@ -57,7 +59,6 @@ class NotificationManager @Inject constructor(
             .setOngoing(true)
             .setAutoCancel(false)
             .setColorized(true)
-            .setGroup(GROUP_KEY)
 
         return notification
     }
@@ -76,20 +77,22 @@ class NotificationManager @Inject constructor(
             NotificationCompat.Builder(context, "")
         }
         val notification: NotificationCompat.Builder = builder
-//            .setSmallIcon(R.drawable.btn_plus)
+            .setSmallIcon(R.drawable.radix_ic_stopwatch)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setContentTitle(title)
-            .setUsesChronometer(true)
             .setProgress(max, progress, false)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setOnlyAlertOnce(true)
             .setOngoing(true)
             .setAutoCancel(false)
             .setColorized(true)
-            .setGroup(GROUP_KEY)
+            .setGroup(TIMER_GROUP_KEY)
+            .setUsesChronometer(true)
+        notification.setWhen(startTime)
 
-        if (updateStartTime)
-            notification.setWhen(startTime)
+        if (updateStartTime) {
+            showGroupSummary()
+        }
 
         showNotification(notification.build(), id)
     }
@@ -108,11 +111,6 @@ class NotificationManager @Inject constructor(
             importance
         )
         notificationChannel.apply {
-            lightColor = Color.BLUE
-            setBypassDnd(true)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                setAllowBubbles(true)
-            }
             lockscreenVisibility = Notification.VISIBILITY_PUBLIC
         }
         manager.createNotificationChannel(notificationChannel)
@@ -234,22 +232,23 @@ class NotificationManager @Inject constructor(
             createNotificationChannel(
                 channelId = channelId,
                 name = name,
-                importance = NotificationManager.IMPORTANCE_MAX
+                importance = NotificationManager.IMPORTANCE_HIGH
             )
-            NotificationCompat.Builder(context, CHANNEL_ID)
+            NotificationCompat.Builder(context, channelId)
         } else {
             NotificationCompat.Builder(context, "")
         }
         val notification: NotificationCompat.Builder = builder
-//            .setSmallIcon(R.drawable.btn_plus)
-            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setSmallIcon(R.drawable.radix_ic_stopwatch)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentTitle(title)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
-            .setOnlyAlertOnce(true)
+            .setDefaults(NotificationCompat.DEFAULT_ALL)
             .setColorized(true)
             .setAutoCancel(true)
-            .setGroup(GROUP_KEY)
-
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setGroup(TIMER_END_GROUP_KEY)
+            .setWhen(System.currentTimeMillis())
         return notification
 
     }
@@ -261,9 +260,9 @@ class NotificationManager @Inject constructor(
         )
         val intent = PendingIntent.getActivity(
             context,
-            10,
+            id,
             timerEndContract.getEyeTimerEndAction(),
-            PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         notif.setFullScreenIntent(
             intent, false
@@ -279,9 +278,9 @@ class NotificationManager @Inject constructor(
         )
         val intent = PendingIntent.getActivity(
             context,
-            10,
+            id,
             timerEndContract.getQuickTimerEndAction(),
-            PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         notif.setFullScreenIntent(
             intent, true
@@ -297,14 +296,67 @@ class NotificationManager @Inject constructor(
         )
         val intent = PendingIntent.getActivity(
             context,
-            10,
+            id,
             timerEndContract.getFocusTimerEndAction(),
-            PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         notif.setFullScreenIntent(
             intent, true
         )
         notif.setContentIntent(intent)
         showNotification(notif.build(), id)
+    }
+
+    private fun showGroupSummary() {
+        val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val (channelId, name) = getNotificationChannelInfoByType(null)
+            createNotificationChannel(
+                channelId = channelId,
+                name = name,
+            )
+            NotificationCompat.Builder(context, channelId)
+        } else {
+            NotificationCompat.Builder(context, "")
+        }
+        builder
+            .setSmallIcon(R.drawable.radix_ic_stopwatch)
+            .setContentTitle(context.getString(R.string.notification_group_title))
+            .setContentText(context.getString(R.string.notification_group_description))
+            .setGroup(TIMER_GROUP_KEY)
+            .setGroupSummary(true)  // ← THIS makes grouping work
+//            .setAggregatedNotificationStyle()  // ← Android 12+ style
+            .build()
+
+        showNotification(builder.build(), TIMER_GROUP_ID)
+    }
+
+    private fun showEndGroupSummary() {
+        val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val (channelId, name) = getNotificationChannelInfoByType(null)
+            createNotificationChannel(
+                channelId = channelId,
+                name = name,
+            )
+            NotificationCompat.Builder(context, channelId)
+        } else {
+            NotificationCompat.Builder(context, "")
+        }
+        builder
+            .setSmallIcon(R.drawable.radix_ic_stopwatch)
+            .setContentTitle(context.getString(R.string.notification_end_group_title))
+            .setContentText(context.getString(R.string.notification_end_group_description))
+            .setGroup(TIMER_END_GROUP_KEY)
+            .setGroupSummary(true)  // ← THIS makes grouping work
+//            .setAggregatedNotificationStyle()  // ← Android 12+ style
+            .build()
+
+        showNotification(builder.build(), TIMER_END_GROUP_ID)
+    }
+
+    fun hideGroupSummary(){
+        cancelNotification(TIMER_GROUP_ID)
+    }
+    fun hideEndGroupSummary(){
+        cancelNotification(TIMER_END_GROUP_ID)
     }
 }

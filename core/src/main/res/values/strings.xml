@@ -9,4 +9,8 @@
     <string name="notification_action_eye">Eye Care</string>
     <string name="notification_action_focus">Zen Mode</string>
     <string name="notification_action_quick">Quick</string>
+    <string name="notification_group_title">Timers</string>
+    <string name="notification_group_description">List of active timers</string>
+    <string name="notification_end_group_title">Finished Timers</string>
+    <string name="notification_end_group_description">List of ended timers</string>
 </resources>
