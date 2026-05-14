@@ -46,6 +46,8 @@ object PermissionUtil {
         return isIgnoringBatteryOptimizations
     }
 
-    fun openBatterySettings(context: Context) =
-        openSettings(context, Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+    fun openBatterySettings(context: Context) {
+        val intent = Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+        context.startActivity(intent)
+    }
 }

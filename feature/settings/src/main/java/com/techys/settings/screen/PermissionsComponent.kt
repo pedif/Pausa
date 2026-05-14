@@ -1,5 +1,6 @@
 package com.techys.settings.screen
 
+import android.provider.Settings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,6 +35,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.techys.core.permission.PermissionUtil
 import com.techys.designsystem.component.NotificationPermissionHandler
+import com.techys.designsystem.component.PermissionHandler
 import com.techys.designsystem.component.SettingsRedirectComponent
 import com.techys.designsystem.theme.AppTheme
 import com.techys.designsystem.theme.Dimen
@@ -84,6 +86,7 @@ fun NotificationItem(modifier: Modifier = Modifier) {
         mutableStateOf(PermissionUtil.hasNotificationPermission(context))
     }
     PermissionItem(
+        permissionId = android.Manifest.permission.POST_NOTIFICATIONS,
         title = stringResource(R.string.permission_notification),
         description = stringResource(R.string.permission_notification_desc),
         hasPermission = hasPermission,
@@ -112,6 +115,7 @@ fun BatteryItem(modifier: Modifier = Modifier) {
         mutableStateOf(PermissionUtil.hasBatteryPermission(context))
     }
     PermissionItem(
+        permissionId = Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS,
         title = stringResource(R.string.permission_battery),
         description = stringResource(R.string.permission_battery),
         hasPermission = hasPermission,
@@ -136,6 +140,7 @@ fun BatteryItem(modifier: Modifier = Modifier) {
 
 @Composable
 private fun PermissionItem(
+    permissionId: String,
     title: String,
     description: String,
     hasPermission: Boolean,
@@ -148,7 +153,8 @@ private fun PermissionItem(
         mutableStateOf(false)
     }
     if (requestPermission) {
-        NotificationPermissionHandler(
+        PermissionHandler(
+            permissions = arrayOf(permissionId),
             onAllGranted = {
                 onPermissionChanged(true)
                 requestPermission = false
