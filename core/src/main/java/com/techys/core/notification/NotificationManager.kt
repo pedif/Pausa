@@ -76,6 +76,12 @@ class NotificationManager @Inject constructor(
         } else {
             NotificationCompat.Builder(context, "")
         }
+        val activityIntent =
+            PendingIntent.getActivities(
+                context, 0, arrayOf(actionContract.getOpenAppIntent()),
+                PendingIntent.FLAG_IMMUTABLE
+            )
+
         val notification: NotificationCompat.Builder = builder
             .setSmallIcon(R.drawable.radix_ic_stopwatch)
             .setPriority(NotificationCompat.PRIORITY_LOW)
@@ -88,7 +94,8 @@ class NotificationManager @Inject constructor(
             .setColorized(true)
             .setGroup(TIMER_GROUP_KEY)
             .setUsesChronometer(true)
-        notification.setWhen(startTime)
+            .setWhen(startTime)
+            .setContentIntent(activityIntent)
 
         if (updateStartTime) {
             showGroupSummary()
@@ -114,31 +121,6 @@ class NotificationManager @Inject constructor(
             lockscreenVisibility = Notification.VISIBILITY_PUBLIC
         }
         manager.createNotificationChannel(notificationChannel)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun updateNotificationChannel(timerType: TimerType, soundUri: String? = null) {
-        val (channelId, name) = getNotificationChannelInfoByType(timerType)
-        val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        // Delete existing
-        manager.deleteNotificationChannel(channelId)
-
-        // Create new with selected sound
-        val uri = soundUri?.toUri()
-
-        val channel =
-            NotificationChannel(channelId, name, NotificationManager.IMPORTANCE_HIGH).apply {
-                description = "Timer notifications"
-                enableVibration(true)
-                setBypassDnd(true)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    setAllowBubbles(true)
-                }
-                lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-                setSound(uri, Notification.AUDIO_ATTRIBUTES_DEFAULT)
-            }
-
-        manager.createNotificationChannel(channel)
     }
 
     private fun getNotificationChannelInfoByType(type: TimerType?): Pair<String, String> {
