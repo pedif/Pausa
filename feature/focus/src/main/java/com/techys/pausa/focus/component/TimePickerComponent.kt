@@ -3,6 +3,7 @@ package com.techys.pausa.focus.component
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -14,7 +15,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,71 +36,37 @@ fun TimerPicker(
     val minutes = remember {
         (1..120).toList()
     }
-    val hours = remember {
-        (0..11).toList()
-    }
-    Row(
-        modifier = modifier
-            .wrapContentWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-//        TimeWheel(items = hours, modifier = Modifier.weight(0.5f))
-//        Text(text = ":")
-        TimeWheel(
-            items = minutes, modifier = Modifier,
-            onItemSelected = onTimeChanged
-        )
-    }
-}
+    var selectedIndex by remember { mutableIntStateOf(2) }
 
-//@Composable
-//fun TimeWheel(
-//    items: List<Int>,
-//    modifier: Modifier = Modifier,
-//    onItemSelected: (Int) -> Unit = {}
-//) {
-//    val listState = rememberLazyListState(initialFirstVisibleItemIndex = Int.MAX_VALUE / 2) // big start index
-//
-//    LaunchedEffect(listState) {
-//        snapshotFlow { listState.firstVisibleItemIndex }
-//            .collect { index ->
-//                val buffer = 50
-//                if (index < buffer || index > Int.MAX_VALUE / 2 + buffer) {
-//                    val newIndex = Int.MAX_VALUE / 2
-//                    listState.scrollToItem(newIndex)
-//                }
-//            }
+    WheelPicker(
+        items = minutes,
+        selectedIndex = selectedIndex,
+        onSelectedIndexChange = {
+            selectedIndex = it
+            onTimeChanged(it)
+        },
+        visibleItemsCount = 5,
+        itemHeight = 48.dp,
+        selectedItemColor = Color.Cyan,
+        modifier = modifier.width(50.dp)
+    )
+//    val minutes = remember {
+//        (1..120).toList()
 //    }
-//
-//    val currentIndex by remember {
-//        derivedStateOf {
-//            listState.firstVisibleItemIndex % items.size
-//        }
+//    val hours = remember {
+//        (0..11).toList()
 //    }
-//
-//    LazyColumn(
-//        state = listState,
-//        flingBehavior = rememberSnapFlingBehavior(lazyListState = listState),
-//        modifier = Modifier.height(150.dp),
-//        horizontalAlignment = Alignment.CenterHorizontally
+//    Row(
+//        modifier = modifier
+//            .wrapContentWidth(),
+//        verticalAlignment = Alignment.CenterVertically
 //    ) {
-//        items(items.size) { index ->
-//            Box(
-//                modifier = Modifier
-//                    .height(50.dp)
-//                    .fillMaxWidth(),
-//                contentAlignment = Alignment.Center
-//            ) {
-//                Text(
-//                    text = items[index].toString().padStart(2, '0'),
-//                    fontSize = 24.sp,
-//                    fontWeight = FontWeight.Bold,
-//                    color = if (index == currentIndex) Color(0xFF2196F3) else Color.Gray
-//                )
-//            }
-//        }
+//        TimeWheel(
+//            items = minutes, modifier = Modifier,
+//            onItemSelected = onTimeChanged
+//        )
 //    }
-//}
+}
 
 
 @Composable
