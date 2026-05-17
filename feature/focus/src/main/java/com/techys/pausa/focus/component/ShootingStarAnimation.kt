@@ -14,21 +14,47 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import kotlinx.coroutines.delay
-import kotlin.math.cos
-import kotlin.math.sin
+import kotlin.math.max
 import kotlin.random.Random
 
 
+/**
+ * The base value for the animation duration
+ */
+private const val ANIM_DURATION_BASE = 1_800L
+
+/**
+ * The animation duration can be the base value plus a random number generated up to this value
+ */
+private const val ANIM_DURATION_MAX = 3_000L
+
+/**
+ * The shooting star animation can begin at different times between stars so we have a more
+ * sporadic and random feeling of the stars
+ */
+private const val ANIM_DELAY_MAX = 1_000L
+
+/**
+ * The base value for the stars to be re-generated again
+ */
+private const val ANIM_SPAWN_RATE_BASE = 1_000L
+
+/**
+ * The max delay value for the next set of stars to be generated
+ */
+private const val ANIM_SPAWN_RATE_MAX = 5_000L
 @Composable
 fun ShootingStarsBackground(
     modifier: Modifier = Modifier,
     maxConcurrentStars: Int = 5,
-    avgSpawnIntervalMs: Long = 1200L
+    animDurationBase:Long = ANIM_DURATION_BASE,
+    animDurationMax: Long = ANIM_DURATION_MAX,
+    animSpawnRateBase:Long = ANIM_SPAWN_RATE_BASE,
+    animSpawnRateMax: Long = ANIM_SPAWN_RATE_MAX
 ) {
     var activeStars by remember { mutableStateOf(listOf<ShootingStarState>()) }
     var nextStarId by remember { mutableIntStateOf(0) }
@@ -36,30 +62,33 @@ fun ShootingStarsBackground(
     // Continuously spawn new stars at random intervals
     LaunchedEffect(Unit) {
         while (true) {
-            if (activeStars.size < maxConcurrentStars) {
+            val iterationStartCount = Random.nextInt(1, maxConcurrentStars + 1)
+            var longestDuration = 0L
+            val starList = mutableListOf<ShootingStarState>()
+            while (starList.size < iterationStartCount) {
+                val animDuration =  Random.nextLong(animDurationBase, animDurationMax)
+                val startDelay = Random.nextLong(0, ANIM_DELAY_MAX)
                 val newStar = ShootingStarState(
                     id = nextStarId++,
-                    startX = Random.nextFloat() * 0.7f + 0.15f,
-                    startY = Random.nextFloat() * 0.2f,
+                    startX = Random.nextFloat().coerceIn(0.1f, 0.9f) ,
+                    startY = Random.nextFloat().coerceIn(0.1f, 0.9f) ,
                     length = 0.06f + Random.nextFloat() * 0.12f,
-                    angle = 25f + Random.nextFloat() * 30f,
-                    durationMs = 1800 + Random.nextInt(1200),
+                    angle = (Random.nextFloat() * 2 - 1) * 360f,
+                    durationMs = animDuration,
+                    startDelay = startDelay,
                     colorType = StarColorType.entries.random()
                 )
-                activeStars = activeStars + newStar
+                longestDuration = max(longestDuration, startDelay + animDuration)
+                starList.add(newStar)
             }
-            delay(Random.nextLong(avgSpawnIntervalMs * 2))
+            activeStars = (starList)
+            delay(longestDuration + Random.nextLong(animSpawnRateBase, animSpawnRateMax))
         }
     }
 
     Box(modifier = modifier) {
         activeStars.forEach { star ->
-            ShootingStarParticle(
-                star = star,
-                onComplete = { completedId ->
-                    activeStars = activeStars.filter { it.id != completedId }
-                }
-            )
+            ShootingStarParticle(star = star)
         }
     }
 }
@@ -75,18 +104,21 @@ private enum class StarColorType(
         glowColor = Color.White,
         tailColor = Color.White
     ),
+
     // Blue-white (classic shooting star)
     BLUE_WHITE(
         coreColor = Color.White,
         glowColor = Color(0xFFB8D4FF),
         tailColor = Color(0xFF8BB8FF)
     ),
+
     // Warm yellow (rare, like a meteor)
     WARM_YELLOW(
         coreColor = Color(0xFFFFFBE6),
         glowColor = Color(0xFFFFE4A0),
         tailColor = Color(0xFFFFD070)
     ),
+
     // Soft pink (very rare, special)
     SOFT_PINK(
         coreColor = Color(0xFFFFE6F0),
@@ -101,18 +133,20 @@ private data class ShootingStarState(
     val startY: Float,
     val length: Float,
     val angle: Float,
-    val durationMs: Int,
+    val durationMs: Long,
+    val startDelay: Long,
     val colorType: StarColorType
 )
 
 @Composable
 private fun ShootingStarParticle(
     star: ShootingStarState,
-    onComplete: (Int) -> Unit
+    onComplete: (Int) -> Unit = {}
 ) {
-    var progress by remember { mutableFloatStateOf(0f) }
+    var progress by remember(star.id) { mutableFloatStateOf(0f) }
 
     LaunchedEffect(star.id) {
+        delay(star.startDelay)
         val startTime = System.nanoTime()
         while (progress < 1f) {
             progress = ((System.nanoTime() - startTime) / 1_000_000f) / star.durationMs
@@ -120,6 +154,7 @@ private fun ShootingStarParticle(
             delay(16L) // ~60fps
         }
         progress = 1f
+        delay(300)
         onComplete(star.id)
     }
 
@@ -253,8 +288,7 @@ fun NightSkyBackground(
 
         // Layer 2: Shooting stars with trails & glow
         ShootingStarsBackground(
-            maxConcurrentStars = maxShootingStars,
-            avgSpawnIntervalMs = 1000L
+            maxConcurrentStars = maxShootingStars
         )
     }
 }
