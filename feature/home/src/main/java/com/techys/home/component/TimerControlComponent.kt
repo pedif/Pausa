@@ -29,6 +29,9 @@ import com.techys.designsystem.theme.Dimen
 import com.techys.designsystem.theme.NeonBlue
 import com.techys.pausa.core.R
 
+private val controlButtonSize = 64.dp
+private val controlIconSize = 48.dp
+
 @Composable
 fun TimerControlComponent(
     state: TimerStateType,
@@ -56,38 +59,38 @@ fun TimerControlComponent(
                 if (state == TimerStateType.PAUSED) {
                     IconButton(
                         onClick = { onRunningStateChange(TimerStateType.STARTED) },
-                        modifier = Modifier.size(64.dp)
+                        modifier = Modifier.size(controlButtonSize)
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.radix_ic_play),
                             contentDescription = "",
                             tint = NeonBlue,
-                            modifier = Modifier.size(48.dp)
+                            modifier = Modifier.size(controlIconSize)
                         )
                     }
                 } else {
                     IconButton(
                         onClick = { onRunningStateChange(TimerStateType.PAUSED) },
-                        modifier = Modifier.size(64.dp)
+                        modifier = Modifier.size(controlButtonSize)
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.radix_ic_pause),
                             contentDescription = "",
                             tint = NeonBlue,
-                            modifier = Modifier.size(48.dp)
+                            modifier = Modifier.size(controlIconSize)
                         )
                     }
                 }
                 Spacer(modifier = Modifier.width(Dimen.medium))
                 IconButton(
                     onClick = { onRunningStateChange(TimerStateType.STOPPED) },
-                    modifier = Modifier.size(64.dp)
+                    modifier = Modifier.size(controlButtonSize)
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.radix_ic_stop),
                         contentDescription = "",
                         tint = NeonBlue,
-                        modifier = Modifier.size(48.dp)
+                        modifier = Modifier.size(controlIconSize)
                     )
                 }
             }
@@ -100,13 +103,13 @@ fun TimerControlComponent(
         ) {
             IconButton(
                 onClick = { onRunningStateChange(TimerStateType.STARTED) },
-                modifier = Modifier.size(64.dp)
+                modifier = Modifier.size(controlButtonSize)
             ) {
                 Icon(
                     painter = painterResource(R.drawable.radix_ic_play),
                     contentDescription = "",
                     tint = NeonBlue,
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier.size(controlIconSize)
                 )
             }
         }

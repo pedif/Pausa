@@ -52,7 +52,7 @@ fun EyeTimerComponent(
                     painter = painterResource(R.drawable.ic_eye_care),
                     contentDescription = "",
                     tint = NeonBlue,
-                    modifier = Modifier.size(32.dp)
+                    modifier = Modifier.size(com.techys.home.util.Dimen.TimerCardIconSize)
                 )
             }
             Spacer(modifier = Modifier.height(Dimen.small))
