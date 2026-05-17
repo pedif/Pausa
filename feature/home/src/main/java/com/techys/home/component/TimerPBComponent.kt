@@ -42,8 +42,7 @@ import com.techys.designsystem.theme.NeonBlue
 @Composable
 fun TimerPB(
     progress: Float,
-    modifier: Modifier = Modifier,
-    useCont: Boolean = false
+    modifier: Modifier = Modifier
 ) {
 
     val p by animateFloatAsState(targetValue = progress,
@@ -59,9 +58,8 @@ fun TimerPB(
         )
     }
 
-    val pp = if(useCont) animatable.value else p
     LinearProgressIndicator(
-        progress = { pp },
+        progress = { animatable.value },
         modifier = modifier
             .fillMaxWidth()
             .height(Dimen.progressbarHeight),
