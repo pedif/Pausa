@@ -1,36 +1,27 @@
 package com.techys.pausa.focus.component
 
-import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.techys.designsystem.theme.AppTheme
-import kotlin.math.abs
+
+private const val VISIBLE_ITEM_COUNT = 5
+private val ITEM_HEIGHT_DEFAULT = 48.dp
+private val ITEM_WIDTH_DEFAULT = 48.dp
 
 @Composable
 fun TimerPicker(
     modifier: Modifier = Modifier,
+    visibleItemCount: Int = VISIBLE_ITEM_COUNT,
+    itemHeight: Dp = ITEM_HEIGHT_DEFAULT,
+    itemWidth: Dp = ITEM_WIDTH_DEFAULT,
     onTimeChanged: (Int) -> Unit = {}
 ) {
     val minutes = remember {
@@ -43,94 +34,12 @@ fun TimerPicker(
         selectedIndex = selectedIndex,
         onSelectedIndexChange = {
             selectedIndex = it
-            onTimeChanged(it)
+            onTimeChanged(minutes[it])
         },
-        visibleItemsCount = 5,
-        itemHeight = 48.dp,
-        selectedItemColor = Color.Cyan,
-        modifier = modifier.width(50.dp)
+        visibleItemsCount = visibleItemCount,
+        itemHeight = itemHeight,
+        modifier = modifier.width(itemWidth)
     )
-//    val minutes = remember {
-//        (1..120).toList()
-//    }
-//    val hours = remember {
-//        (0..11).toList()
-//    }
-//    Row(
-//        modifier = modifier
-//            .wrapContentWidth(),
-//        verticalAlignment = Alignment.CenterVertically
-//    ) {
-//        TimeWheel(
-//            items = minutes, modifier = Modifier,
-//            onItemSelected = onTimeChanged
-//        )
-//    }
-}
-
-
-@Composable
-private fun TimeWheel(
-    items: List<Int>,
-    modifier: Modifier = Modifier,
-    onItemSelected: (Int) -> Unit = {}
-) {
-
-    val paddedItems = mutableListOf<String>("")
-    paddedItems.addAll(items.map { it.toString().padStart(2, '0') })
-    paddedItems.add("")
-    val listState = rememberLazyListState()
-    val snappingBehavior = rememberSnapFlingBehavior(lazyListState = listState)
-    val currentIndex by remember {
-        derivedStateOf {
-            val layoutInfo = listState.layoutInfo
-            val visibleItems = layoutInfo.visibleItemsInfo
-            if (visibleItems.isEmpty())
-                return@derivedStateOf 0
-            //find the center of the visible area
-            val viewportCenter = (layoutInfo.viewportStartOffset + layoutInfo.viewportEndOffset) / 2
-
-            //find the item whose center is closest to center
-            visibleItems.minByOrNull { item ->
-                val itemCenter = item.offset + (item.size / 2)
-                abs(itemCenter - viewportCenter)
-            }?.index ?: 0
-        }
-    }
-
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
-        LazyColumn(
-            state = listState,
-            flingBehavior = snappingBehavior,
-            modifier = Modifier.height(150.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            items(paddedItems.size) { index ->
-                Box(
-                    modifier = Modifier
-                        .height(50.dp)
-                        .width(60.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = paddedItems[index],
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = if (index == currentIndex) MaterialTheme.colorScheme.primary else Color.Gray,
-                        modifier = Modifier.align(Alignment.CenterEnd)
-                    )
-                }
-            }
-        }
-    }
-    LaunchedEffect(currentIndex) {
-        val index = currentIndex.coerceAtLeast(1)
-        onItemSelected(items[index - 1])
-    }
-
 }
 
 @Preview

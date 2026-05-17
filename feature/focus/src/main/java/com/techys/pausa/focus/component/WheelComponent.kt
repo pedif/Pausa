@@ -2,12 +2,8 @@ package com.techys.pausa.focus.component
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.calculateTargetValue
-import androidx.compose.animation.core.exponentialDecay
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,30 +17,32 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.techys.designsystem.theme.AppTheme
 import kotlin.math.roundToInt
 
 @Composable
 fun <T> WheelPicker(
     items: List<T>,
     selectedIndex: Int,
-    onSelectedIndexChange: (Int) -> Unit,
     modifier: Modifier = Modifier,
     visibleItemsCount: Int = 5,
     itemHeight: Dp = 48.dp,
-    selectedItemColor: Color = Color.Cyan,
+    selectedItemColor: Color = MaterialTheme.colorScheme.primary,
     unselectedItemColor: Color = Color.Gray,
-    itemTextStyle: TextStyle = MaterialTheme.typography.bodyLarge
+    itemTextStyle: TextStyle = MaterialTheme.typography.bodyLarge,
+    onSelectedIndexChange: (Int) -> Unit = {}
 ) {
     val visibleItemsHalf = visibleItemsCount / 2
 
@@ -84,72 +82,50 @@ fun <T> WheelPicker(
             dragOffset = 0f
         }
     }
-    LaunchedEffect(isDragging) {
-        if (!isDragging) {
-            animatedOffset.animateTo(0f, spring(dampingRatio = Spring.DampingRatioMediumBouncy))
-
-            val totalOffset = dragOffset + animatedOffset.value
-            val indexOffset = (totalOffset / itemHeightPx).roundToInt()
-            val targetIndex = (selectedIndex - indexOffset).coerceIn(0, items.lastIndex)
-            onSelectedIndexChange(targetIndex)
-            dragOffset = 0f
-        }
-    }
 
     Box(
         modifier = modifier
             .height(itemHeight * visibleItemsCount)
             .pointerInput(Unit) {
-                val decay = exponentialDecay<Float>( 1f)
-
-                awaitEachGesture {
-                    val first = awaitFirstDown(requireUnconsumed = false)
-                    isDragging = true
-                    dragOffset = 0f
-
-                    var totalDrag = 0f
-
-                    do {
-                        val event = awaitPointerEvent()
-                        val drag = event.changes.sumOf { it.positionChange().y.toDouble() }.toFloat()
-                        totalDrag += drag
-                        dragOffset = totalDrag
-                        event.changes.forEach { it.consume() }
-                    } while (event.changes.any { it.pressed })
-
-                    // Calculate velocity from last drag
-                    val velocity = first.previousPosition.y
-
-                    // Apply fling if velocity is high
-                    if (kotlin.math.abs(velocity) > 100) {
-                        val targetOffset = decay.calculateTargetValue(totalDrag, velocity)
-                        dragOffset = targetOffset
+                detectVerticalDragGestures(
+                    onDragStart = { isDragging = true },
+                    onDragEnd = { isDragging = false },
+                    onDragCancel = {
+                        isDragging = false
+                        dragOffset = 0f
                     }
-
-                    isDragging = false
+                ) { change, dragAmount ->
+                    dragOffset += dragAmount
+                    change.consume()
                 }
             }
     ) {
         Canvas(modifier = Modifier.fillMaxSize()) {
             val centerY = totalHeight / 2
-
+            val totalOffset = dragOffset + animatedOffset.value
             for (i in -visibleItemsHalf..visibleItemsHalf) {
                 val itemIndex = currentIndex + i
                 if (itemIndex !in items.indices) continue
 
-                val itemCenterY = centerY + (i * itemHeightPx) + (dragOffset % itemHeightPx)
-                val distanceFromCenter = kotlin.math.abs(itemCenterY - centerY)
-                val normalizedDistance = (distanceFromCenter / (itemHeightPx * visibleItemsHalf)).coerceIn(0f, 1f)
+                // NEW - selected item always at center
+                val itemOffset = (itemIndex - selectedIndex) * itemHeightPx
+                val itemCenterY =
+                    centerY + itemOffset + totalOffset - itemHeightPx / 2 + itemHeightPx / 9
+                val distanceFromCenter =
+                    kotlin.math.abs(itemCenterY - centerY + itemHeightPx / 2 - itemHeightPx / 9)
+                val normalizedDistance =
+                    (distanceFromCenter / (itemHeightPx * visibleItemsHalf)).coerceIn(0f, 1f)
 
                 val scale = 1f - (normalizedDistance * 0.3f)
                 val alpha = 1f - (normalizedDistance * 0.7f)
 
                 // Selection background
                 if (normalizedDistance < 0.15f) {
-                    drawRect(
+                    drawRoundRect(
                         color = selectedItemColor.copy(alpha = 0.1f),
                         topLeft = Offset(0f, itemCenterY - itemHeightPx / 2),
-                        size = Size(size.width, itemHeightPx)
+                        size = Size(size.width, itemHeightPx),
+                        cornerRadius = CornerRadius(4.dp.toPx(), 4.dp.toPx())
                     )
                 }
 
@@ -172,20 +148,17 @@ fun <T> WheelPicker(
                     drawText(text, size.width / 2, textY, paint)
                 }
             }
-
-            // Selection indicators
-            drawLine(
-                color = selectedItemColor,
-                start = Offset(0f, centerY - itemHeightPx / 2),
-                end = Offset(size.width, centerY - itemHeightPx / 2),
-                strokeWidth = 2f
-            )
-            drawLine(
-                color = selectedItemColor,
-                start = Offset(0f, centerY + itemHeightPx / 2),
-                end = Offset(size.width, centerY + itemHeightPx / 2),
-                strokeWidth = 2f
-            )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewComponent() {
+    AppTheme {
+        WheelPicker(
+            (1..5).toList(),
+            selectedIndex = 1,
+        )
     }
 }
