@@ -8,6 +8,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.techys.home.component.HomeScreen
 import com.techys.pausa.eye.component.EyeEndScreen
+import com.techys.pausa.focus.component.FocusEndScreen
 import com.techys.pausa.focus.component.FocusScreen
 import com.techys.pausa.quick.component.QuickEndScreen
 import com.techys.pausa.quick.component.QuickScreen
@@ -25,12 +26,10 @@ fun EndNavHost(
         onBack = { backStack.removeLastOrNull() },
         entryProvider = entryProvider {
             entry<EndNavRoute.Eye> {
-                EyeEndScreen{activity?.finish()}
+                EyeEndScreen { activity?.finish() }
             }
             entry<EndNavRoute.Focus> {
-                FocusScreen(
-                    modifier = modifier
-                )
+                FocusEndScreen { activity?.finish() }
             }
 
             entry<EndNavRoute.Quick> {
