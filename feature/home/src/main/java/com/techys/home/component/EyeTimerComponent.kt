@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.techys.core.model.TimerState
@@ -29,6 +30,7 @@ import com.techys.designsystem.theme.AppTheme
 import com.techys.designsystem.theme.Dimen
 import com.techys.designsystem.theme.NeonBlue
 import com.techys.designsystem.theme.TextPrimary
+import com.techys.pausa.core.R
 
 
 @Composable
@@ -45,6 +47,15 @@ fun EyeTimerComponent(
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Row(modifier= Modifier.fillMaxWidth()) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_eye_care),
+                    contentDescription = "",
+                    tint = NeonBlue,
+                    modifier = Modifier.size(32.dp)
+                )
+            }
+            Spacer(modifier = Modifier.height(Dimen.small))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -62,8 +73,7 @@ fun EyeTimerComponent(
             }
             Spacer(modifier = Modifier.height(Dimen.large))
             TimerPB(
-                progress = state.progress,
-                useCont = true
+                progress = state.progress
             )
 
             Spacer(modifier = Modifier.height(Dimen.medium))

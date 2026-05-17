@@ -58,7 +58,7 @@ fun FocusTimerComponent(
                     modifier = Modifier.size(32.dp)
                 )
             }
-            Spacer(modifier = Modifier.height(Dimen.medium))
+            Spacer(modifier = Modifier.height(Dimen.small))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
