@@ -23,4 +23,10 @@ object Dimen {
     val largeIconButtonSize = 72.dp
     val largeIconButtonImage = 48.dp
 
+    val smallShapeCorner = 4.dp
+
+
+    val iconButtonSize = 64.dp
+    val iconImageSize = 48.dp
+
 }

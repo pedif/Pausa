@@ -21,9 +21,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.techys.core.model.TimerStateType
+import com.techys.designsystem.component.PausaIconButton
 import com.techys.designsystem.theme.AppTheme
 import com.techys.designsystem.theme.Dimen
 import com.techys.designsystem.theme.NeonBlue
@@ -57,42 +59,24 @@ fun TimerControlComponent(
         ) {
             Row {
                 if (state == TimerStateType.PAUSED) {
-                    IconButton(
+                    PausaIconButton(
+                        painter = painterResource(R.drawable.radix_ic_play),
                         onClick = { onRunningStateChange(TimerStateType.STARTED) },
-                        modifier = Modifier.size(controlButtonSize)
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.radix_ic_play),
-                            contentDescription = "",
-                            tint = NeonBlue,
-                            modifier = Modifier.size(controlIconSize)
-                        )
-                    }
+                        imageDescription = stringResource(R.string.action_resume_desc)
+                    )
                 } else {
-                    IconButton(
+                    PausaIconButton(
+                        painter = painterResource(R.drawable.radix_ic_pause),
                         onClick = { onRunningStateChange(TimerStateType.PAUSED) },
-                        modifier = Modifier.size(controlButtonSize)
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.radix_ic_pause),
-                            contentDescription = "",
-                            tint = NeonBlue,
-                            modifier = Modifier.size(controlIconSize)
-                        )
-                    }
-                }
-                Spacer(modifier = Modifier.width(Dimen.medium))
-                IconButton(
-                    onClick = { onRunningStateChange(TimerStateType.STOPPED) },
-                    modifier = Modifier.size(controlButtonSize)
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.radix_ic_stop),
-                        contentDescription = "",
-                        tint = NeonBlue,
-                        modifier = Modifier.size(controlIconSize)
+                        imageDescription = stringResource(R.string.action_pause_desc)
                     )
                 }
+                Spacer(modifier = Modifier.width(Dimen.medium))
+                PausaIconButton(
+                    painter = painterResource(R.drawable.radix_ic_stop),
+                    onClick = { onRunningStateChange(TimerStateType.STOPPED) },
+                    imageDescription = stringResource(R.string.action_stop_desc)
+                )
             }
         }
         AnimatedVisibility(
@@ -101,17 +85,11 @@ fun TimerControlComponent(
             exit = slideOutVertically() + fadeOut(),
             modifier = Modifier
         ) {
-            IconButton(
+            PausaIconButton(
+                painter = painterResource(R.drawable.radix_ic_play),
                 onClick = { onRunningStateChange(TimerStateType.STARTED) },
-                modifier = Modifier.size(controlButtonSize)
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.radix_ic_play),
-                    contentDescription = "",
-                    tint = NeonBlue,
-                    modifier = Modifier.size(controlIconSize)
-                )
-            }
+                imageDescription = stringResource(R.string.action_play_desc)
+            )
         }
     }
 }

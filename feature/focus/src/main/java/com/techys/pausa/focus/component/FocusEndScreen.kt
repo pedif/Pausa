@@ -25,15 +25,15 @@ import com.techys.designsystem.theme.Dimen
 import kotlinx.coroutines.delay
 
 @Composable
-fun QuickEndScreen(
+fun FocusEndScreen(
     modifier: Modifier = Modifier,
     onFinished: () -> Unit = {}
 ) {
     val state by PausaService.state.collectAsState()
     var remainingTime by remember { mutableIntStateOf(10) }
 
-    QuickEndScreen(
-        state = state.quickTimers.first(),
+    FocusEndScreen(
+        state = state.focusTimer,
         seconds = remainingTime,
         modifier = modifier
     )
@@ -48,7 +48,7 @@ fun QuickEndScreen(
 }
 
 @Composable
-fun QuickEndScreen(
+fun FocusEndScreen(
     state: TimerState,
     seconds: Int,
     modifier: Modifier = Modifier
@@ -74,7 +74,7 @@ fun QuickEndScreen(
 @Composable
 private fun PreviewScreen() {
     AppTheme {
-        QuickEndScreen(
+        FocusEndScreen(
             state = TimerState(id = 1),
             seconds = 10
         )

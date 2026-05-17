@@ -3,25 +3,18 @@ package com.techys.pausa.focus.component
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import com.techys.designsystem.component.PausaIconButton
 import com.techys.designsystem.theme.AppTheme
 import com.techys.designsystem.theme.Dimen
-import com.techys.designsystem.theme.NeonBlue
 import com.techys.pausa.core.R
 
 @Composable
@@ -37,46 +30,28 @@ fun RunningFocusComponent(
         modifier = modifier.height(Dimen.FocusActionAreaHeight),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        if(isTimerPaused){
-            IconButton(
+        if (isTimerPaused) {
+            PausaIconButton(
+                painter = painterResource(R.drawable.radix_ic_play),
                 onClick = onTimerResumeClicked,
-                modifier = Modifier.size(Dimen.largeIconButtonSize),
-                colors = IconButtonDefaults.iconButtonColors(containerColor = Color.DarkGray)
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.radix_ic_play),
-                    contentDescription = "",
-                    tint = NeonBlue,
-                    modifier = Modifier.size(Dimen.largeIconButtonImage)
-                )
-            }
-        }else {
-            IconButton(
+                buttonColors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.surface),
+                imageDescription = stringResource(R.string.action_resume_desc)
+            )
+        } else {
+            PausaIconButton(
+                painter = painterResource(R.drawable.radix_ic_pause),
                 onClick = onTimerPauseClicked,
-                modifier = Modifier.size(Dimen.largeIconButtonSize),
-                colors = IconButtonDefaults.iconButtonColors(containerColor = Color.DarkGray)
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.radix_ic_pause),
-                    contentDescription = "",
-                    tint = NeonBlue,
-                    modifier = Modifier.size(Dimen.largeIconButtonImage)
-                )
-            }
-        }
-        Spacer(modifier = Modifier.width(Dimen.large))
-        IconButton(
-            onClick = onTimerStopClicked,
-            modifier = Modifier.size(Dimen.largeIconButtonSize),
-            colors = IconButtonDefaults.iconButtonColors(containerColor = Color.DarkGray)
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.radix_ic_stop),
-                contentDescription = "",
-                tint = NeonBlue,
-                modifier = Modifier.size(Dimen.largeIconButtonImage)
+                buttonColors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.surface),
+                imageDescription = stringResource(R.string.action_pause_desc)
             )
         }
+        Spacer(modifier = Modifier.width(Dimen.large))
+        PausaIconButton(
+            painter = painterResource(R.drawable.radix_ic_stop),
+            onClick = onTimerStopClicked,
+            buttonColors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.surface),
+            imageDescription = stringResource(R.string.action_stop_desc)
+        )
     }
 }
 
