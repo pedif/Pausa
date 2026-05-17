@@ -35,12 +35,17 @@ fun TimerControlComponent(
     modifier: Modifier = Modifier,
     onRunningStateChange: (TimerStateType) -> Unit = {}
 ) {
-    Box(modifier = modifier.fillMaxWidth(),
-       contentAlignment = Alignment.Center) {
+    Box(
+        modifier = modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
         var isTimerRunning by remember(state) {
-            mutableStateOf( state == TimerStateType.STARTED || state == TimerStateType.COOLDOWN   )
+            mutableStateOf(
+                state == TimerStateType.STARTED
+                        || state == TimerStateType.COOLDOWN
+                        || state == TimerStateType.PAUSED
+            )
         }
-//        isTimerRunning = state == TimerStateType.STARTED || state == TimerStateType.COOLDOWN
         AnimatedVisibility(
             visible = isTimerRunning,
             enter = slideInVertically() + fadeIn(),
@@ -48,16 +53,30 @@ fun TimerControlComponent(
             modifier = Modifier
         ) {
             Row {
-                IconButton(
-                    onClick = { onRunningStateChange(TimerStateType.PAUSED) },
-                    modifier = Modifier.size(64.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.radix_ic_pause),
-                        contentDescription = "",
-                        tint = NeonBlue,
-                        modifier = Modifier.size(48.dp)
-                    )
+                if (state == TimerStateType.PAUSED) {
+                    IconButton(
+                        onClick = { onRunningStateChange(TimerStateType.STARTED) },
+                        modifier = Modifier.size(64.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.radix_ic_play),
+                            contentDescription = "",
+                            tint = NeonBlue,
+                            modifier = Modifier.size(48.dp)
+                        )
+                    }
+                } else {
+                    IconButton(
+                        onClick = { onRunningStateChange(TimerStateType.PAUSED) },
+                        modifier = Modifier.size(64.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.radix_ic_pause),
+                            contentDescription = "",
+                            tint = NeonBlue,
+                            modifier = Modifier.size(48.dp)
+                        )
+                    }
                 }
                 Spacer(modifier = Modifier.width(Dimen.medium))
                 IconButton(
