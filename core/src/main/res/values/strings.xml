@@ -24,4 +24,6 @@
     <string name="action_resume_desc">Resume Timer</string>
     <string name="action_pause_desc">Pause Timer</string>
     <string name="action_stop_desc">Stop Timer</string>
+
+    <string name="timer_end_title">Automatically dismissing this screen in %s</string>
 </resources>
