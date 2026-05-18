@@ -21,6 +21,8 @@ import androidx.navigation3.scene.Scene
 import androidx.navigation3.scene.SceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import com.techys.home.component.HomeScreen
+import com.techys.onboarding.screen.OnboardingScreen
+import com.techys.pausa.eye.component.EyeEndScreen
 import com.techys.pausa.focus.component.FocusScreen
 import com.techys.pausa.quick.component.QuickScreen
 import com.techys.settings.screen.SettingsScreen
@@ -102,7 +104,7 @@ fun NavHost(
                         if (navStack.size == 1) {
                             navStack.removeLastOrNull()
                             navStack.add(NavRoutes.Home)
-                        }else
+                        } else
                             navStack.removeLastOrNull()
                     }
                 )
@@ -113,7 +115,7 @@ fun NavHost(
                     DialogProperties()
                 )
             ) {
-                QuickScreen() {
+                QuickScreen(modifier = modifier) {
                     navStack.removeLastOrNull()
                 }
             }
@@ -130,6 +132,16 @@ fun NavHost(
                 SettingsScreen(
                     modifier = modifier,
                     onBackClick = { navStack.removeLastOrNull() })
+            }
+
+            entry<NavRoutes.Onboarding> {
+                OnboardingScreen(
+                    modifier = modifier,
+                    onFinish = {
+                        navStack.removeLastOrNull()
+                        navStack.add(NavRoutes.Home)
+                    }
+                )
             }
         }
     )

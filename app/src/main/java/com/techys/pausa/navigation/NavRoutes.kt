@@ -18,4 +18,7 @@ sealed class NavRoutes: NavKey {
 
     @Serializable
     object QuickDialog: NavRoutes()
+
+    @Serializable
+    object Onboarding: NavRoutes()
 }
