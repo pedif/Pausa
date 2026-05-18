@@ -7,22 +7,36 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.techys.designsystem.component.PausaButton
 import com.techys.designsystem.theme.AppTheme
 import com.techys.designsystem.theme.Dimen
 import com.techys.pausa.quick.QuickState
 import com.techys.pausa.quick.QuickViewModel
+import com.techys.pausa.quick.R
 
 @Composable
 fun QuickScreen(
@@ -41,7 +55,8 @@ fun QuickScreen(
                 viewModel.onTimePicked(index)
             onDismissed()
         },
-        onTitleChanged = viewModel::onTitleChanged
+        onTitleChanged = viewModel::onTitleChanged,
+        onDurationChanged = viewModel::onDurationChanged
     )
 
 }
@@ -55,8 +70,10 @@ fun QuickScreen(
     state: QuickState,
     modifier: Modifier = Modifier,
     onTimePicked: (Int) -> Unit = {},
-    onTitleChanged: (String) -> Unit = {}
+    onTitleChanged: (String) -> Unit = {},
+    onDurationChanged: (String) -> Unit = {}
 ) {
+    val isDurationError = state.durationErrorMessage.isNotEmpty()
     Dialog(
         onDismissRequest = { onTimePicked(-1) }
     ) {
@@ -67,26 +84,59 @@ fun QuickScreen(
                     .padding(Dimen.paddingScreen)
             ) {
                 Text(
-                    text = "Setup a Quick Timer",
-                    color = MaterialTheme.colorScheme.onBackground
+                    text = stringResource(R.string.quick_dialog_title),
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(modifier = Modifier.height(Dimen.large))
-                TextField(
+                OutlinedTextField(
                     value = state.title,
                     onValueChange = onTitleChanged,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                Spacer(modifier = Modifier.height(Dimen.medium))
+                Spacer(modifier = Modifier.height(Dimen.large))
+                OutlinedTextField(
+                    value = state.duration.toString(),
+                    onValueChange = {
+                        onDurationChanged(it)
+                    },
+                    singleLine = true,
+                    isError = isDurationError,
+                    supportingText = {
+                        if (isDurationError)
+                            Text(text = state.durationErrorMessage)
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = if (isDurationError) ImeAction.None else ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            if (state.duration > 0)
+                                onTimePicked(state.duration)
+                        }
+                    ),
+                    suffix = {
+                        Text(text = "minute",
+                            style = MaterialTheme.typography.bodySmall)
+                    }
+                )
+                Text(
+                    text = stringResource(R.string.quick_duration_support_text),
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Spacer(modifier = Modifier.height(Dimen.small))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     state.timeList.forEachIndexed { index, time ->
-                        Button(onClick = { onTimePicked(index) }) {
-                            Text("$time")
-                        }
+                        PausaButton(
+                            text = "$time",
+                            onClick = { onTimePicked(time) })
                     }
                 }
             }
