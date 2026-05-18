@@ -3,8 +3,10 @@ package com.techys.pausa.end
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +25,7 @@ import com.techys.core.model.TimerType
 import com.techys.designsystem.theme.AppTheme
 import com.techys.pausa.end.navigation.EndNavHost
 import com.techys.pausa.end.navigation.EndNavRoute
+import com.techys.pausa.eye.component.EyeEndScreen
 import com.techys.pausa.navigation.NavRoutes
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,25 +43,18 @@ class TimerEndActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        // These are critical
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true)
             setTurnScreenOn(true)
         }
 
-        // Keep screen on
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         checkIntentForDeepLink(intent)
         setContent {
             AppTheme {
                 val dest by state.collectAsState()
-                val backStack = remember { mutableStateListOf(dest) }
-                LaunchedEffect(dest) {
-                    backStack.clear()
-                    backStack.add(dest)
-                }
-                MessageComponent(backStack)
+                MessageComponent(dest)
             }
         }
     }
@@ -76,10 +72,10 @@ class TimerEndActivity : ComponentActivity() {
 
 
 @Composable
-fun MessageComponent(backStack: SnapshotStateList<EndNavRoute>, modifier: Modifier = Modifier) {
+fun MessageComponent(dest: EndNavRoute, modifier: Modifier = Modifier) {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         EndNavHost(
-            backStack = backStack,
+            dest = dest,
             modifier = modifier.padding(innerPadding)
         )
     }
@@ -89,6 +85,6 @@ fun MessageComponent(backStack: SnapshotStateList<EndNavRoute>, modifier: Modifi
 @Composable
 fun GreetingPreview2() {
     AppTheme {
-        MessageComponent(SnapshotStateList())
+        MessageComponent(EndNavRoute.Eye)
     }
 }

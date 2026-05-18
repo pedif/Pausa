@@ -1,6 +1,5 @@
 package com.techys.core.util
 
-import android.util.Log
 import com.techys.core.model.TimerStateType
 import com.techys.core.model.TimerType
 import com.techys.core.notification.NotificationManager
@@ -30,7 +29,6 @@ class FocusTimerHelper(
     override fun onTimerEnded() {}
 
     override fun updateNotification(updateStartTime: Boolean) {
-        Log.e("tagtag","id is $notificationId")
         super.updateNotification(updateStartTime)
     }
 

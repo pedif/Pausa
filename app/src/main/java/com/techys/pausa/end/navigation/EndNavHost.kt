@@ -16,25 +16,24 @@ import com.techys.pausa.quick.component.QuickScreen
 
 @Composable
 fun EndNavHost(
-    backStack: SnapshotStateList<EndNavRoute>,
+    dest: EndNavRoute,
     modifier: Modifier = Modifier
 ) {
     val activity = LocalActivity.current
 
-    NavDisplay(
-        backStack = backStack,
-        onBack = { backStack.removeLastOrNull() },
-        entryProvider = entryProvider {
-            entry<EndNavRoute.Eye> {
-                EyeEndScreen { activity?.finish() }
-            }
-            entry<EndNavRoute.Focus> {
-                FocusEndScreen { activity?.finish() }
-            }
-
-            entry<EndNavRoute.Quick> {
-                QuickEndScreen { activity?.finish() }
-            }
+    when (dest) {
+        EndNavRoute.Eye -> {
+            EyeEndScreen { activity?.finish() }
         }
-    )
+
+        EndNavRoute.Focus -> {
+            FocusEndScreen { activity?.finish() }
+        }
+
+        EndNavRoute.Quick -> {
+            QuickEndScreen { activity?.finish() }
+        }
+
+        else -> {activity?.finish()}
+    }
 }
