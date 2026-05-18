@@ -15,4 +15,7 @@
         Grant permission or similar
     </string>
     <string name="permission_granted">Permission has already been given</string>
+    <string name="onboarding_action_finish">Finish</string>
+    <string name="onboarding_action_next">Next</string>
+    <string name="onboarding_action_skip">Skip</string>
 </resources>
