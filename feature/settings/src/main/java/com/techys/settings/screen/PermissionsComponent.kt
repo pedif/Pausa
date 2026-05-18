@@ -55,26 +55,6 @@ fun PermissionsComponent(modifier: Modifier = Modifier) {
             HorizontalDivider(modifier = Modifier.padding(horizontal = Dimen.medium))
 
             BatteryItem()
-
-            HorizontalDivider(modifier = Modifier.padding(horizontal = Dimen.medium))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(Dimen.small)
-            ) {
-                Text(text = stringResource(R.string.permission_system_overlay))
-                Spacer(modifier = Modifier.weight(1f))
-                VerticalDivider(
-                    modifier = Modifier
-                        .height(48.dp)
-                        .padding(vertical = Dimen.medium)
-                )
-                Spacer(modifier = Modifier.width(Dimen.medium))
-                Switch(
-                    checked = true, onCheckedChange = {})
-            }
         }
     }
 }
@@ -166,7 +146,7 @@ private fun PermissionItem(
             }
         )
     }
-    if (requestScreenIntent) {
+    else if (requestScreenIntent) {
         SettingsRedirectComponent(
             permissionName = "Notification",
             onRedirectClick = {
