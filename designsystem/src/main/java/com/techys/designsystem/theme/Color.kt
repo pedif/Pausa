@@ -19,7 +19,7 @@ val iceBackground = Color(0xFF121212)
 
 val NeonBlue = Color(0xFF00F5FF)
 val DarkBackground = Color(0xFF121212)
-val CardBackground = Color(0xFF1E1E1E)
+val CardBackground = Color(0xFF353535)
 val TextPrimary = Color(0xFFFFFFFF)
 val TextSecondary = Color(0xFFB0B0B0)
 val ProgressTrack = Color(0xFF333333)
