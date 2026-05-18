@@ -4,7 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -12,21 +14,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.techys.core.model.TimerState
-import com.techys.core.service.PausaService
 import com.techys.core.util.TimeUtil
 import com.techys.designsystem.theme.AppTheme
 import com.techys.designsystem.theme.Dimen
+import com.techys.pausa.core.R
 import com.techys.pausa.eye.EyeEndViewModel
 import com.techys.pausa.eye.model.EyeEndState
-import kotlinx.coroutines.delay
 
 @Composable
 fun EyeEndScreen(
@@ -58,7 +58,6 @@ fun EyeEndScreen(
             .background(MaterialTheme.colorScheme.background)
             .padding(Dimen.paddingScreen)
     ) {
-        ShootingStarsBackground(modifier = Modifier.fillMaxSize(), maxConcurrentStars = 7)
         Column(
             modifier = Modifier
                 .fillMaxSize(),
@@ -68,13 +67,18 @@ fun EyeEndScreen(
             Text(
                 "${state.title} has just finished",
                 style = MaterialTheme.typography.headlineLarge,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.Center
             )
+            Spacer(modifier = Modifier.height(100.dp))
             Text(
-                "Automatically dismissing this screen in" +
-                        " ${TimeUtil.getElapsedTimeLabel(state.current)}",
+                stringResource(
+                    R.string.timer_end_title,
+                    TimeUtil.getElapsedTimeLabel(state.current)
+                ),
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.Center
             )
         }
     }
@@ -85,7 +89,7 @@ fun EyeEndScreen(
 private fun PreviewScreen() {
     AppTheme {
         EyeEndScreen(
-            state = EyeEndState( title = "eye timer")
+            state = EyeEndState(title = "eye timer")
         )
     }
 }
