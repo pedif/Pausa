@@ -65,7 +65,14 @@ fun EyeEndScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                "${state.title} has just finished",
+                stringResource(R.string.timer_end_eye_title),
+                style = MaterialTheme.typography.headlineLarge,
+                color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.Center
+            )
+            Spacer(Modifier.height(Dimen.small))
+            Text(
+                stringResource(R.string.timer_end_eye_desc),
                 style = MaterialTheme.typography.headlineLarge,
                 color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center
@@ -73,7 +80,7 @@ fun EyeEndScreen(
             Spacer(modifier = Modifier.height(100.dp))
             Text(
                 stringResource(
-                    R.string.timer_end_title,
+                    R.string.timer_end_auto_dismiss,
                     TimeUtil.getElapsedTimeLabel(state.current)
                 ),
                 style = MaterialTheme.typography.titleMedium,
