@@ -8,6 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -21,11 +22,12 @@ import com.techys.pausa.navigation.NavHost
 import com.techys.pausa.navigation.NavRoutes
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val _state = MutableStateFlow<NavRoutes>(NavRoutes.Home)
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,11 +38,11 @@ class MainActivity : ComponentActivity() {
         checkIntentForDeepLink(intent, false)
         setContent {
             AppTheme {
-                val dest by _state.collectAsState()
+                val dest by viewModel.state.collectAsState()
                 AppNavigation(
                     dest = dest,
                     onDestChanged = {
-                        _state.value = it
+                        viewModel.changeRoute(it)
                     }
                 )
             }
@@ -65,14 +67,16 @@ class MainActivity : ComponentActivity() {
     private fun checkIntentForDeepLink(intent: Intent, activityPresent: Boolean) {
 
         val action = intent.action ?: return
+        var route: NavRoutes? = null
         if (action == TimerType.Focus.id)
-            _state.value = NavRoutes.Focus
+            route = NavRoutes.Focus
         else if (action == TimerType.Quick.id) {
-            if (activityPresent)
-                _state.value = NavRoutes.Quick
+            route = if (activityPresent)
+                NavRoutes.Quick
             else
-                _state.value = NavRoutes.QuickDialog
+                NavRoutes.QuickDialog
         }
+        route?.let { viewModel.changeRoute(route) }
     }
 }
 
