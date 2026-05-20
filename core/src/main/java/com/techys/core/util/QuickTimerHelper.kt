@@ -1,6 +1,5 @@
 package com.techys.core.util
 
-import android.content.Context
 import com.techys.core.model.TimerStateType
 import com.techys.core.model.TimerType
 import com.techys.core.notification.NotificationManager
@@ -33,6 +32,6 @@ class QuickTimerHelper(
         /**
          * We probably want to show separate notifications for each quick timer end event
          */
-        notificationManager.showQuickTimerEndNotification(Random.nextInt(10_000, 20_000), notificationTitle)
+        notificationManager.showQuickTimerEndNotification(Random.nextInt(10_000, 20_000), notificationTitle, interval / 60)
     }
 }

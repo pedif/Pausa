@@ -11,11 +11,13 @@ object TimerConstants {
 
 
     /**
-     * Default intervals for the timers
+     * Default intervals for the timers in seconds
      */
-    const val DEFAULT_EYE_INTERVAL = 7
-    const val DEFAULT_FOCUS_INTERVAL = 45
-    const val DEFAULT_QUICK_INTERVAL = 30
+    const val DEFAULT_EYE_INTERVAL = 20 * 60
+    const val DEFAULT_FOCUS_INTERVAL = 45 * 60
+    const val DEFAULT_QUICK_INTERVAL = 30 * 60
+
+    const val DEFAULT_EYE_COOLDOWN_INTERVAL = 20
 
     /**
      * We will use this id to display the end of the eye timer event to the user

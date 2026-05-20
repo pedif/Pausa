@@ -37,6 +37,6 @@ class FocusTimerHelper(
          * Maybe shouw fixed id like for eye care so the notifications replace each other or we should
          * keep notificiation sof all focus events separately??
          */
-        notificationManager.showFocusTimerEndNotification(Random.nextInt(10_000, 20_000), notificationTitle)
+        notificationManager.showFocusTimerEndNotification(Random.nextInt(10_000, 20_000), interval / 60 )
     }
 }

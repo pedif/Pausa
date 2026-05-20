@@ -1,14 +1,13 @@
 package com.techys.core.util
 
-import android.widget.Toast
 import com.techys.core.model.TimerStateType
 import com.techys.core.model.TimerType
 import com.techys.core.notification.NotificationManager
+import com.techys.core.util.TimerConstants.DEFAULT_EYE_COOLDOWN_INTERVAL
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 /**
  * child class to provide the field to parent in kotlin same name error,
@@ -32,11 +31,6 @@ class EyeTimerHelper(
      * The duration that an eye care timer takes to finish its cycle
      */
     private var timerInterval = interval
-
-    companion object {
-        private const val DEFAULT_COOLDOWN_INTERVAL = 5
-    }
-
     override fun onTimeUp() {
         /**
          * We have two modes for an eye care timer we either have just finished the actual duration
@@ -46,7 +40,7 @@ class EyeTimerHelper(
          */
         progress = 0
         if (runningState == TimerStateType.STARTED) {
-            interval = DEFAULT_COOLDOWN_INTERVAL
+            interval = DEFAULT_EYE_COOLDOWN_INTERVAL
             updateTimerState(TimerStateType.COOLDOWN)
             showTimerEndNotification()
         } else if (runningState == TimerStateType.COOLDOWN) {
@@ -73,7 +67,7 @@ class EyeTimerHelper(
 
     private fun restartTimer() {
         CoroutineScope(Dispatchers.IO).launch {
-            delay(DEFAULT_COOLDOWN_INTERVAL.toLong() * 100)
+            delay(DEFAULT_EYE_COOLDOWN_INTERVAL.toLong() * 100)
             progress = 0
             updateTimerState(TimerStateType.STARTED)
         }
@@ -96,7 +90,7 @@ class EyeTimerHelper(
     }
 
     private fun showTimerEndNotification(){
-        notificationManager.showEyeTimerEndNotification(TimerConstants.EYE_TIMER_END_ID, notificationTitle)
+        notificationManager.showEyeTimerEndNotification(TimerConstants.EYE_TIMER_END_ID)
     }
     private fun dismissTimerEndNotification(){
         notificationManager.cancelNotification(TimerConstants.EYE_TIMER_END_ID)

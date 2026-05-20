@@ -253,7 +253,11 @@ class NotificationManager @Inject constructor(
         NotificationManagerCompat.from(context).cancel(notificationId)
     }
 
-    fun getTimerEndNotification(timerType: TimerType, title: String): NotificationCompat.Builder {
+    fun getTimerEndNotification(
+        timerType: TimerType,
+        title: String,
+        description: String
+    ): NotificationCompat.Builder {
         val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val (channelId, name) = getNotificationChannelInfoByType(timerType)
             createNotificationChannel(
@@ -269,6 +273,7 @@ class NotificationManager @Inject constructor(
             .setSmallIcon(R.drawable.radix_ic_stopwatch)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentTitle(title)
+            .setContentText(description)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
             .setColorized(true)
@@ -280,10 +285,11 @@ class NotificationManager @Inject constructor(
 
     }
 
-    fun showEyeTimerEndNotification(id: Int, title: String) {
+    fun showEyeTimerEndNotification(id: Int) {
         val notif = getTimerEndNotification(
             TimerType.EyeBreak,
-            title = title
+            title = context.getString(R.string.timer_end_eye_title),
+            description = context.getString(R.string.timer_end_eye_desc)
         )
         val intent = PendingIntent.getActivity(
             context,
@@ -298,10 +304,11 @@ class NotificationManager @Inject constructor(
         showNotification(notif.build(), id)
     }
 
-    fun showQuickTimerEndNotification(id: Int, title: String) {
+    fun showQuickTimerEndNotification(id: Int, title: String, duration: Int) {
         val notif = getTimerEndNotification(
             timerType = TimerType.Quick,
-            title = title
+            title = context.getString(R.string.timer_end_quick_title, title),
+            description = context.getString(R.string.timer_end_quick_desc, duration)
         )
         val intent = PendingIntent.getActivity(
             context,
@@ -316,10 +323,11 @@ class NotificationManager @Inject constructor(
         showNotification(notif.build(), id)
     }
 
-    fun showFocusTimerEndNotification(id: Int, title: String) {
+    fun showFocusTimerEndNotification(id: Int, duration: Int) {
         val notif = getTimerEndNotification(
             timerType = TimerType.Focus,
-            title = title
+            title = context.getString(R.string.timer_end_focus_title),
+            description = context.getString(R.string.timer_end_focus_desc, duration)
         )
         val intent = PendingIntent.getActivity(
             context,
