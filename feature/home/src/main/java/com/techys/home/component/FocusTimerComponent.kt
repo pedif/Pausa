@@ -52,7 +52,7 @@ fun FocusTimerComponent(
         ) {
             Row(modifier= Modifier.fillMaxWidth()) {
                 Icon(
-                    painter = painterResource(R.drawable.radix_ic_timer),
+                    painter = painterResource(R.drawable.ic_focus),
                     contentDescription = "",
                     tint = NeonBlue,
                     modifier = Modifier.size(com.techys.home.util.Dimen.TimerCardIconSize)
