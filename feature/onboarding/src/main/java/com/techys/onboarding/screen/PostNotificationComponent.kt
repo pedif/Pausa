@@ -2,9 +2,13 @@ package com.techys.onboarding.screen
 
 import android.Manifest
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.techys.core.permission.PermissionUtil
 import com.techys.designsystem.component.PermissionHandler
 import com.techys.designsystem.component.SettingsRedirectComponent
+import com.techys.designsystem.theme.Dimen
 import com.techys.onboarding.R
 
 @Composable
@@ -46,8 +51,7 @@ fun PostNotificationComponent(modifier: Modifier = Modifier) {
                 requestScreenIntent = true
             }
         )
-    }
-    else if (requestScreenIntent) {
+    } else if (requestScreenIntent) {
         SettingsRedirectComponent(
             permissionName = "Notification",
             onRedirectClick = {
@@ -58,18 +62,39 @@ fun PostNotificationComponent(modifier: Modifier = Modifier) {
         )
     }
     Box(modifier = modifier.fillMaxSize()) {
-        Text(
-            text = stringResource(R.string.onboarding_post_notification_text),
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.TopCenter)
+        InfoComponent(
+            modifier = Modifier.fillMaxSize()
         )
         PermissionButton(
             hasPermission = hasPermission,
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter),
-            onClick = {requestPermission = true}
+            onClick = { requestPermission = true }
+        )
+    }
+}
+
+@Composable
+private fun InfoComponent(modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
+        Text(
+            text = stringResource(R.string.onboarding_notification_title),
+            style = MaterialTheme.typography.titleLarge
+        )
+        Text(
+            text = stringResource(R.string.onboarding_notification_subtitle),
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        Spacer(Modifier.height(Dimen.small))
+        Text(
+            text = stringResource(R.string.onboarding_notification_text),
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Text(
+            text = stringResource(R.string.onboarding_notification_end),
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }
@@ -78,6 +103,6 @@ fun PostNotificationComponent(modifier: Modifier = Modifier) {
 @Composable
 private fun PreviewComponent() {
     Surface {
-        PostNotificationComponent()
+        PostNotificationComponent(modifier = Modifier.padding(Dimen.paddingScreen))
     }
 }

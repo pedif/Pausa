@@ -3,8 +3,13 @@ package com.techys.onboarding.screen
 import android.Manifest
 import android.provider.Settings
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.techys.core.permission.PermissionUtil
 import com.techys.designsystem.component.PermissionHandler
 import com.techys.designsystem.component.SettingsRedirectComponent
+import com.techys.designsystem.theme.Dimen
 import com.techys.onboarding.R
 
 @Composable
@@ -47,8 +53,7 @@ fun BatteryOptimizationComponent(modifier: Modifier = Modifier) {
                 requestScreenIntent = true
             }
         )
-    }
-    else if (requestScreenIntent) {
+    } else if (requestScreenIntent) {
         SettingsRedirectComponent(
             permissionName = "Notification",
             onRedirectClick = {
@@ -59,18 +64,33 @@ fun BatteryOptimizationComponent(modifier: Modifier = Modifier) {
         )
     }
     Box(modifier = modifier.fillMaxSize()) {
-        Text(
-            text = stringResource(R.string.onboarding_battery_text),
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.TopCenter)
-        )
+        InfoComponent(modifier = Modifier.fillMaxSize())
         PermissionButton(
             hasPermission = hasPermission,
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter),
-            onClick = {requestPermission = true}
+            onClick = { requestPermission = true }
+        )
+    }
+}
+
+@Composable
+private fun InfoComponent(modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
+        Text(
+            text = stringResource(R.string.onboarding_battery_title),
+            style = MaterialTheme.typography.titleLarge
+        )
+
+        Spacer(Modifier.height(Dimen.small))
+        Text(
+            text = stringResource(R.string.onboarding_battery_text),
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Text(
+            text = stringResource(R.string.onboarding_battery_end),
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }
@@ -78,7 +98,7 @@ fun BatteryOptimizationComponent(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun PreviewComponent() {
-    Surface{
-        BatteryOptimizationComponent()
+    Surface {
+        BatteryOptimizationComponent(modifier = Modifier.padding(Dimen.paddingScreen))
     }
 }

@@ -1,21 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="onboarding_post_notification_text">
-        show onboarding reason why we request this permission
-    </string>
 
-    <string name="onboarding_introduction_text">
-      introduce pause, mayke it maybe funny?? or professional, which is better
+    <string name="onboarding_introduction_title">
+        Meet Pausa.
     </string>
+    <string name="onboarding_introduction_subtitle">
+        Your timers, your way.
+    </string>
+    <string name="onboarding_introduction_eye">Eye Care 👀 — Every 20 minutes, pause and look 20
+        feet away for 20 seconds. Your eyes will thank you.</string>
+    <string name="onboarding_introduction_focus">Focus 🧘 — Set it, forget it, get notified when
+        it\'s done.</string>
+    <string name="onboarding_introduction_quick">Quick ⏱️ — Need a 5-minute break? A 15-minute
+        call? Just pick a time and go.</string>
+    <string name="onboarding_introduction_end">Designed to be fast. Launch timers from the
+        notification itself — no app opening required.</string>
 
-    <string name="onboarding_battery_text">
-        show onboarding reason why we request this permission
-    </string>
     <string name="action_request_permission">
-        Grant permission or similar
+        Grant permission
     </string>
-    <string name="permission_granted">Permission has already been given</string>
+    <string name="permission_granted">Permission is granted</string>
     <string name="onboarding_action_finish">Finish</string>
     <string name="onboarding_action_next">Next</string>
-    <string name="onboarding_action_skip">Skip</string>
+    <string name="onboarding_action_prev">Previous</string>
+
+    <string name="onboarding_notification_title">I need to bug you.</string>
+    <string name="onboarding_notification_subtitle">(In the best way possible!)</string>
+    <string name="onboarding_notification_text">Pausa sends you notifications when your timers
+        finish or when it\'s time for an eye break. Without this permission,
+        it\'s just a very quiet app sitting on your phone doing nothing.</string>
+    <string name="onboarding_notification_end">Tap below to enable notifications.
+        If you skip, you can always grant access later from Settings. </string>
+
+
+    <string name="onboarding_battery_title">Don\'t let timers sleep on the job.</string>
+    <string name="onboarding_battery_text">Android\'s battery optimization can shut down
+        background apps to save power. Since Pausa runs a foreground service 24/7 to keep your
+        timers alive, it needs to be exempted from battery optimization. Otherwise, your timers
+        might simply stop working.</string>
+    <string name="onboarding_battery_end">This one\'s optional. The app works without it,
+        just slightly less punctual. </string>
 </resources>
