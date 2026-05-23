@@ -21,9 +21,6 @@ import com.techys.designsystem.theme.AppTheme
 import com.techys.pausa.navigation.NavHost
 import com.techys.pausa.navigation.NavRoutes
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.MutableStateFlow
-import javax.inject.Inject
-
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 

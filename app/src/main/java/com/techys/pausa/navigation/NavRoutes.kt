@@ -21,4 +21,7 @@ sealed class NavRoutes: NavKey {
 
     @Serializable
     object Onboarding: NavRoutes()
+
+    @Serializable
+    object None: NavRoutes()
 }

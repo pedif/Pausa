@@ -143,6 +143,7 @@ fun NavHost(
                     }
                 )
             }
+            entry<NavRoutes.None> { }
         }
     )
 }

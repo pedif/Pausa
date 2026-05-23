@@ -16,7 +16,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(val userPreferencesManager: UserPreferencesManager) : ViewModel() {
 
 
-    private val _state = MutableStateFlow<NavRoutes>(NavRoutes.Home)
+    private val _state = MutableStateFlow<NavRoutes>(NavRoutes.None)
     val state: StateFlow<NavRoutes>
         get() = _state.asStateFlow()
 
@@ -25,9 +25,11 @@ class MainViewModel @Inject constructor(val userPreferencesManager: UserPreferen
             val hasFinishedOnboarding = userPreferencesManager.onboardingCompleted.first()
             if(!hasFinishedOnboarding)
                 _state.value = NavRoutes.Onboarding
+            else
+                _state.value = NavRoutes.Home
         }
     }
     fun changeRoute(route: NavRoutes){
-
+        _state.value = route
     }
 }
