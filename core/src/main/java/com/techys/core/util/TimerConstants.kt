@@ -24,8 +24,8 @@ object TimerConstants {
      */
     const val EYE_TIMER_END_ID = 10001
 
-    const val QUICK_TIMER_MAX_INTERVAL = 120
-    const val FOCUS_TIMER_MAX_INTERVAL = 120
+    const val QUICK_TIMER_MAX_INTERVAL = 120 * 60
+    const val FOCUS_TIMER_MAX_INTERVAL = 120 * 60
 
 
 }

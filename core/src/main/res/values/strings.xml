@@ -32,5 +32,12 @@
     <string name="timer_end_quick_desc">%1$d minutes are done.</string>
     <!-- -->
 
-<!--    <string name="timer_worker_manager_notification">Pausa needs attention. Tap to open and resume your timers.</string>-->
+    <!-- timer default titles -->
+    <string name="timer_eye_default_title">Eye Care</string>
+    <string name="timer_eye_cooldown_default_title">Eye Care - resting time</string>
+    <string name="timer_focus_default_title">Zen Mode</string>
+    <string name="timer_quick_default_title">Quick</string>
+    <!-- -->
+
+    <!--    <string name="timer_worker_manager_notification">Pausa needs attention. Tap to open and resume your timers.</string>-->
 </resources>

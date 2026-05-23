@@ -9,22 +9,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -98,7 +90,7 @@ fun QuickScreen(
 
                 Spacer(modifier = Modifier.height(Dimen.large))
                 OutlinedTextField(
-                    value = state.duration.toString(),
+                    value = state.duration,
                     onValueChange = {
                         onDurationChanged(it)
                     },
@@ -115,8 +107,8 @@ fun QuickScreen(
                     ),
                     keyboardActions = KeyboardActions(
                         onDone = {
-                            if (state.duration > 0)
-                                onTimePicked(state.duration)
+                            if (state.duration.toIntOrNull()!! > 0)
+                                onTimePicked(state.duration.toIntOrNull()!!)
                         }
                     ),
                     suffix = {

@@ -44,13 +44,10 @@ class QuickViewModel @Inject constructor(@param:ApplicationContext val context: 
             errorMessage = context.getString(R.string.quick_error_duration_zero)
 
         _state.update {
-            if (time != null) {
                 it.copy(
                     durationErrorMessage = errorMessage,
-                    duration = time.coerceAtLeast(1)
+                    duration = duration
                 )
-            } else
-                it.copy(durationErrorMessage = errorMessage)
         }
     }
 
@@ -65,5 +62,4 @@ class QuickViewModel @Inject constructor(@param:ApplicationContext val context: 
             )
         }
     }
-
 }

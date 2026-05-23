@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
-import android.util.Log
 import com.techys.core.model.PausaState
 import com.techys.core.model.TimerStateType
 import com.techys.core.notification.NotificationManager
@@ -14,6 +13,7 @@ import com.techys.core.util.EyeTimerHelper
 import com.techys.core.util.FocusTimerHelper
 import com.techys.core.util.QuickTimerHelper
 import com.techys.core.util.TimerHelperManager
+import com.techys.pausa.core.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -74,17 +74,12 @@ class PausaService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        timerManager = TimerHelperManager(
-            eyeTimer = EyeTimerHelper(notificationManager),
-            focusTimer = FocusTimerHelper(notificationManager),
-            quickTimers = mutableListOf(QuickTimerHelper(notificationManager))
-        )
-        timerManager.start()
-        pausaReceiver = PausaServiceReceiver(
-            onTimerStateUpdateRequested = this::updateTimerState,
-            onTimerInfoUpdateRequested = this::updateTimerInfo
-        )
-        pausaReceiver?.registerReceiver(this)
+        setupTimerManager()
+        setupReceiver()
+        setupTimerObserver()
+    }
+
+    private fun setupTimerObserver() {
         collectJob = serviceScope.launch {
             state.collect { pausaState ->
                 val isFocusRunning = (pausaState.focusTimer.state != TimerStateType.STOPPED)
@@ -97,7 +92,35 @@ class PausaService : Service() {
                     notificationManager.hideGroupSummary()
             }
         }
+    }
 
+    private fun setupReceiver() {
+        pausaReceiver = PausaServiceReceiver(
+            onTimerStateUpdateRequested = this::updateTimerState,
+            onTimerInfoUpdateRequested = this::updateTimerInfo
+        )
+        pausaReceiver?.registerReceiver(this)
+    }
+
+    private fun setupTimerManager() {
+        timerManager = TimerHelperManager(
+            eyeTimer = EyeTimerHelper(
+                notificationManager,
+                notificationTitle = resources.getString(R.string.timer_eye_default_title),
+                coolDownNotificationTitle = resources.getString(R.string.timer_eye_cooldown_default_title)
+            ),
+            focusTimer = FocusTimerHelper(
+                notificationManager,
+                notificationTitle = resources.getString(R.string.timer_focus_default_title)
+            ),
+            quickTimers = mutableListOf(
+                QuickTimerHelper(
+                    notificationManager,
+                    notificationTitle = resources.getString(R.string.quick_timer_default_title)
+                )
+            )
+        )
+        timerManager.start()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

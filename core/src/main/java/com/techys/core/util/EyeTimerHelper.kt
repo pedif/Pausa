@@ -19,6 +19,7 @@ class EyeTimerHelper(
     interval: Int = TimerConstants.DEFAULT_EYE_INTERVAL,
     id: Int = TimerConstants.EYE_TIMER_ID,
     notificationTitle: String = "Eye Care",
+    val coolDownNotificationTitle: String = "Eye care - Take a rest"
 ) :
     TimerHelper(
         id,
@@ -81,7 +82,7 @@ class EyeTimerHelper(
 
         notificationManager.showTimerNotification(
             id= notificationId,
-            title = notificationTitle + " - Take a rest",
+            title = coolDownNotificationTitle,
             startTime = startTime,
             progress = interval - progress,
             max = interval,
