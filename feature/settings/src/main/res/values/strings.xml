@@ -2,9 +2,8 @@
 <resources>
     <string name="permission_notification">Notification Permission</string>
     <string name="permission_battery">Battery Optimization Permission</string>
-    <string name="permission_system_overlay">System Overlay Permission</string>
-    <string name="permission_notification_desc">Needed to display notifications about the timers</string>
+    <string name="permission_notification_desc" >Needed to display notifications about the timers</string>
     <string name="permission_battery_desc">Enabling this permission would allow the app to be more robust against system forced shut downs</string>
-    <string name="permission_system_overlay_desc">System Overlay Permission</string>
-    <string name="version">version: 1.123</string>
+    <string name="permission_system_overlay_desc" >System Overlay Permission</string>
+    <string name="version">version: %s</string>
 </resources>

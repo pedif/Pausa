@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="quick_dialog_title">Setup a Quick Timer</string>
-    <string name="quick_error_duration_zero"> The timer duration cannot be less than 1</string>
+    <string name="quick_error_duration_zero"> The timer duration cannot be less than 1 minute</string>
     <string name="quick_error_duration_too_big">The timer duration cannot be more than 2 hours</string>
     <string name="quick_duration_support_text">or use any of the quick duration buttons below</string>
 </resources>

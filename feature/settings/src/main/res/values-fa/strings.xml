@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_notification">اجازه ی نوتیفیکیشن</string>
+    <string name="permission_battery">اجازه ی بهینه سازی باتری</string>
+    <string name="permission_notification_desc" >برای نمایش نوتیفیکشن مرتبط با تایمر ها نیاز به اجازه ی نمایش نوتیفیکیشن هست.</string>
+    <string name="permission_battery_desc">فعال کردن این دسترسی اپ رو در مقابل خروج های اجباری سیستم مقاومتر و پایدارتر میکنه. </string>
+    <string name="version">ورژن: %s</string>
+</resources>

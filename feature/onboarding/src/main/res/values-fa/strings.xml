@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+      <string name="onboarding_introduction_title">با Pausa آشنا شو.</string>
+    <string name="onboarding_introduction_subtitle">تایمر ها هرطوری که خودت دوست داری.</string>
+    <string name="onboarding_introduction_eye">مراقبت از چشم 👀 — هر ۲۰ دقیقه، مکث کنید و ۲۰ ثانیه به فاصله‌ی ۲۰ متری نگاه کنید.</string>
+    <string name="onboarding_introduction_focus">حالت زن و تمرکز 🧘 — تنظیمش کنید، فراموشش کنید، وقتی تمام شد اطلاع داده می‌شید</string>
+    <string name="onboarding_introduction_quick">حالت سریع ⏱️ — یک استراحت ۵ دقیقه ای نیاز داری؟ می خوای ی تماس ۱۵ دقیقه ای داشته باشی؟
+فقط زمان رو انتخاب کن و شروع کن.</string>
+    <string name="onboarding_introduction_end">طراحی شده که سریع باشه. تایمرها رو بدون باز کردن اپ و مستقیم از نوتیفیکیشن اجرا کن.</string>
+
+    <string name="action_request_permission">اجازه دسترسی بده </string>
+    <string name="permission_granted">دسترسی داده شد</string>
+    <string name="onboarding_action_finish">اتمام</string>
+    <string name="onboarding_action_next">بعدی</string>
+    <string name="onboarding_action_prev">قبلی</string>
+
+    <string name="onboarding_notification_title">باید گاهی اذیتت کنم.</string>
+    <string name="onboarding_notification_subtitle">(به بهترین شکل ممکن!)</string>
+    <string name="onboarding_notification_text">Pausa وقتی تایمر ها تموم میشن یا وقت مراقبت از چشم فرا میرسه، بهت نوتیفیکیشن میفرسته.
+    بدون این اجازه، این اپ خیلی ساکت ی گوشه میشینه و هیچکاری هم انجام نمیده.</string>
+    <string name="onboarding_notification_end">دکمه ی زیر رو بزن تا نوتیفیکیشن ها فعال بشن، اگه رد کردید، هروقت خواستید میتونید
+    از طریق بخش تنظیمات اون رو فعال کنید.</string>
+
+
+    <string name="onboarding_battery_title">نذار تایمرهات ناپدید بشن.</string>
+    <string name="onboarding_battery_text">بهینه‌سازی باتری اندروید می‌تونه اپ‌های پس‌زمینه رو برای ذخیره باتری ببنده. چون Pausa یه سرویس رو ۲۴ ساعته اجرا می‌کنه تا تایمرهات زنده بمونن، باید از بهینه‌سازی باتری مستثنی بشه. در غیر این صورت، تایمرهات ممکنه کار نکنن.</string>
+    <string name="onboarding_battery_end">این دسترسی اختیاریه و Pausa بدون اون هم میتونه کار کنه منتهی ممکنه یک مقدار کم دقت بشه.</string>
+
+</resources>

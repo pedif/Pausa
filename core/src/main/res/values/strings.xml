@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="channel_pausa_name">Pausa Service Channel</string>
-    <string name="channel_timer_end_eye_name">Eye Care Channel</string>
-    <string name="channel_timer_end_focus_name">Zen Mode Channel</string>
-    <string name="channel_timer_end_quick_name">Quick Channel</string>
+    <string name="channel_pausa_name" translatable="false">Pausa Service Channel</string>
+    <string name="channel_timer_end_eye_name" translatable="false">Eye Care Channel</string>
+    <string name="channel_timer_end_focus_name" translatable="false">Zen Mode Channel</string>
+    <string name="channel_timer_end_quick_name" translatable="false">Quick Channel</string>
     <string name="notification_pausa_name">Pausa</string>
     <string name="notification_pausa_description">Start a timer</string>
     <string name="notification_action_eye">Eye Care</string>
     <string name="notification_action_focus">Zen Mode</string>
     <string name="notification_action_quick">Quick</string>
-    <string name="notification_group_title">Timers</string>
-    <string name="notification_group_description">List of active timers</string>
-    <string name="notification_end_group_title">Finished Timers</string>
-    <string name="notification_end_group_description">List of ended timers</string>
+    <string name="notification_group_title">Active Timers</string>
 
     <string name="action_resume">Resume</string>
     <string name="action_stop">Stop</string>
@@ -28,10 +25,12 @@
     <!-- Timer end section -->
     <string name="timer_end_auto_dismiss">Automatically dismissing this screen in %s</string>
     <string name="timer_end_eye_title">👀 Look away.</string>
-    <string name="timer_end_eye_desc">20 seconds. 20 feet. Go stare at something far.</string>
+    <string name="timer_end_eye_desc">20 seconds. 20 meters. Go stare at something far.</string>
     <string name="timer_end_focus_title">🧘 Focus session complete.</string>
     <string name="timer_end_focus_desc">You just did %1$d minutes of deep work. Go grab that coffee. You\'ve earned it.</string>
     <string name="timer_end_quick_title">⏱️ %1$s Timer\'s up.</string>
     <string name="timer_end_quick_desc">%1$d minutes are done.</string>
     <!-- -->
+
+<!--    <string name="timer_worker_manager_notification">Pausa needs attention. Tap to open and resume your timers.</string>-->
 </resources>

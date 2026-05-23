@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<!--    <string name="notification_pausa_name">Pausa</string>-->
+<!--    <string name="notification_pausa_description">تایمرت رو شروع کن</string>-->
+<!--    <string name="notification_action_eye">مراقبت از چشم</string>-->
+<!--    <string name="notification_action_focus">تمرکز</string>-->
+<!--    <string name="notification_action_quick">سریع</string>-->
+<!--    <string name="notification_group_title">تایمرهای فعال</string>-->
+
+<!--    <string name="action_resume">ادامه</string>-->
+<!--    <string name="action_stop">توقف کامل</string>-->
+<!--    <string name="action_pause">مکث</string>-->
+
+<!--    <string name="quick_timer_default_title">تایمر سریع</string>-->
+
+<!--    <string name="action_play_desc">شروع تایمر</string>-->
+<!--    <string name="action_resume_desc">ادامه ی تایمر</string>-->
+<!--    <string name="action_pause_desc">مکث تایمر</string>-->
+<!--    <string name="action_stop_desc">توقف کامل تایمر</string>-->
+
+<!--    &lt;!&ndash; Timer end section &ndash;&gt;-->
+<!--    <string name="timer_end_auto_dismiss">این صفحه بصورت خودکار بعد از %s محو خواهد شد</string>-->
+<!--    <string name="timer_end_eye_title">👀 اونور رو نگاه کن.</string>-->
+<!--    <string name="timer_end_eye_desc">۲۰ ثانیه، ۲۰ متر، برو به یک منظره دور خیره شو!</string>-->
+<!--    <string name="timer_end_focus_title">🧘 جلسه تمرکز تموم شد.</string>-->
+<!--    <string name="timer_end_focus_desc">شما %1$d دقیقه کار عمیق انجام دادید. برو برای خودت ی قهوه بریز و ازش لذت ببر. </string>-->
+<!--    <string name="timer_end_quick_title">⏱️ %1$s تایمر تموم شد.</string>-->
+<!--    <string name="timer_end_quick_desc">%1$d دقیقه گذشت.</string>-->
+<!--    &lt;!&ndash; &ndash;&gt;-->
+
+<!--    <string name="timer_worker_manager_notification">Pausa به توجه نیاز داره. بازش کن تا تایمرهات دوباره شروع بشن.</string>-->
+
+</resources>

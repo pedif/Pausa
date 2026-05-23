@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="quick_dialog_title">یک تایمر سریع بساز</string>
+    <string name="quick_error_duration_zero">زمان تایمر نمیتونه کمتر از ۱ دقیقه باشه.</string>
+    <string name="quick_error_duration_too_big">زمان تایمر سریع نمیتونه بیشتر از 2 ساعت باشه</string>
+    <string name="quick_duration_support_text">یا یکی از آپشن های زمان زیر رو انتخاب کن</string>
+</resources>
