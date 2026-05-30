@@ -34,7 +34,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.techys.core.permission.PermissionUtil
-import com.techys.designsystem.component.NotificationPermissionHandler
 import com.techys.designsystem.component.PermissionHandler
 import com.techys.designsystem.component.SettingsRedirectComponent
 import com.techys.designsystem.theme.AppTheme
@@ -54,7 +53,41 @@ fun PermissionsComponent(modifier: Modifier = Modifier) {
 
             HorizontalDivider(modifier = Modifier.padding(horizontal = Dimen.medium))
 
+            AlarmItem()
+
+            HorizontalDivider(modifier = Modifier.padding(horizontal = Dimen.medium))
+
             BatteryItem()
+        }
+    }
+}
+
+@Composable
+fun AlarmItem(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    var hasPermission by remember {
+        mutableStateOf(PermissionUtil.hasAlarmPermission(context))
+    }
+    PermissionItem(
+        permissionId = android.Manifest.permission.SCHEDULE_EXACT_ALARM,
+        title = stringResource(R.string.permission_alarm),
+        description = stringResource(R.string.permission_alarm_desc),
+        hasPermission = hasPermission,
+        onPermissionChanged = { hasPermission = it },
+        onPermissionSettingsRequested = {
+            PermissionUtil.openAlarmSettings(context) }
+    )
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                hasPermission = PermissionUtil.hasAlarmPermission(context)
+            }
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
 }

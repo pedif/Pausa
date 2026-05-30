@@ -10,8 +10,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
 import com.techys.designsystem.theme.Dimen
+import com.techys.pausa.designsystem.R
 
 @Composable
 fun SettingsRedirectComponent(
@@ -27,10 +29,10 @@ fun SettingsRedirectComponent(
                     .fillMaxWidth()
                     .padding(Dimen.paddingScreen)
             ) {
-                Text("Permission required. Please enable in Settings.")
+                Text(stringResource(R.string.permission_required_message))
                 Spacer(modifier= Modifier.height(Dimen.large))
                 Button(onClick = onRedirectClick) {
-                    Text("Open Settings")
+                    Text(stringResource(R.string.permission_action_open_settings))
                 }
             }
         }

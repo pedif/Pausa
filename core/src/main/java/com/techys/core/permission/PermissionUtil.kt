@@ -1,10 +1,12 @@
 package com.techys.core.permission
 
 import android.Manifest
+import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.PowerManager
 import android.provider.Settings
 import androidx.core.app.ActivityCompat
@@ -25,7 +27,17 @@ object PermissionUtil {
     fun hasNotificationPermission(
         context: Context
     ): Boolean = hasPermission(context, Manifest.permission.POST_NOTIFICATIONS)
-//    fun hasBatteryPermission(): Boolean = hasPermission(Manifest.permission.Batt)
+
+    fun hasAlarmPermission(
+        context: Context
+    ): Boolean{
+        val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            return alarmMgr.canScheduleExactAlarms()
+        }
+        return true
+    }
 
 
     fun openSettings(context: Context, action: String) {
@@ -38,6 +50,10 @@ object PermissionUtil {
 
     fun openNotificationSettings(context: Context) =
         openSettings(context, Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+
+
+    fun openAlarmSettings(context: Context) =
+        openSettings(context, Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
 
     fun hasBatteryPermission(context: Context): Boolean {
         val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
