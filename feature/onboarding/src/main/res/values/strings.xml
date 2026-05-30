@@ -7,11 +7,11 @@
     <string name="onboarding_introduction_subtitle">
         Your timers, your way.
     </string>
-    <string name="onboarding_introduction_eye">Eye Care 👀 — Every 20 minutes, pause and look 20
+    <string name="onboarding_introduction_eye">Eye Care 👀 : Every 20 minutes, pause and look 20
         feet away for 20 seconds. Your eyes will thank you.</string>
-    <string name="onboarding_introduction_focus">Focus 🧘 — Set it, forget it, get notified when
+    <string name="onboarding_introduction_focus">Focus 🧘 : Set it, forget it, get notified when
         it\'s done.</string>
-    <string name="onboarding_introduction_quick">Quick ⏱️ — Need a 5-minute break? A 15-minute
+    <string name="onboarding_introduction_quick">Quick ⏱️ : Need a 5-minute break? A 15-minute
         call? Just pick a time and go.</string>
     <string name="onboarding_introduction_end">Designed to be fast. Launch timers from the
         notification itself — no app opening required.</string>
@@ -30,6 +30,14 @@
         finish or when it\'s time for an eye break. Without this permission,
         it\'s just a very quiet app sitting on your phone doing nothing.</string>
     <string name="onboarding_notification_end">Tap below to enable notifications.
+        If you skip, you can always grant access later from Settings. </string>
+
+    <string name="onboarding_alarm_title">Punctuality is my thing.</string>
+    <string name="onboarding_alarm_subtitle">(without it, I'm basically useless!)</string>
+    <string name="onboarding_alarm_text">To ring exactly when scheduled, Pausa needs permission
+    to set exact alarms. without it, Android may delay alarms, reminders, and timers when
+    your device is idle</string>
+    <string name="onboarding_alarm_end">Tap below to enable alarms.
         If you skip, you can always grant access later from Settings. </string>
 
 

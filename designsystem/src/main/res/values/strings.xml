@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_required_message">Permission required. Please enable in Settings.</string>
+    <string name="permission_action_open_settings">Open Settings</string>
+</resources>

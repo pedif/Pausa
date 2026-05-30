@@ -30,6 +30,7 @@
     <string name="timer_end_focus_desc">You just did %1$d minutes of deep work. Go grab that coffee. You\'ve earned it.</string>
     <string name="timer_end_quick_title">⏱️ %1$s Timer\'s up.</string>
     <string name="timer_end_quick_desc">%1$d minutes are done.</string>
+    <string name="timer_end_action_dismiss_immediate">Dismiss immediately</string>
     <!-- -->
 
     <!-- timer default titles -->
