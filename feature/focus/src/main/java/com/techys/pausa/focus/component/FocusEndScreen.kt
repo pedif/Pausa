@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.techys.core.model.TimerState
 import com.techys.core.service.PausaService
 import com.techys.core.util.TimeUtil
+import com.techys.designsystem.component.PausaButton
 import com.techys.designsystem.theme.AppTheme
 import com.techys.designsystem.theme.Dimen
 import com.techys.pausa.core.R
@@ -36,12 +37,13 @@ fun FocusEndScreen(
     onFinished: () -> Unit = {}
 ) {
     val state by PausaService.state.collectAsState()
-    var remainingTime by remember { mutableIntStateOf(10) }
+    var remainingTime by remember { mutableIntStateOf(30) }
 
     FocusEndScreen(
         state = state.focusTimer,
         seconds = remainingTime,
-        modifier = modifier
+        modifier = modifier,
+        onFinishClick = onFinished
     )
 
     LaunchedEffect(Unit) {
@@ -57,7 +59,8 @@ fun FocusEndScreen(
 fun FocusEndScreen(
     state: TimerState,
     seconds: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onFinishClick: () -> Unit = {}
 ) {
 
     Column(
@@ -84,12 +87,17 @@ fun FocusEndScreen(
         Spacer(modifier = Modifier.height(100.dp))
         Text(
             text = stringResource(
-                com.techys.pausa.core.R.string.timer_end_auto_dismiss,
-                TimeUtil.getElapsedTimeLabel(state.current)
+                R.string.timer_end_auto_dismiss,
+                TimeUtil.getElapsedTimeLabel(seconds)
             ),
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center
+        )
+        Spacer(Modifier.height(Dimen.small))
+        PausaButton(
+            text = stringResource(R.string.timer_end_action_dismiss_immediate),
+            onClick = onFinishClick
         )
     }
 

@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.techys.core.model.TimerState
 import com.techys.core.service.PausaService
 import com.techys.core.util.TimeUtil
+import com.techys.designsystem.component.PausaButton
 import com.techys.designsystem.theme.AppTheme
 import com.techys.designsystem.theme.Dimen
 import com.techys.pausa.core.R
@@ -41,7 +42,8 @@ fun QuickEndScreen(
     QuickEndScreen(
         state = state.quickTimers.first(),
         seconds = remainingTime,
-        modifier = modifier
+        modifier = modifier,
+        onFinishClick = onFinished
     )
 
     LaunchedEffect(Unit) {
@@ -57,7 +59,8 @@ fun QuickEndScreen(
 fun QuickEndScreen(
     state: TimerState,
     seconds: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onFinishClick: () -> Unit = {}
 ) {
 
     Column(
@@ -87,11 +90,16 @@ fun QuickEndScreen(
         Text(
             text = stringResource(
                 com.techys.pausa.core.R.string.timer_end_auto_dismiss,
-                TimeUtil.getElapsedTimeLabel(state.current)
+                TimeUtil.getElapsedTimeLabel(seconds)
             ),
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center
+        )
+        Spacer(Modifier.height(Dimen.small))
+        PausaButton(
+            text = stringResource(R.string.timer_end_action_dismiss_immediate),
+            onClick = onFinishClick
         )
     }
 

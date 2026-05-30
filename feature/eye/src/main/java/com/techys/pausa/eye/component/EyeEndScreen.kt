@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.techys.core.util.TimeUtil
+import com.techys.designsystem.component.PausaButton
 import com.techys.designsystem.theme.AppTheme
 import com.techys.designsystem.theme.Dimen
 import com.techys.pausa.core.R
@@ -37,7 +38,8 @@ fun EyeEndScreen(
     val state by viewModel.state.collectAsState()
     EyeEndScreen(
         state = state,
-        modifier = modifier
+        modifier = modifier,
+        onFinishClick = onFinished
     )
 
     LaunchedEffect(state) {
@@ -49,7 +51,8 @@ fun EyeEndScreen(
 @Composable
 fun EyeEndScreen(
     state: EyeEndState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onFinishClick: () -> Unit = {}
 ) {
 
     Box(
@@ -86,6 +89,11 @@ fun EyeEndScreen(
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center
+            )
+            Spacer(Modifier.height(Dimen.small))
+            PausaButton(
+                text = stringResource(R.string.timer_end_action_dismiss_immediate),
+                onClick = onFinishClick
             )
         }
     }
