@@ -21,11 +21,11 @@ import com.techys.designsystem.theme.AppTheme
 import com.techys.pausa.navigation.NavHost
 import com.techys.pausa.navigation.NavRoutes
 import dagger.hilt.android.AndroidEntryPoint
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         startService()
@@ -44,7 +44,6 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
-
     }
 
     private fun startService() {

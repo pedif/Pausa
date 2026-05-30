@@ -1,6 +1,7 @@
 package com.techys.settings.screen
 
 
+import android.os.Build
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
@@ -19,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.techys.core.util.AppConstants
 import com.techys.designsystem.theme.Dimen
 import com.techys.settings.R
 import com.techys.settings.model.SoundItem
@@ -74,16 +76,9 @@ private fun SettingsScreen(
                 )
         ) {
             PermissionsComponent(modifier = Modifier.fillMaxWidth())
-            Spacer(modifier = Modifier.height(Dimen.large))
-            TimerSoundSettings(
-                sounds = soundList,
-                eyeSoundItem = eyeSoundItem,
-                focusSoundItem = focusSoundItem,
-                quickSoundItem = quickSoundItem
-            )
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = stringResource(R.string.version),
+                text = stringResource(R.string.version, AppConstants.versionName),
                 modifier = Modifier.padding(top = Dimen.large)
             )
         }
