@@ -47,6 +47,11 @@ private const val ANIM_SPAWN_RATE_BASE = 1_000L
  * The max delay value for the next set of stars to be generated
  */
 private const val ANIM_SPAWN_RATE_MAX = 5_000L
+
+/**
+ * The initial delay value for start of the animation
+ */
+private const val ANIM_START_DELAY = 2_500L
 @Composable
 fun ShootingStarsBackground(
     modifier: Modifier = Modifier,
@@ -54,13 +59,15 @@ fun ShootingStarsBackground(
     animDurationBase:Long = ANIM_DURATION_BASE,
     animDurationMax: Long = ANIM_DURATION_MAX,
     animSpawnRateBase:Long = ANIM_SPAWN_RATE_BASE,
-    animSpawnRateMax: Long = ANIM_SPAWN_RATE_MAX
+    animSpawnRateMax: Long = ANIM_SPAWN_RATE_MAX,
+    animStartDelay: Long = ANIM_START_DELAY
 ) {
     var activeStars by remember { mutableStateOf(listOf<ShootingStarState>()) }
     var nextStarId by remember { mutableIntStateOf(0) }
 
     // Continuously spawn new stars at random intervals
     LaunchedEffect(Unit) {
+        delay(animStartDelay)
         while (true) {
             val iterationStartCount = Random.nextInt(1, maxConcurrentStars + 1)
             var longestDuration = 0L
