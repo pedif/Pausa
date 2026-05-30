@@ -298,7 +298,7 @@ class NotificationManager @Inject constructor(
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         notif.setFullScreenIntent(
-            intent, false
+            intent, true
         )
         notif.setContentIntent(intent)
         showNotification(notif.build(), id)
@@ -356,36 +356,12 @@ class NotificationManager @Inject constructor(
         builder
             .setSmallIcon(R.drawable.radix_ic_stopwatch)
             .setContentTitle(context.getString(R.string.notification_group_title))
-            .setContentText(context.getString(R.string.notification_group_description))
             .setGroup(TIMER_GROUP_KEY)
             .setGroupSummary(true)  // ← THIS makes grouping work
 //            .setAggregatedNotificationStyle()  // ← Android 12+ style
             .build()
 
         showNotification(builder.build(), TIMER_GROUP_ID)
-    }
-
-    private fun showEndGroupSummary() {
-        val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val (channelId, name) = getNotificationChannelInfoByType(null)
-            createNotificationChannel(
-                channelId = channelId,
-                name = name,
-            )
-            NotificationCompat.Builder(context, channelId)
-        } else {
-            NotificationCompat.Builder(context, "")
-        }
-        builder
-            .setSmallIcon(R.drawable.radix_ic_stopwatch)
-            .setContentTitle(context.getString(R.string.notification_end_group_title))
-            .setContentText(context.getString(R.string.notification_end_group_description))
-            .setGroup(TIMER_END_GROUP_KEY)
-            .setGroupSummary(true)  // ← THIS makes grouping work
-//            .setAggregatedNotificationStyle()  // ← Android 12+ style
-            .build()
-
-        showNotification(builder.build(), TIMER_END_GROUP_ID)
     }
 
     fun hideGroupSummary() {

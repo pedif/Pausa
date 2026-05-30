@@ -1,5 +1,6 @@
 package com.techys.core.util
 
+import android.os.SystemClock
 import com.techys.core.model.TimerStateType
 import com.techys.core.model.TimerType
 import com.techys.core.notification.NotificationManager
@@ -16,6 +17,7 @@ import kotlinx.coroutines.launch
  */
 class EyeTimerHelper(
     notificationManager: NotificationManager,
+    alarmManager: TimerAlarmManager,
     interval: Int = TimerConstants.DEFAULT_EYE_INTERVAL,
     id: Int = TimerConstants.EYE_TIMER_ID,
     notificationTitle: String = "Eye Care",
@@ -27,6 +29,7 @@ class EyeTimerHelper(
         notificationTitle,
         TimerType.EyeBreak,
         notificationManager,
+        alarmManager
     ) {
     /**
      * The duration that an eye care timer takes to finish its cycle
@@ -80,6 +83,7 @@ class EyeTimerHelper(
             return
         }
 
+        SystemClock.elapsedRealtime()
         notificationManager.showTimerNotification(
             id= notificationId,
             title = coolDownNotificationTitle,
@@ -91,7 +95,7 @@ class EyeTimerHelper(
     }
 
     private fun showTimerEndNotification(){
-        notificationManager.showEyeTimerEndNotification(TimerConstants.EYE_TIMER_END_ID)
+//        notificationManager.showEyeTimerEndNotification(TimerConstants.EYE_TIMER_END_ID)
     }
     private fun dismissTimerEndNotification(){
         notificationManager.cancelNotification(TimerConstants.EYE_TIMER_END_ID)

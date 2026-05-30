@@ -7,6 +7,7 @@ import kotlin.random.Random
 
 class QuickTimerHelper(
     notificationManager: NotificationManager,
+    alarmManager: TimerAlarmManager,
     interval: Int = TimerConstants.DEFAULT_QUICK_INTERVAL,
     id: Int =TimerConstants.QUICK_TIMER_ID ,
     notificationTitle: String = "Quick Timer"
@@ -17,6 +18,7 @@ class QuickTimerHelper(
         notificationTitle,
         TimerType.Quick,
         notificationManager,
+        alarmManager
     ) {
     override fun onTimeUp() {
         showTimerEndNotification()

@@ -12,6 +12,7 @@ import com.techys.core.receiver.PausaServiceReceiver
 import com.techys.core.util.EyeTimerHelper
 import com.techys.core.util.FocusTimerHelper
 import com.techys.core.util.QuickTimerHelper
+import com.techys.core.util.TimerAlarmManager
 import com.techys.core.util.TimerHelperManager
 import com.techys.pausa.core.R
 import dagger.hilt.android.AndroidEntryPoint
@@ -66,6 +67,9 @@ class PausaService : Service() {
 
     @Inject
     lateinit var notificationManager: NotificationManager
+    @Inject
+    lateinit var alarmManager: TimerAlarmManager
+
     var pausaReceiver: PausaServiceReceiver? = null
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -106,16 +110,19 @@ class PausaService : Service() {
         timerManager = TimerHelperManager(
             eyeTimer = EyeTimerHelper(
                 notificationManager,
+                alarmManager,
                 notificationTitle = resources.getString(R.string.timer_eye_default_title),
                 coolDownNotificationTitle = resources.getString(R.string.timer_eye_cooldown_default_title)
             ),
             focusTimer = FocusTimerHelper(
                 notificationManager,
+                alarmManager,
                 notificationTitle = resources.getString(R.string.timer_focus_default_title)
             ),
             quickTimers = mutableListOf(
                 QuickTimerHelper(
                     notificationManager,
+                    alarmManager,
                     notificationTitle = resources.getString(R.string.quick_timer_default_title)
                 )
             )

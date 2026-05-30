@@ -8,6 +8,7 @@ import kotlin.random.Random
 
 class FocusTimerHelper(
     notificationManager: NotificationManager,
+    alarmManager: TimerAlarmManager,
     interval: Int = TimerConstants.DEFAULT_FOCUS_INTERVAL,
     id: Int = TimerConstants.FOCUS_TIMER_ID,
     notificationTitle: String = "Zen Mode"
@@ -18,6 +19,7 @@ class FocusTimerHelper(
         notificationTitle,
         TimerType.Focus,
         notificationManager,
+        alarmManager
     ) {
 
     override fun onTimeUp() {

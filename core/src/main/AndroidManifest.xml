@@ -3,4 +3,24 @@
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
+    <application>
+        <service
+            android:name="com.techys.core.service.PausaService"
+            android:foregroundServiceType="specialUse" />
+
+        <receiver
+            android:name="com.techys.core.receiver.PausaServiceReceiver"
+            android:exported="false" />
+
+        <service
+            android:name="com.techys.core.service.PausaRingService"
+            android:foregroundServiceType="mediaPlayback" />
+
+        <receiver
+            android:name="com.techys.core.receiver.PausaAlarmReceiver"
+            android:exported="false" />
+    </application>
+
 </manifest>

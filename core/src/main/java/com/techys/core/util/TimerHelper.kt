@@ -1,9 +1,12 @@
 package com.techys.core.util
 
+import android.util.Log
 import com.techys.core.model.TimerState
 import com.techys.core.model.TimerStateType
 import com.techys.core.model.TimerType
 import com.techys.core.notification.NotificationManager
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 /**
  * Base class for all timers
@@ -11,14 +14,14 @@ import com.techys.core.notification.NotificationManager
  * @param interval = the amount of time in seconds which it takes for a timer to finish its cycle
  *
  */
-abstract class TimerHelper(
+open class TimerHelper @Inject constructor(
     val id: Int = 0,
     var interval: Int = 0,
     var title: String = "",
     val type: TimerType,
-    val notificationManager: NotificationManager
+    val notificationManager: NotificationManager,
+    val alarmManager: TimerAlarmManager
 ) {
-
     var progress: Int = 0
     var runningState = TimerStateType.STOPPED
     val notificationId
@@ -32,22 +35,43 @@ abstract class TimerHelper(
     var startTime = 0L
 
     /**
+     * Whether this timer is in its cooldown mode or not since some timers have two active states
+     * a normal running state with their set interval and also a cooldown state that would reset back
+     * to the original normal state after a while
+     */
+    var isInCooldownMode = false
+
+    /**
      * COuld be an edge case where the state is set but the timer/notif is not the same state as ??
      */
     fun updateTimerState(newState: TimerStateType) {
         if (runningState == TimerStateType.STOPPED && newState == TimerStateType.STARTED)
             startTime = System.currentTimeMillis()
-        if (newState == TimerStateType.STARTED || newState == TimerStateType.COOLDOWN) {
-            runningState = newState
-            updateNotification(updateStartTime = true)
-        }
+
         runningState = newState
-        if (newState == TimerStateType.STOPPED) {
-            progress = 0
-            cancelNotification()
-//            onTimerEnded()
-        } else if(newState == TimerStateType.STARTED){
-            onTimerStarted()
+        when (newState) {
+            TimerStateType.STARTED -> {
+                startTimer()
+                /**
+                 * If we were in cooldown mode this state meant for a resume of the cooldown state
+                 * and not an actual new start command for normal timer mode
+                 */
+                if (isInCooldownMode)
+                    runningState = TimerStateType.COOLDOWN
+            }
+
+            TimerStateType.PAUSED -> {
+                pauseTimer()
+            }
+
+            TimerStateType.STOPPED -> {
+                stopTimer()
+            }
+
+            TimerStateType.COOLDOWN -> {
+                isInCooldownMode = true
+                updateNotification(updateStartTime = true)
+            }
         }
     }
 
@@ -60,7 +84,7 @@ abstract class TimerHelper(
     }
 
     open fun updateNotification(updateStartTime: Boolean = false) {
-       notificationManager.showTimerNotification(
+        notificationManager.showTimerNotification(
             id = notificationId,
             title = notificationTitle,
             startTime = startTime,
@@ -76,17 +100,40 @@ abstract class TimerHelper(
         notificationManager.cancelNotification(notificationId)
     }
 
+    private fun pauseTimer() {
+        alarmManager.cancelAlarm(notificationId)
+    }
+
+    private fun stopTimer() {
+        isInCooldownMode = false
+        progress = 0
+        cancelNotification()
+        onTimerEnded()
+        alarmManager.cancelAlarm(notificationId)
+    }
+
+    private fun startTimer() {
+        updateNotification(updateStartTime = true)
+        onTimerStarted()
+        if (isInCooldownMode)
+            return
+        alarmManager.scheduleAlarm(
+            id = notificationId,
+            alarmTime = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis((interval - progress).toLong())
+        )
+    }
+
     /**
      * The event to be executed when the timer is up
      */
-    abstract fun onTimeUp()
+    open fun onTimeUp() {}
 
     /**
      * The event to be execute when the timer has just received the start command
      */
-    abstract fun onTimerStarted()
+    open fun onTimerStarted() {}
 
-    abstract fun onTimerEnded()
+    open fun onTimerEnded() {}
 
     /**
      * executes on each tick of the timer
@@ -99,8 +146,10 @@ abstract class TimerHelper(
         progress++
         if (progress <= interval)
             updateNotification()
-        if (progress > interval)
+        if (progress > interval) {
+            isInCooldownMode = false
             onTimeUp()
+        }
     }
 
     fun getState(): TimerState {
