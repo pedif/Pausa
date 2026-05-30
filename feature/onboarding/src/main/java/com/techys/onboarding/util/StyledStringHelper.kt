@@ -8,7 +8,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 
 @Composable
-fun boldIntroductionText(text: String, delimiter: String = "—"): AnnotatedString {
+fun boldIntroductionText(text: String, delimiter: String = ":"): AnnotatedString {
        return buildAnnotatedString {
             val parts = text.split(delimiter)
             withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
