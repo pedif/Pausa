@@ -20,9 +20,12 @@ import com.techys.pausa.core.R
 
 
 @Composable
-fun StartFocusComponent(modifier: Modifier = Modifier,
-                        onTimeChanged: (Int) -> Unit = {},
-                        onTimerStartedClicked:()->Unit = {}) {
+fun StartFocusComponent(
+    selectedIndex: Int,
+    modifier: Modifier = Modifier,
+    onTimeChanged: (Int) -> Unit = {},
+    onTimerStartedClicked: () -> Unit = {}
+) {
     Row(
         modifier = modifier.height(Dimen.FocusActionAreaHeight),
         verticalAlignment = Alignment.CenterVertically,
@@ -35,11 +38,14 @@ fun StartFocusComponent(modifier: Modifier = Modifier,
         )
         Spacer(modifier = Modifier.width(Dimen.medium))
         TimerPicker(
+            selectedIndex = selectedIndex,
             onTimeChanged = onTimeChanged
         )
         Spacer(modifier = Modifier.width(Dimen.small))
-        Text(text = "Minutes",
-            color = MaterialTheme.colorScheme.primary)
+        Text(
+            text = stringResource(com.techys.pausa.focus.R.string.wheel_label),
+            color = MaterialTheme.colorScheme.primary
+        )
     }
 }
 
@@ -47,6 +53,6 @@ fun StartFocusComponent(modifier: Modifier = Modifier,
 @Composable
 private fun PreviewComponent() {
     AppTheme {
-        StartFocusComponent {  }
+        StartFocusComponent(selectedIndex = 0) { }
     }
 }

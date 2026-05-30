@@ -124,7 +124,9 @@ private fun FocusScreen(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
         ) {
+            //Since we start our items from 1 and not 0 so index0 is actually 1
             StartFocusComponent(
+                (state.time / 60)-1,
                 onTimerStartedClicked = onStartNewTimer,
                 onTimeChanged = onTimeChanged
             )
