@@ -115,7 +115,7 @@ fun NavHost(
                     DialogProperties()
                 )
             ) {
-                QuickScreen(modifier = modifier) {
+                QuickScreen() {
                     navStack.removeLastOrNull()
                 }
             }
