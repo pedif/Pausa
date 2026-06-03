@@ -4,6 +4,7 @@ import android.os.SystemClock
 import com.techys.core.model.TimerStateType
 import com.techys.core.model.TimerType
 import com.techys.core.notification.NotificationManager
+import com.techys.core.receiver.PausaAlarmReceiver
 import com.techys.core.util.TimerConstants.DEFAULT_EYE_COOLDOWN_INTERVAL
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -92,5 +93,6 @@ class EyeTimerHelper(
     private fun showTimerEndNotification(){}
     private fun dismissTimerEndNotification(){
         notificationManager.cancelNotification(TimerConstants.EYE_TIMER_END_ID)
+        PausaAlarmReceiver.sendDismissNotification(notificationManager.context)
     }
 }
