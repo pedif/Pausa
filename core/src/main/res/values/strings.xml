@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="channel_pausa_name" translatable="false">Pausa Service Channel</string>
-    <string name="channel_timer_end_eye_name" translatable="false">Eye Care Channel</string>
-    <string name="channel_timer_end_focus_name" translatable="false">Zen Mode Channel</string>
-    <string name="channel_timer_end_quick_name" translatable="false">Quick Channel</string>
+    <string name="channel_timer_end_name" translatable="false">Timer End Service Channel</string>
     <string name="notification_pausa_name">Pausa</string>
     <string name="notification_pausa_description">Start a timer</string>
     <string name="notification_action_eye">Eye Care</string>
@@ -30,7 +28,8 @@
     <string name="timer_end_focus_desc">You just did %1$d minutes of deep work. Go grab that coffee. You\'ve earned it.</string>
     <string name="timer_end_quick_title">⏱️ %1$s Timer\'s up.</string>
     <string name="timer_end_quick_desc">%1$d minutes are done.</string>
-    <string name="timer_end_action_dismiss_immediate">Dismiss immediately</string>
+    <string name="timer_end_action_dismiss_immediate">Dismiss</string>
+    <string name="timer_end_action_dismiss_fg">Dismiss</string>
     <!-- -->
 
     <!-- timer default titles -->
@@ -41,4 +40,7 @@
     <!-- -->
 
     <!--    <string name="timer_worker_manager_notification">Pausa needs attention. Tap to open and resume your timers.</string>-->
+
+
+    <string name="notification_timer_end_service_name">Time\'s up!</string>
 </resources>

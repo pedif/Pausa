@@ -27,16 +27,19 @@
     <string name="timer_end_focus_desc">شما %1$d دقیقه کار عمیق انجام دادید. برو برای خودت ی قهوه بریز و ازش لذت ببر. </string>
     <string name="timer_end_quick_title">⏱️ %1$s تایمر تموم شد.</string>
     <string name="timer_end_quick_desc">%1$d دقیقه گذشت.</string>
+    <string name="timer_end_action_dismiss_fg">تمومش کن</string>
     <!-- -->
 
 <!--    <string name="timer_worker_manager_notification">Pausa به توجه نیاز داره. بازش کن تا تایمرهات دوباره شروع بشن.</string>-->
 
     <!-- timer default titles -->
-    <string name="timer_end_action_dismiss_immediate">همین الان صفحه رو ببند</string>
+    <string name="timer_end_action_dismiss_immediate"> صفحه رو ببند</string>
     <string name="timer_eye_default_title">مراقبت از چشم</string>
     <string name="timer_eye_cooldown_default_title">مراقبت از چشم - تایم استراحت</string>
     <string name="timer_focus_default_title">تمرکز</string>
     <string name="timer_quick_default_title">سریع</string>
     <!-- -->
 
+
+    <string name="notification_timer_end_service_name">تایمرت تموم شد!</string>
 </resources>

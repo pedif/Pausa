@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 import com.techys.core.model.TimerType
-import com.techys.core.service.PausaTimerEndService
+import com.techys.core.service.TimerEndService
 import com.techys.designsystem.theme.AppTheme
 import com.techys.pausa.end.navigation.EndNavHost
 import com.techys.pausa.end.navigation.EndNavRoute
@@ -57,7 +57,7 @@ class TimerEndActivity : ComponentActivity() {
 
     private fun observeEndState() {
         lifecycleScope.launch {
-            PausaTimerEndService.runningState.collect { isRunning ->
+            TimerEndService.runningState.collect { isRunning ->
                 if (!isRunning)
                     this@TimerEndActivity.finish()
             }

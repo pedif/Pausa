@@ -12,9 +12,13 @@ class PausaAlarmReceiver(
     companion object {
         const val ACTION_DISMISS_SERVICE = "action_dismiss"
         fun sendDismissNotification(context: Context) {
+            context.sendBroadcast(getDismissNotificationIntent(context))
+        }
+
+        fun getDismissNotificationIntent(context: Context): Intent{
             val intent = Intent(ACTION_DISMISS_SERVICE)
             intent.setPackage(context.packageName)
-            context.sendBroadcast(intent)
+            return intent
         }
     }
 

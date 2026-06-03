@@ -30,12 +30,13 @@ import javax.inject.Inject
 import kotlin.random.Random
 
 @AndroidEntryPoint
-class PausaTimerEndService() : Service() {
+class TimerEndService() : Service() {
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
 
     companion object {
+        private const val SERVICE_ID = 1011
         private const val TIMER_ID_KEY = "timer_id"
         private const val TIMER_TYPE_KEY = "timer_type"
         private const val AUTO_DISMISS_DURATION = 15_000
@@ -45,7 +46,7 @@ class PausaTimerEndService() : Service() {
             id: Int,
             type: TimerType
         ): Intent {
-            return Intent(context, PausaTimerEndService::class.java).apply {
+            return Intent(context, TimerEndService::class.java).apply {
                 putExtra(TIMER_ID_KEY, id)
                 putExtra(TIMER_TYPE_KEY, type.id)
             }
@@ -152,15 +153,15 @@ class PausaTimerEndService() : Service() {
     }
 
     private fun startForeground() {
-        val notification = notificationManager.getPausaServiceNotification()
+        val notification = notificationManager.getTimerEndServiceNotification()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             startForeground(
-                12379,
+                SERVICE_ID,
                 notification,
                 ServiceInfo.FOREGROUND_SERVICE_TYPE_MANIFEST
             )
         } else {
-            startForeground(12379, notification)
+            startForeground(SERVICE_ID, notification)
         }
     }
 

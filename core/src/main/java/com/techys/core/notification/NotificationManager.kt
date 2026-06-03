@@ -17,8 +17,8 @@ import com.techys.core.receiver.PausaServiceReceiver
 import com.techys.core.util.TimerConstants
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
-import androidx.core.net.toUri
 import com.techys.core.model.TimerType
+import com.techys.core.receiver.PausaAlarmReceiver
 import com.techys.pausa.core.R
 
 class NotificationManager @Inject constructor(
@@ -29,14 +29,11 @@ class NotificationManager @Inject constructor(
 
     companion object {
         private const val CHANNEL_ID = "TimerService"
+        private const val CHANNEL_END_TIMER_ID = "TimerEndService"
         private const val TIMER_GROUP_KEY = "groupKey"
         private const val TIMER_GROUP_ID = 99998
         private const val TIMER_END_GROUP_KEY = "EndGroupKey"
         private const val TIMER_END_GROUP_ID = 99999
-
-        const val CHANNEL_TIMER_END_EYE_ID = "end_eye_time"
-        const val CHANNEL_TIMER_END_QUICK_ID = "end_quick_timer"
-        const val CHANNEL_TIMER_END_FOCUS_ID = "end_focus_mode"
 
         const val REQUEST_CODE_PLAY_PAUSE_TIMER = 30000
         const val REQUEST_CODE_PLAY_TIMER = 40000
@@ -45,7 +42,7 @@ class NotificationManager @Inject constructor(
 
     private fun setupForegroundServiceNotification(title: String): NotificationCompat.Builder {
         val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val (channelId, name) = getNotificationChannelInfoByType(null)
+            val (channelId, name) = getNotificationChannelInfo(isTimerEnd = false)
             createNotificationChannel(
                 channelId = channelId,
                 name = name
@@ -71,7 +68,7 @@ class NotificationManager @Inject constructor(
         id: Int, title: String, startTime: Long, progress: Int, max: Int, updateStartTime: Boolean
     ) {
         val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val (channelId, name) = getNotificationChannelInfoByType(null)
+            val (channelId, name) = getNotificationChannelInfo(isTimerEnd = false)
             createNotificationChannel(
                 channelId = channelId,
                 name = name
@@ -167,29 +164,17 @@ class NotificationManager @Inject constructor(
         manager.createNotificationChannel(notificationChannel)
     }
 
-    private fun getNotificationChannelInfoByType(type: TimerType?): Pair<String, String> {
-        return when (type) {
-            TimerType.EyeBreak -> Pair(
-                CHANNEL_TIMER_END_EYE_ID,
-                context.getString(R.string.channel_timer_end_eye_name)
+    private fun getNotificationChannelInfo(isTimerEnd: Boolean = false): Pair<String, String> {
+        return if (isTimerEnd) {
+            Pair(
+                CHANNEL_END_TIMER_ID,
+                context.getString(R.string.channel_timer_end_name)
             )
-
-            TimerType.Quick -> Pair(
-                CHANNEL_TIMER_END_QUICK_ID,
-                context.getString(R.string.channel_timer_end_quick_name)
+        } else {
+            Pair(
+                CHANNEL_ID,
+                context.getString(R.string.channel_pausa_name)
             )
-
-            TimerType.Focus -> Pair(
-                CHANNEL_TIMER_END_FOCUS_ID,
-                context.getString(R.string.channel_timer_end_focus_name)
-            )
-
-            else -> {
-                Pair(
-                    CHANNEL_ID,
-                    context.getString(R.string.channel_pausa_name)
-                )
-            }
         }
     }
 
@@ -258,7 +243,7 @@ class NotificationManager @Inject constructor(
         description: String
     ): NotificationCompat.Builder {
         val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val (channelId, name) = getNotificationChannelInfoByType(timerType)
+            val (channelId, name) = getNotificationChannelInfo(true)
             createNotificationChannel(
                 channelId = channelId,
                 name = name,
@@ -343,7 +328,7 @@ class NotificationManager @Inject constructor(
 
     private fun showGroupSummary() {
         val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val (channelId, name) = getNotificationChannelInfoByType(null)
+            val (channelId, name) = getNotificationChannelInfo(false)
             createNotificationChannel(
                 channelId = channelId,
                 name = name,
@@ -382,5 +367,40 @@ class NotificationManager @Inject constructor(
         showTimerNotification(
             id, title, startTime, progress, max, updateStartTime
         )
+    }
+
+    fun getTimerEndServiceNotification(): Notification {
+        val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val (channelId, name) = getNotificationChannelInfo(false)
+            createNotificationChannel(
+                channelId = channelId,
+                name = name,
+                importance = NotificationManager.IMPORTANCE_HIGH
+            )
+            NotificationCompat.Builder(context, channelId)
+        } else {
+            NotificationCompat.Builder(context, "")
+        }
+        builder
+            .setSmallIcon(R.drawable.radix_ic_stopwatch)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentTitle(context.getString(R.string.notification_timer_end_service_name))
+            .setCategory(NotificationCompat.CATEGORY_REMINDER)
+            .setOnlyAlertOnce(true)
+            .setOngoing(true)
+            .setAutoCancel(false)
+            .setColorized(true)
+
+        val dismissIntent = PendingIntent.getBroadcast(
+            context,
+            11,
+            PausaAlarmReceiver.getDismissNotificationIntent(context),
+            PendingIntent.FLAG_IMMUTABLE
+        )
+        builder.addAction(
+            android.R.drawable.ic_delete,
+            context.getString(R.string.timer_end_action_dismiss_fg), dismissIntent
+        )
+        return builder.build()
     }
 }
