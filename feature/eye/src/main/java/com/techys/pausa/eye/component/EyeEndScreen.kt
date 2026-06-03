@@ -41,11 +41,6 @@ fun EyeEndScreen(
         modifier = modifier,
         onFinishClick = onFinished
     )
-
-    LaunchedEffect(state) {
-        if (state.current == 0)
-            onFinished()
-    }
 }
 
 @Composable
@@ -81,16 +76,7 @@ fun EyeEndScreen(
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(100.dp))
-            Text(
-                stringResource(
-                    R.string.timer_end_auto_dismiss,
-                    TimeUtil.getElapsedTimeLabel(state.current)
-                ),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.primary,
-                textAlign = TextAlign.Center
-            )
-            Spacer(Modifier.height(Dimen.small))
+
             PausaButton(
                 text = stringResource(R.string.timer_end_action_dismiss_immediate),
                 onClick = onFinishClick

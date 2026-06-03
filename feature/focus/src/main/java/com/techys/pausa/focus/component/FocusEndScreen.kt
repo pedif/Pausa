@@ -37,28 +37,17 @@ fun FocusEndScreen(
     onFinished: () -> Unit = {}
 ) {
     val state by PausaService.state.collectAsState()
-    var remainingTime by remember { mutableIntStateOf(30) }
 
     FocusEndScreen(
         state = state.focusTimer,
-        seconds = remainingTime,
         modifier = modifier,
         onFinishClick = onFinished
     )
-
-    LaunchedEffect(Unit) {
-        while (remainingTime > 0) {
-            delay(1_000)
-            remainingTime--
-        }
-        onFinished()
-    }
 }
 
 @Composable
 fun FocusEndScreen(
     state: TimerState,
-    seconds: Int,
     modifier: Modifier = Modifier,
     onFinishClick: () -> Unit = {}
 ) {
@@ -85,16 +74,6 @@ fun FocusEndScreen(
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(100.dp))
-        Text(
-            text = stringResource(
-                R.string.timer_end_auto_dismiss,
-                TimeUtil.getElapsedTimeLabel(seconds)
-            ),
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.primary,
-            textAlign = TextAlign.Center
-        )
-        Spacer(Modifier.height(Dimen.small))
         PausaButton(
             text = stringResource(R.string.timer_end_action_dismiss_immediate),
             onClick = onFinishClick
@@ -108,8 +87,7 @@ fun FocusEndScreen(
 private fun PreviewScreen() {
     AppTheme {
         FocusEndScreen(
-            state = TimerState(id = 1),
-            seconds = 10
+            state = TimerState(id = 1)
         )
     }
 }

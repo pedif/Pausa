@@ -15,7 +15,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.lifecycleScope
 import com.techys.core.model.TimerType
+import com.techys.core.service.PausaTimerEndService
 import com.techys.designsystem.theme.AppTheme
 import com.techys.pausa.end.navigation.EndNavHost
 import com.techys.pausa.end.navigation.EndNavRoute
@@ -23,6 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class TimerEndActivity : ComponentActivity() {
@@ -43,10 +46,20 @@ class TimerEndActivity : ComponentActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         checkIntentForDeepLink(intent)
+        observeEndState()
         setContent {
             AppTheme {
                 val dest by state.collectAsState()
                 MessageComponent(dest)
+            }
+        }
+    }
+
+    private fun observeEndState() {
+        lifecycleScope.launch {
+            PausaTimerEndService.runningState.collect { isRunning ->
+                if (!isRunning)
+                    this@TimerEndActivity.finish()
             }
         }
     }

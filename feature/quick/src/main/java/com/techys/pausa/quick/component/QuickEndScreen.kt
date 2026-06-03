@@ -37,28 +37,17 @@ fun QuickEndScreen(
     onFinished: () -> Unit = {}
 ) {
     val state by PausaService.state.collectAsState()
-    var remainingTime by remember { mutableIntStateOf(10) }
 
     QuickEndScreen(
         state = state.quickTimers.first(),
-        seconds = remainingTime,
         modifier = modifier,
         onFinishClick = onFinished
     )
-
-    LaunchedEffect(Unit) {
-        while (remainingTime > 0) {
-            delay(1_000)
-            remainingTime--
-        }
-        onFinished()
-    }
 }
 
 @Composable
 fun QuickEndScreen(
     state: TimerState,
-    seconds: Int,
     modifier: Modifier = Modifier,
     onFinishClick: () -> Unit = {}
 ) {
@@ -87,16 +76,6 @@ fun QuickEndScreen(
         )
 
         Spacer(modifier = Modifier.height(100.dp))
-        Text(
-            text = stringResource(
-                com.techys.pausa.core.R.string.timer_end_auto_dismiss,
-                TimeUtil.getElapsedTimeLabel(seconds)
-            ),
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.primary,
-            textAlign = TextAlign.Center
-        )
-        Spacer(Modifier.height(Dimen.small))
         PausaButton(
             text = stringResource(R.string.timer_end_action_dismiss_immediate),
             onClick = onFinishClick
@@ -110,8 +89,7 @@ fun QuickEndScreen(
 private fun PreviewScreen() {
     AppTheme {
         QuickEndScreen(
-            state = TimerState(id = 1),
-            seconds = 10
+            state = TimerState(id = 1)
         )
     }
 }

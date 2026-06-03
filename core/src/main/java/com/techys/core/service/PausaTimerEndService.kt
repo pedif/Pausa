@@ -14,14 +14,15 @@ import com.techys.core.model.TimerType
 import com.techys.core.model.timerTypeIdToTimerType
 import com.techys.core.notification.NotificationManager
 import com.techys.core.receiver.PausaAlarmReceiver
-import com.techys.core.receiver.PausaAlarmReceiver.Companion.TIMER_ID_KEY
-import com.techys.core.receiver.PausaAlarmReceiver.Companion.TIMER_TYPE_KEY
 import com.techys.core.util.TimerConstants
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,6 +35,8 @@ class PausaTimerEndService() : Service() {
     }
 
     companion object {
+        private const val TIMER_ID_KEY = "timer_id"
+        private const val TIMER_TYPE_KEY = "timer_type"
         var isPLaying = false
         fun getTimerEndIntent(
             context: Context,
@@ -45,6 +48,9 @@ class PausaTimerEndService() : Service() {
                 putExtra(TIMER_TYPE_KEY, type.id)
             }
         }
+
+        private var _runningState: MutableStateFlow<Boolean> = MutableStateFlow(false)
+        val runningState: StateFlow<Boolean> = _runningState.asStateFlow()
     }
 
     private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
@@ -57,30 +63,33 @@ class PausaTimerEndService() : Service() {
 
     var ringtonePlayer: Ringtone? = null
 
+    var pausaReceiver: PausaAlarmReceiver? = null
+
+    override fun onCreate() {
+        super.onCreate()
+        setupReceiver()
+        _runningState.value = true
+    }
+
+    private fun setupReceiver() {
+        pausaReceiver = PausaAlarmReceiver {
+            this.stopSelf()
+        }
+        pausaReceiver?.registerReceiver(this)
+    }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         startForeground()
-//        val player = MediaPlayer.create(this, R.raw.zz).apply {
-//            setAudioAttributes(
-//                AudioAttributes.Builder()
-//                    .setUsage(AudioAttributes.USAGE_ALARM)
-//                    .build()
-//            )
-//            start()
-//            setOnCompletionListener {
-//                this@PausaRingService.stopSelf()
-//            }
-//        }
-
         processIntent(intent)
         return super.onStartCommand(intent, flags, startId)
     }
 
     private fun processIntent(intent: Intent?) {
         val extras = intent?.extras ?: return
-        val timerId = extras.getInt(PausaAlarmReceiver.TIMER_ID_KEY)
+        val timerId = extras.getInt(TIMER_ID_KEY)
         val timerType =
-            timerTypeIdToTimerType(extras.getString(PausaAlarmReceiver.TIMER_TYPE_KEY) ?: "")
-       serviceScope.launch {
+            timerTypeIdToTimerType(extras.getString(TIMER_TYPE_KEY) ?: "")
+        serviceScope.launch {
             when (timerType) {
                 TimerType.EyeBreak -> {
                     notificationManager.showEyeTimerEndNotification(TimerConstants.EYE_TIMER_END_ID)
@@ -118,7 +127,7 @@ class PausaTimerEndService() : Service() {
     }
 
     private fun play(filePath: String) {
-        if(isPLaying)
+        if (isPLaying)
             return
         isPLaying = true
         val uri = if (filePath.isEmpty())
@@ -145,6 +154,16 @@ class PausaTimerEndService() : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+
         serviceScope.cancel()
+        ringtonePlayer?.let {
+            it.stop()
+            ringtonePlayer = null
+        }
+        pausaReceiver?.let {
+            unregisterReceiver(pausaReceiver)
+            pausaReceiver = null
+        }
+        _runningState.value = false
     }
 }

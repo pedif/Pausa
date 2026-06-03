@@ -1,17 +1,12 @@
 package com.techys.pausa.end.navigation
 
-import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
-import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.ui.NavDisplay
-import com.techys.home.component.HomeScreen
+import androidx.compose.ui.platform.LocalContext
+import com.techys.core.receiver.PausaAlarmReceiver
 import com.techys.pausa.eye.component.EyeEndScreen
 import com.techys.pausa.focus.component.FocusEndScreen
-import com.techys.pausa.focus.component.FocusScreen
 import com.techys.pausa.quick.component.QuickEndScreen
-import com.techys.pausa.quick.component.QuickScreen
 
 
 @Composable
@@ -19,21 +14,25 @@ fun EndNavHost(
     dest: EndNavRoute,
     modifier: Modifier = Modifier
 ) {
-    val activity = LocalActivity.current
+    val activity = LocalContext.current
 
     when (dest) {
         EndNavRoute.Eye -> {
-            EyeEndScreen { activity?.finish() }
+            EyeEndScreen {
+                PausaAlarmReceiver.sendDismissNotification(activity)
+            }
         }
 
         EndNavRoute.Focus -> {
-            FocusEndScreen { activity?.finish() }
+            FocusEndScreen {
+                PausaAlarmReceiver.sendDismissNotification(activity)
+            }
         }
 
         EndNavRoute.Quick -> {
-            QuickEndScreen { activity?.finish() }
+            QuickEndScreen {
+                PausaAlarmReceiver.sendDismissNotification(activity)
+            }
         }
-
-        else -> {activity?.finish()}
     }
 }
