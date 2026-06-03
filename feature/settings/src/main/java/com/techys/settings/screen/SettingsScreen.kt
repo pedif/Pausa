@@ -1,9 +1,10 @@
 package com.techys.settings.screen
 
 
-import android.os.Build
+import android.net.Uri
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -45,22 +46,25 @@ fun SettingsScreen(
             modifier = modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-            soundList = state.sounds,
             eyeSoundItem = state.eyeSoundItem,
             focusSoundItem = state.focusSoundItem,
-            quickSoundItem = state.quickSoundItem
+            quickSoundItem = state.quickSoundItem,
+            onEyeSoundChange = viewModel::setEyeSound,
+            onFocusSoundChange = viewModel::setFocusSound,
+            onQuickSoundChange = viewModel::setQuickSound
         )
     }
 }
 
-//Why not lazy colum instead of colum with scrollable modifier??
 @Composable
 private fun SettingsScreen(
-    soundList: List<SoundItem>,
+    modifier: Modifier = Modifier,
     eyeSoundItem: SoundItem,
     focusSoundItem: SoundItem,
     quickSoundItem: SoundItem,
-    modifier: Modifier = Modifier
+    onEyeSoundChange: (Uri) -> Unit = {},
+    onFocusSoundChange: (Uri) -> Unit = {},
+    onQuickSoundChange: (Uri) -> Unit = {},
 ) {
 
     val scroll = rememberScrollState()
@@ -76,6 +80,16 @@ private fun SettingsScreen(
                 )
         ) {
             PermissionsComponent(modifier = Modifier.fillMaxWidth())
+            Spacer(modifier = Modifier.height(Dimen.medium))
+            SoundCard(
+                modifier = Modifier.fillMaxWidth(),
+                eyeSoundItem = eyeSoundItem,
+                focusSoundItem = focusSoundItem,
+                quickSoundItem = quickSoundItem,
+                onEyeSoundChange = onEyeSoundChange,
+                onFocusSoundChange = onFocusSoundChange,
+                onQuickSoundChange = onQuickSoundChange
+            )
             Spacer(modifier = Modifier.weight(1f))
             Text(
                 text = stringResource(R.string.version, AppConstants.versionName),

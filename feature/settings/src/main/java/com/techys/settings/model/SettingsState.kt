@@ -12,7 +12,6 @@ package com.techys.settings.model
  * while notif channel is not a permission, the user might disable it, shall we includeit inside permissions box?
  */
 data class SettingsState(
-    val sounds: List<SoundItem> = emptyList(),
     val eyeSoundItem: SoundItem = SoundItem(),
     val focusSoundItem: SoundItem = SoundItem(),
     val quickSoundItem: SoundItem = SoundItem()

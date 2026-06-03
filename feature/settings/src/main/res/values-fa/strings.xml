@@ -5,4 +5,10 @@
     <string name="permission_notification_desc" >برای نمایش نوتیفیکشن مرتبط با تایمر ها نیاز به اجازه ی نمایش نوتیفیکیشن هست.</string>
     <string name="permission_battery_desc">فعال کردن این دسترسی اپ رو در مقابل خروج های اجباری سیستم مقاومتر و پایدارتر میکنه. </string>
     <string name="version">ورژن: %s</string>
+    <string name="permission_alarm">اجازه ی هشدار آلارم</string>
+    <string name="permission_alarm_desc" >برای هشدار به موقع اتمام تایمرها نیاز به اجازه ی آلارم هست.</string>
+    <string name="alarm_section_title">صداهای مخصوص هر تایمر</string>
+    <string name="alarm_sound_eye">مراقبه چشم :</string>
+    <string name="alarm_sound_focus">حالت تمرکز :</string>
+    <string name="alarm_sound_quick">حالت سریع :</string>
 </resources>
