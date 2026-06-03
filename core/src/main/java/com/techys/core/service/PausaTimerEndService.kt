@@ -20,6 +20,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,6 +38,7 @@ class PausaTimerEndService() : Service() {
     companion object {
         private const val TIMER_ID_KEY = "timer_id"
         private const val TIMER_TYPE_KEY = "timer_type"
+        private const val AUTO_DISMISS_DURATION = 15_000
         var isPLaying = false
         fun getTimerEndIntent(
             context: Context,
@@ -89,6 +91,8 @@ class PausaTimerEndService() : Service() {
         val timerId = extras.getInt(TIMER_ID_KEY)
         val timerType =
             timerTypeIdToTimerType(extras.getString(TIMER_TYPE_KEY) ?: "")
+        if (timerType == null)
+            return
         serviceScope.launch {
             when (timerType) {
                 TimerType.EyeBreak -> {
@@ -123,6 +127,14 @@ class PausaTimerEndService() : Service() {
 
                 else -> {}
             }
+        }
+        serviceScope.launch {
+            var dismissCounter = 0
+            while (dismissCounter < AUTO_DISMISS_DURATION) {
+                dismissCounter += 1_000
+                delay(1_000)
+            }
+            stopSelf()
         }
     }
 
