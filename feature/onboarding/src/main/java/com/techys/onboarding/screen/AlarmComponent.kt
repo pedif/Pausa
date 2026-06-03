@@ -1,7 +1,7 @@
 package com.techys.onboarding.screen
 
-import android.Manifest
 import android.provider.Settings
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,7 +34,7 @@ import com.techys.designsystem.theme.Dimen
 import com.techys.onboarding.R
 
 @Composable
-fun BatteryOptimizationComponent(modifier: Modifier = Modifier) {
+fun AlarmPermissionScreen(modifier: Modifier = Modifier) {
 
 
     val context = LocalContext.current
@@ -46,7 +47,7 @@ fun BatteryOptimizationComponent(modifier: Modifier = Modifier) {
     }
     if (requestPermission) {
         PermissionHandler(
-            permissions = arrayOf(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS),
+            permissions = arrayOf(android.Manifest.permission.SCHEDULE_EXACT_ALARM),
             onAllGranted = {
                 hasPermission = true
                 requestPermission = false
@@ -62,7 +63,7 @@ fun BatteryOptimizationComponent(modifier: Modifier = Modifier) {
             permissionName = "Notification",
             onRedirectClick = {
                 requestScreenIntent = false
-                PermissionUtil.openBatterySettings(context)
+                PermissionUtil.openAlarmSettings(context)
             },
             onDismissed = { requestScreenIntent = false }
         )
@@ -82,7 +83,7 @@ fun BatteryOptimizationComponent(modifier: Modifier = Modifier) {
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                hasPermission = PermissionUtil.hasBatteryPermission(context)
+                hasPermission = PermissionUtil.hasAlarmPermission(context)
             }
         }
 
@@ -97,17 +98,21 @@ fun BatteryOptimizationComponent(modifier: Modifier = Modifier) {
 private fun InfoComponent(modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         Text(
-            text = stringResource(R.string.onboarding_battery_title),
+            text = stringResource(R.string.onboarding_alarm_title),
             style = MaterialTheme.typography.titleLarge
+        )
+        Text(
+            text = stringResource(R.string.onboarding_alarm_subtitle),
+            style = MaterialTheme.typography.titleMedium
         )
 
         Spacer(Modifier.height(Dimen.small))
         Text(
-            text = stringResource(R.string.onboarding_battery_text),
+            text = stringResource(R.string.onboarding_alarm_text),
             style = MaterialTheme.typography.bodyMedium
         )
         Text(
-            text = stringResource(R.string.onboarding_battery_end),
+            text = stringResource(R.string.onboarding_alarm_end),
             style = MaterialTheme.typography.bodyMedium
         )
     }
@@ -117,6 +122,6 @@ private fun InfoComponent(modifier: Modifier = Modifier) {
 @Composable
 private fun PreviewComponent() {
     Surface {
-        BatteryOptimizationComponent(modifier = Modifier.padding(Dimen.paddingScreen))
+        AlarmPermissionScreen(modifier = Modifier.padding(Dimen.paddingScreen))
     }
 }

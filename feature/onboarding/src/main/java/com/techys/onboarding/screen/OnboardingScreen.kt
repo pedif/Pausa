@@ -35,7 +35,7 @@ import com.techys.designsystem.theme.Dimen
 import com.techys.onboarding.OnboardingViewModel
 import kotlinx.coroutines.launch
 
-private const val PAGE_COUNT = 3
+private const val PAGE_COUNT = 4
 
 @Composable
 fun OnboardingScreen(
@@ -85,7 +85,8 @@ private fun OnboardingScreen(
             when (page) {
                 0 -> IntroductionComponent()
                 1 -> PostNotificationComponent()
-                2 -> BatteryOptimizationComponent()
+                2 -> AlarmPermissionScreen()
+                3 -> BatteryOptimizationComponent()
             }
         }
 
