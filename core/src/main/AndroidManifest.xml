@@ -15,7 +15,7 @@
             android:exported="false" />
 
         <service
-            android:name="com.techys.core.service.PausaRingService"
+            android:name="com.techys.core.service.PausaTimerEndService"
             android:foregroundServiceType="mediaPlayback" />
 
         <receiver

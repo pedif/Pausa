@@ -5,7 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.os.Build
 import com.techys.core.model.TimerType
-import com.techys.core.service.PausaRingService
+import com.techys.core.service.PausaTimerEndService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -23,14 +23,14 @@ class TimerAlarmManager @Inject constructor(
             PendingIntent.getForegroundService(
                 context,
                 id,
-                PausaRingService.getTimerEndIntent(context, id, type),
+                PausaTimerEndService.getTimerEndIntent(context, id, type),
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             )
         } else {
             PendingIntent.getService(
                 context,
                 id,
-                PausaRingService.getTimerEndIntent(context, id, type),
+                PausaTimerEndService.getTimerEndIntent(context, id, type),
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             )
         }
@@ -43,14 +43,14 @@ class TimerAlarmManager @Inject constructor(
             PendingIntent.getForegroundService(
                 context,
                 id,
-                PausaRingService.getTimerEndIntent(context, id, type),
+                PausaTimerEndService.getTimerEndIntent(context, id, type),
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             )
         } else {
             PendingIntent.getService(
                 context,
                 id,
-                PausaRingService.getTimerEndIntent(context, id, type),
+                PausaTimerEndService.getTimerEndIntent(context, id, type),
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             )
         }
