@@ -48,6 +48,7 @@ class EyeTimerHelper(
         } else if (runningState == TimerStateType.COOLDOWN) {
             dismissTimerEndNotification()
             interval = timerInterval
+            runningState = TimerStateType.STOPPED
             updateTimerState(TimerStateType.STARTED)
         }
     }
