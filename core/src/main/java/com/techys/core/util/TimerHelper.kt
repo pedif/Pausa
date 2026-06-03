@@ -1,5 +1,6 @@
 package com.techys.core.util
 
+import android.os.SystemClock
 import android.util.Log
 import com.techys.core.model.TimerState
 import com.techys.core.model.TimerStateType
@@ -22,7 +23,7 @@ open class TimerHelper @Inject constructor(
     val notificationManager: NotificationManager,
     val alarmManager: TimerAlarmManager
 ) {
-    var progress: Int = 0
+
     var runningState = TimerStateType.STOPPED
     val notificationId
         get() = id
@@ -33,6 +34,18 @@ open class TimerHelper @Inject constructor(
      * The time when a timer gets started
      */
     var startTime = 0L
+
+    val progress: Int
+        get() {
+            if(runningState == TimerStateType.STOPPED)
+                return 0
+            if(runningState == TimerStateType.PAUSED)
+                return previousProgress
+            val elapsedTime =  SystemClock.elapsedRealtime() - startTime
+            return previousProgress + TimeUnit.MILLISECONDS.toSeconds(elapsedTime).toInt()
+        }
+
+    var previousProgress: Int = 0
 
     /**
      * Whether this timer is in its cooldown mode or not since some timers have two active states
@@ -46,8 +59,8 @@ open class TimerHelper @Inject constructor(
      */
     fun updateTimerState(newState: TimerStateType) {
         if (runningState == TimerStateType.STOPPED && newState == TimerStateType.STARTED)
-            startTime = System.currentTimeMillis()
-
+            startTime = SystemClock.elapsedRealtime()
+        previousProgress = progress
         runningState = newState
         when (newState) {
             TimerStateType.STARTED -> {
@@ -70,6 +83,7 @@ open class TimerHelper @Inject constructor(
 
             TimerStateType.COOLDOWN -> {
                 isInCooldownMode = true
+                startTime  = SystemClock.elapsedRealtime()
                 updateNotification(updateStartTime = true)
             }
         }
@@ -88,7 +102,7 @@ open class TimerHelper @Inject constructor(
             id = notificationId,
             title = notificationTitle,
             startTime = startTime,
-            progress = interval - progress,
+            progress = progress,
             max = interval,
             updateStartTime = updateStartTime
         )
@@ -101,25 +115,27 @@ open class TimerHelper @Inject constructor(
     }
 
     private fun pauseTimer() {
-        alarmManager.cancelAlarm(notificationId)
+        alarmManager.cancelAlarm(notificationId, type)
     }
 
     private fun stopTimer() {
         isInCooldownMode = false
-        progress = 0
         cancelNotification()
         onTimerEnded()
-        alarmManager.cancelAlarm(notificationId)
+        alarmManager.cancelAlarm(notificationId, type)
+        previousProgress = 0
     }
 
     private fun startTimer() {
+        startTime = SystemClock.elapsedRealtime()
         updateNotification(updateStartTime = true)
         onTimerStarted()
         if (isInCooldownMode)
             return
         alarmManager.scheduleAlarm(
             id = notificationId,
-            alarmTime = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis((interval - progress).toLong())
+            alarmTime = startTime + TimeUnit.SECONDS.toMillis((interval - progress).toLong()),
+            type = type
         )
     }
 
@@ -143,12 +159,12 @@ open class TimerHelper @Inject constructor(
             && runningState != TimerStateType.COOLDOWN
         )
             return
-        progress++
         if (progress <= interval)
             updateNotification()
         if (progress > interval) {
             isInCooldownMode = false
             onTimeUp()
+            previousProgress = 0
         }
     }
 
