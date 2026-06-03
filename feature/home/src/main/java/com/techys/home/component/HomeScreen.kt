@@ -8,15 +8,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.techys.core.model.PausaState
 import com.techys.core.model.TimerState
 import com.techys.core.model.TimerStateType
+import com.techys.core.permission.PermissionUtil
 import com.techys.core.receiver.PausaServiceReceiver
 import com.techys.core.service.PausaService
 import com.techys.core.util.TimerConstants
@@ -75,6 +80,21 @@ fun HomeScreen(
             },
             onFocusClick = onStartFocusClick
         )
+    }
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                if (PermissionUtil.hasNotificationPermission(context))
+                    PausaService.startService(context)
+            }
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
     }
 }
 

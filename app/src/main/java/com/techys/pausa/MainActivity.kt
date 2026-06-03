@@ -2,7 +2,6 @@ package com.techys.pausa
 
 import android.content.Intent
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -16,7 +15,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.techys.core.model.TimerType
-import com.techys.core.service.PausaService
 import com.techys.designsystem.theme.AppTheme
 import com.techys.pausa.navigation.NavHost
 import com.techys.pausa.navigation.NavRoutes
@@ -25,10 +23,10 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    //TODO start fg srevice after omboarding
     private val viewModel: MainViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        startService()
         enableEdgeToEdge(
             navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT)
         )
@@ -43,15 +41,6 @@ class MainActivity : ComponentActivity() {
                     }
                 )
             }
-        }
-    }
-
-    private fun startService() {
-        val intent = Intent(this, PausaService::class.java)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(intent)
-        } else {
-            startService(intent)
         }
     }
 

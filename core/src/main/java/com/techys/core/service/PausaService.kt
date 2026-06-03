@@ -1,6 +1,7 @@
 package com.techys.core.service
 
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.os.Build
@@ -59,6 +60,15 @@ class PausaService : Service() {
         fun updatePausaState(transform: PausaState.() -> PausaState) {
             _state.update { it.transform() }
         }
+
+        fun startService(context: Context) {
+            val intent = Intent(context, PausaService::class.java)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(intent)
+            } else {
+                context.startService(intent)
+            }
+        }
     }
 
     private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
@@ -67,6 +77,7 @@ class PausaService : Service() {
 
     @Inject
     lateinit var notificationManager: NotificationManager
+
     @Inject
     lateinit var alarmManager: TimerAlarmManager
 
