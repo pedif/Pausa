@@ -42,11 +42,9 @@ class EyeTimerHelper(
          * the other mode is that we've just finished the cooldown duration so we need to start the timer
          * with its actually duration again
          */
-        progress = 0
         if (runningState == TimerStateType.STARTED) {
             interval = DEFAULT_EYE_COOLDOWN_INTERVAL
             updateTimerState(TimerStateType.COOLDOWN)
-            showTimerEndNotification()
         } else if (runningState == TimerStateType.COOLDOWN) {
             dismissTimerEndNotification()
             interval = timerInterval
@@ -55,13 +53,10 @@ class EyeTimerHelper(
     }
 
     override fun onTimerStarted() {
-//        interval = DEFAULT_INTERVAL
-//        progress = 0
     }
 
     override fun onTimerEnded() {
         interval = timerInterval
-        progress = 0
     }
 
     override fun cancelNotification() {
@@ -72,7 +67,6 @@ class EyeTimerHelper(
     private fun restartTimer() {
         CoroutineScope(Dispatchers.IO).launch {
             delay(DEFAULT_EYE_COOLDOWN_INTERVAL.toLong() * 100)
-            progress = 0
             updateTimerState(TimerStateType.STARTED)
         }
     }
@@ -94,9 +88,7 @@ class EyeTimerHelper(
         )
     }
 
-    private fun showTimerEndNotification(){
-//        notificationManager.showEyeTimerEndNotification(TimerConstants.EYE_TIMER_END_ID)
-    }
+    private fun showTimerEndNotification(){}
     private fun dismissTimerEndNotification(){
         notificationManager.cancelNotification(TimerConstants.EYE_TIMER_END_ID)
     }

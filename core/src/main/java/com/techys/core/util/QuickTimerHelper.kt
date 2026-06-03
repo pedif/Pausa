@@ -3,7 +3,6 @@ package com.techys.core.util
 import com.techys.core.model.TimerStateType
 import com.techys.core.model.TimerType
 import com.techys.core.notification.NotificationManager
-import kotlin.random.Random
 
 class QuickTimerHelper(
     notificationManager: NotificationManager,
@@ -29,11 +28,5 @@ class QuickTimerHelper(
     override fun onTimerStarted() {}
     override fun onTimerEnded() {}
 
-    private fun showTimerEndNotification(){
-
-        /**
-         * We probably want to show separate notifications for each quick timer end event
-         */
-        notificationManager.showQuickTimerEndNotification(Random.nextInt(10_000, 20_000), notificationTitle, interval / 60)
-    }
+    private fun showTimerEndNotification(){}
 }

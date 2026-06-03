@@ -124,7 +124,6 @@ class NotificationManager @Inject constructor(
             .setColorized(true)
             .setGroup(TIMER_GROUP_KEY)
             .setUsesChronometer(true)
-            .setWhen(startTime)
             .setContentIntent(activityIntent)
             .addAction(
                 R.drawable.radix_ic_stopwatch,
