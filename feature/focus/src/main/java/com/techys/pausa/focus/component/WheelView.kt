@@ -3,8 +3,8 @@ package com.techys.pausa.focus.component
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.Drawable
+import android.icu.text.NumberFormat
 import android.util.AttributeSet
-import android.util.Log
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
@@ -12,7 +12,6 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.compose.ui.graphics.toArgb
-import com.techys.designsystem.theme.Dimen
 import com.techys.designsystem.theme.NeonBlue
 import java.lang.Integer.parseInt
 
@@ -89,8 +88,6 @@ class WheelView @JvmOverloads constructor(
             if (initialY - newY == 0) { // stopped
                 val remainder = initialY % itemHeight
                 val divided = initialY / itemHeight
-                //                    Log.d(TAG, "initialY: " + initialY);
-//                    Log.d(TAG, "remainder: " + remainder + ", divided: " + divided);
                 if (remainder == 0) {
                     selectedIndex = divided + offset
                     onSeletedCallBack()
@@ -151,7 +148,6 @@ class WheelView @JvmOverloads constructor(
         try {
             parseInt(item!!)
             tv.text = String.format("%02d", item)
-
         } catch (e: Exception) {
             tv.text = item
         }
@@ -163,12 +159,9 @@ class WheelView @JvmOverloads constructor(
 
         if (0 == itemHeight) {
             itemHeight = getViewMeasuredHeight(tv)
-//            val wid = (context as Activity)!!.windowManager.defaultDisplay.width
 
             views!!.layoutParams =
                 LayoutParams(LayoutParams.MATCH_PARENT, itemHeight * displayItemCount)
-
-//            this.layoutParams = LinearLayout.LayoutParams(wid/3, itemHeight * displayItemCount)
         }
         return tv
     }
@@ -176,22 +169,6 @@ class WheelView @JvmOverloads constructor(
 
     override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
         super.onScrollChanged(l, t, oldl, oldt)
-
-//        Log.d(TAG, "l: " + l + ", t: " + t + ", oldl: " + oldl + ", oldt: " + oldt);
-
-//        try {
-//            Field field = ScrollView.class.getDeclaredField("mScroller");
-//            field.setAccessible(true);
-//            OverScroller mScroller = (OverScroller) field.get(this);
-//
-//
-//            if(mScroller.isFinished()){
-//                Log.d(TAG, "isFinished...");
-//            }
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
         refreshItemView(t)
         scrollDirection = if (t > oldt) {
             SCROLL_DIRECTION_DOWN
@@ -210,31 +187,6 @@ class WheelView @JvmOverloads constructor(
             if (remainder > itemHeight / 2) {
                 position = divided + offset + 1
             }
-
-//            if(remainder > itemHeight / 2){
-//                if(scrollDirection == SCROLL_DIRECTION_DOWN){
-//                    position = divided + offset;
-//                    Log.d(TAG, ">down...position: " + position);
-//                }else if(scrollDirection == SCROLL_DIRECTION_UP){
-//                    position = divided + offset + 1;
-//                    Log.d(TAG, ">up...position: " + position);
-//                }
-//            }else{
-////                position = y / itemHeight + offset;
-//                if(scrollDirection == SCROLL_DIRECTION_DOWN){
-//                    position = divided + offset;
-//                    Log.d(TAG, "<down...position: " + position);
-//                }else if(scrollDirection == SCROLL_DIRECTION_UP){
-//                    position = divided + offset + 1;
-//                    Log.d(TAG, "<up...position: " + position);
-//                }
-//            }
-//        }
-
-//        if(scrollDirection == SCROLL_DIRECTION_DOWN){
-//            position = divided + offset;
-//        }else if(scrollDirection == SCROLL_DIRECTION_UP){
-//            position = divided + offset + 1;
         }
         val childSize = views!!.childCount
         for (i in 0 until childSize) {
@@ -271,9 +223,7 @@ class WheelView @JvmOverloads constructor(
     override fun setBackgroundDrawable(background: Drawable?) {
         var background = background
         if (viewWidth == 0) {
-//            viewWidth = (context as Activity?)!!.windowManager.defaultDisplay.width
             viewWidth = measuredWidth
-            Log.d(TAG, "viewWidth: $viewWidth")
         }
         if (null == paint) {
             paint = Paint()
@@ -300,7 +250,6 @@ class WheelView @JvmOverloads constructor(
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        Log.d(TAG, "w: $w, h: $h, oldw: $oldw, oldh: $oldh")
         viewWidth = w
         setBackgroundDrawable(null)
     }

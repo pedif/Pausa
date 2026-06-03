@@ -33,7 +33,7 @@
         If you skip, you can always grant access later from Settings. </string>
 
     <string name="onboarding_alarm_title">Punctuality is my thing.</string>
-    <string name="onboarding_alarm_subtitle">(without it, I'm basically useless!)</string>
+    <string name="onboarding_alarm_subtitle">(without it, I\'m basically useless!)</string>
     <string name="onboarding_alarm_text">To ring exactly when scheduled, Pausa needs permission
     to set exact alarms. without it, Android may delay alarms, reminders, and timers when
     your device is idle</string>
