@@ -1,43 +1,37 @@
 package com.techys.designsystem.component
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import java.util.jar.Manifest
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun PermissionHandler(
     vararg permissions: String,
-    onAllGranted:  () -> Unit,
-    onDenied:  (shouldShowRationale: Boolean) -> Unit = {}
+    onAllGranted: () -> Unit,
+    onDenied: (shouldShowRationale: Boolean) -> Unit = {},
+    onRequested: ()-> Unit = {}
 ) {
+
+    var hasRequestedBefore = remember { false }
     val permissionState = rememberMultiplePermissionsState(permissions.toList())
     when {
         permissionState.allPermissionsGranted -> {
             onAllGranted()
         }
-        permissionState.shouldShowRationale ->{
+
+        !hasRequestedBefore || permissionState.shouldShowRationale -> {
+            onRequested()
+            hasRequestedBefore = true
             LaunchedEffect(Unit) {
                 permissionState.launchMultiplePermissionRequest()
             }
         }
+
         else -> {
-                onDenied(false)
+            onDenied(false)
         }
     }
-}
-
-@Composable
-fun NotificationPermissionHandler(
-    onAllGranted:  () -> Unit,
-    onDenied:  (shouldShowRationale: Boolean) -> Unit = {}
-) {
-    PermissionHandler(
-        permissions = arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
-        onAllGranted = onAllGranted,
-        onDenied = onDenied
-    )
 }
