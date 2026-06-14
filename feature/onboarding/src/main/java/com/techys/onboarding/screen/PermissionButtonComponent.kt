@@ -17,13 +17,15 @@ import com.techys.onboarding.R
 @Composable
 fun PermissionButton(
     hasPermission: Boolean,
+    hasPermissionText: String = stringResource(R.string.permission_granted),
+    noPermissionText: String = stringResource(R.string.action_request_permission),
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
     val text = if (hasPermission) {
-        stringResource(R.string.permission_granted)
+        hasPermissionText
     } else {
-        stringResource(R.string.action_request_permission)
+        noPermissionText
     }
     PausaButton(
         text = text,

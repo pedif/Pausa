@@ -1,6 +1,7 @@
 package com.techys.onboarding.screen
 
 import android.Manifest
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -30,59 +31,98 @@ import com.techys.designsystem.component.PermissionHandler
 import com.techys.designsystem.component.SettingsRedirectComponent
 import com.techys.designsystem.theme.Dimen
 import com.techys.onboarding.R
+import com.techys.pausa.core.R as coreR
 
 @Composable
 fun PostNotificationComponent(modifier: Modifier = Modifier) {
 
     val context = LocalContext.current
-    var hasPermission by remember {
+    var hasNotifPermission by remember {
         mutableStateOf(PermissionUtil.hasNotificationPermission(context))
     }
-    var requestPermission by remember { mutableStateOf(false) }
-    var requestScreenIntent by remember {
+    var requestNotifPermission by remember { mutableStateOf(false) }
+    var requestNotifScreenIntent by remember {
         mutableStateOf(false)
     }
-    if (requestPermission) {
+
+    var hasFullScreenIntentPermission by remember {
+        mutableStateOf(PermissionUtil.hasFullScreenIntentPermission(context))
+    }
+    var requestFullScreenIntentScreenIntent by remember {
+        mutableStateOf(false)
+    }
+
+    if (requestNotifPermission) {
         PermissionHandler(
             permissions = arrayOf(Manifest.permission.POST_NOTIFICATIONS),
             onAllGranted = {
-                hasPermission = true
-                requestPermission = false
+                hasNotifPermission = true
+                requestNotifPermission = false
             },
             onDenied = {
-                hasPermission = false
-                requestPermission = false
-                requestScreenIntent = true
+                hasNotifPermission = false
+                requestNotifPermission = false
+                requestNotifScreenIntent = true
+            },
+            onRequested = {
+                requestNotifPermission = false
             }
         )
-    } else if (requestScreenIntent) {
+    } else if (requestNotifScreenIntent) {
         SettingsRedirectComponent(
-            permissionName = "Notification",
+            permissionName = stringResource(coreR.string.permission_notification),
             onRedirectClick = {
-                requestScreenIntent = false
+                requestNotifScreenIntent = false
                 PermissionUtil.openNotificationSettings(context)
             },
-            onDismissed = { requestScreenIntent = false }
+            onDismissed = { requestNotifScreenIntent = false }
         )
     }
+
+    if (requestFullScreenIntentScreenIntent) {
+        SettingsRedirectComponent(
+            permissionName = stringResource(coreR.string.permission_fullscreen_intent),
+            onRedirectClick = {
+                requestFullScreenIntentScreenIntent = false
+                PermissionUtil.openFullScreenIntentSettings(context)
+            },
+            onDismissed = { requestFullScreenIntentScreenIntent = false }
+        )
+    }
+
     Box(modifier = modifier.fillMaxSize()) {
         InfoComponent(
             modifier = Modifier.fillMaxSize()
         )
-        PermissionButton(
-            hasPermission = hasPermission,
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter),
-            onClick = { requestPermission = true }
-        )
+                .align(Alignment.BottomCenter)
+        ) {
+            PermissionButton(
+                hasPermission = hasNotifPermission,
+                noPermissionText = stringResource(R.string.onboarding_action_grant_notifications),
+                modifier = Modifier
+                    .fillMaxWidth(),
+                onClick = {
+                    Log.e("tagtag","tap on notif btn $requestNotifPermission")
+                    requestNotifPermission = true }
+            )
+            PermissionButton(
+                hasPermission = hasFullScreenIntentPermission,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                noPermissionText = stringResource(R.string.onboarding_action_grant_fullscreen),
+                onClick = { requestFullScreenIntentScreenIntent = true }
+            )
+        }
     }
 
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                hasPermission = PermissionUtil.hasNotificationPermission(context)
+                hasNotifPermission = PermissionUtil.hasNotificationPermission(context)
+                hasFullScreenIntentPermission = PermissionUtil.hasFullScreenIntentPermission(context)
             }
         }
 

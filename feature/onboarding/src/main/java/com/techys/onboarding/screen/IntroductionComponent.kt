@@ -28,11 +28,12 @@ fun IntroductionComponent(modifier: Modifier = Modifier) {
                 style = MaterialTheme.typography.titleLarge
             )
         }
-        Spacer(Modifier.height(Dimen.small))
         Text(
             text = stringResource(R.string.onboarding_introduction_subtitle),
             style = MaterialTheme.typography.titleMedium
         )
+
+        Spacer(Modifier.height(Dimen.small))
         Text(
             text = boldIntroductionText(
                 stringResource(R.string.onboarding_introduction_eye)
@@ -53,7 +54,7 @@ fun IntroductionComponent(modifier: Modifier = Modifier) {
             style = MaterialTheme.typography.bodyMedium
         )
 
-        Spacer(Modifier.height(Dimen.medium))
+        Spacer(Modifier.height(Dimen.small))
         Text(
             text = stringResource(R.string.onboarding_introduction_end),
             style = MaterialTheme.typography.bodyMedium

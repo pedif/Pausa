@@ -1,37 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="onboarding_introduction_title">با Pausa آشنا شو.</string>
-    <string name="onboarding_introduction_subtitle">تایمر ها همونطوری که خودت دوستشون داری.</string>
-    <string name="onboarding_introduction_eye">مراقبت از چشم 👀 : هر ۲۰ دقیقه، مکث کنید و ۲۰ ثانیه به فاصله‌ی ۲۰ متری نگاه کنید.</string>
-    <string name="onboarding_introduction_focus">حالت zen و تمرکز 🧘 : تنظیمش کنید، فراموشش کنید، وقتی تمام شد اطلاع داده می‌شید</string>
-    <string name="onboarding_introduction_quick">حالت سریع ⏱️ : یک استراحت ۵ دقیقه ای نیاز داری؟ می خوای ی تماس ۱۵ دقیقه ای داشته باشی؟
-فقط زمان رو انتخاب کن و شروع کن.</string>
-    <string name="onboarding_introduction_end">طراحی شده که سریع باشه. تایمرها رو بدون باز کردن اپ و مستقیم از نوتیفیکیشن اجرا کن.</string>
 
-    <string name="action_request_permission">اجازه دسترسی بده </string>
-    <string name="permission_granted">دسترسی داده شد</string>
-    <string name="onboarding_action_finish">اتمام</string>
+    <string name="onboarding_introduction_title">با Pausa آشنا شو.</string>
+    <string name="onboarding_introduction_subtitle">تایمرهات، به سبک خودت.</string>
+    <string name="onboarding_introduction_eye">سلامت چشم 👀 : هر ۲۰ دقیقه یک بار، ۲۰ ثانیه به
+        یک نقطه‌ی دور نگاه کن. چشمات ممنونت می‌شن.</string>
+    <string name="onboarding_introduction_focus">تمرکز 🧘 : تنظیمش کن، فراموشش کن، وقتی تموم شد
+        خبرت می کنم.</string>
+    <string name="onboarding_introduction_quick">سریع ⏱️ : به یک استراحت ۵ دقیقه‌ای نیاز داری؟
+        یک تماس ۱۵ دقیقه‌ای؟ زمان رو انتخاب کن و به کارت برس.</string>
+    <string name="onboarding_introduction_end">طراحی شده برای سرعت. تایمر رو مستقیم از
+        نوتیفیکیشن شروع کن — بدون نیاز به باز کردن اپ.</string>
+
+    <string name="action_request_permission">دادن مجوز</string>
+    <string name="permission_granted">مجوز داده شد</string>
+    <string name="onboarding_action_finish">پایان</string>
     <string name="onboarding_action_next">بعدی</string>
     <string name="onboarding_action_prev">قبلی</string>
 
-    <string name="onboarding_notification_title">باید گاهی اذیتت کنم.</string>
-    <string name="onboarding_notification_subtitle">(به بهترین شکل ممکن!)</string>
-    <string name="onboarding_notification_text">Pausa وقتی تایمر ها تموم میشن یا وقت مراقبت از چشم فرا میرسه، بهت نوتیفیکیشن میفرسته.
-    بدون این اجازه، این اپ خیلی ساکت ی گوشه میشینه و هیچکاری هم انجام نمیده.</string>
-    <string name="onboarding_notification_end">دکمه ی زیر رو بزن تا نوتیفیکیشن ها فعال بشن، اگه رد کردید، هروقت خواستید میتونید
-    از طریق بخش تنظیمات اون رو فعال کنید.</string>
+    <!-- Notification + Full Screen Intent screen -->
+    <string name="onboarding_notification_title">یک لحظه توجه — جدی می‌گم.</string>
+    <string name="onboarding_notification_subtitle">(قول می‌دم اذیتت نکنم.)</string>
+    <string name="onboarding_notification_text">Pausa باید موقعی که مهمه بهت خبر بده — وقتی تایمرت
+        تموم شده یا وقت استراحت چشمته. این شامل نوتیفیکیشن‌ها می‌شه و اگه گوشیت قفله،
+        نمایش هشدار روی صفحه‌ی قفل. بدون اینا، هیچ تایمری رو از دست نمی‌دی
+        فقط یه ساعته که کسی صدای تموم شدن تایمرهات رو نمی‌شنوه.</string>
+    <string name="onboarding_notification_end">برای فعال کردن اجازه ها روی دکمه بزن.</string>
+    <string name="onboarding_action_grant_notifications">فعال کردن نوتیفیکیشن‌ها</string>
+    <string name="onboarding_action_grant_fullscreen">فعال کردن هشدار روی صفحه‌ی قفل</string>
 
+    <!-- Exact Alarm screen -->
+    <string name="onboarding_alarm_title">وقت ‌شناسی کار منه.</string>
+    <string name="onboarding_alarm_subtitle">(بدون این، دیگه به دردت نمی‌خورم!)</string>
+    <string name="onboarding_alarm_text">برای اینکه دقیقاً سر وقت بهت خبر بده، Pausa به مجوز تنظیم
+        آلارم دقیق نیاز داره. بدونش، اندروید ممکنه تایمرهات رو وقتی گوشی بی‌کاره
+        به تأخیر بندازه و یه تایمر دیر کرده، یعنی تایمر خراب.</string>
+    <string name="onboarding_alarm_end">برای فعال کردن آلارم روی دکمه بزن.</string>
 
-    <string name="onboarding_battery_title">نذار تایمرهات ناپدید بشن.</string>
-    <string name="onboarding_battery_text">بهینه‌سازی باتری اندروید می‌تونه اپ‌های پس‌زمینه رو برای ذخیره باتری ببنده. چون Pausa یه سرویس رو ۲۴ ساعته اجرا می‌کنه تا تایمرهات زنده بمونن، باید از بهینه‌سازی باتری مستثنی بشه. در غیر این صورت، تایمرهات ممکنه کار نکنن.</string>
-    <string name="onboarding_battery_end">این دسترسی اختیاریه و Pausa بدون اون هم میتونه کار کنه منتهی ممکنه یک مقدار کم دقت بشه.</string>
-    <string name="onboarding_alarm_title">وقت شناسی کار منه.</string>
-    <string name="onboarding_alarm_subtitle">راستش بدون اون خیلی به درد نمیخورم!</string>
-    <string name="onboarding_alarm_text"> Pausa برای اینکه هشدارها، یادآورها، و تایمر ها دقیقا در زمان تعییر شده
-        اجرا شوند، به دسترسی Alarm نیاز داره.
-        بدون این دسترسی، اندروید ممکن است اجرای تایمرها رو هنگام بیکار بودن دستگاه به تأخیر بیندازد</string>
-    <string name="onboarding_alarm_end">دکمه ی زیر رو بزن تا آلارم ها فعال بشن، اگه رد کردید، هروقت خواستید میتونید
-    از طریق بخش تنظیمات اون رو فعال کنید.</string>
-
+    <!-- Battery Optimization screen -->
+    <string name="onboarding_battery_title">نذار تایمرا سر کار بخوابن.</string>
+    <string name="onboarding_battery_text">بهینه‌سازی باتری اندروید می‌تونه اپ‌های پس‌زمینه رو
+        ببنده تا مصرف شارژ باتری کمتر بشه. چون Pausa یه سرویس پیش‌زمینه داره که تایمرهات رو
+        زنده نگه می‌داره، باید از این محدودیت استثنا بشه. بدون این، ممکنه تایمرهات
+        وقتی صفحه خاموشه اصلاً نزنن.</string>
+    <string name="onboarding_battery_end">کاملاً توصیه می‌شه. برای استثنا کردن Pausa
+        از بهینه‌سازی باتری روی دکمه بزن.</string>
 
 </resources>

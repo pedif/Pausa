@@ -1,7 +1,5 @@
 package com.techys.onboarding.screen
 
-import android.provider.Settings
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,7 +18,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,10 +25,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.techys.core.permission.PermissionUtil
-import com.techys.designsystem.component.PermissionHandler
 import com.techys.designsystem.component.SettingsRedirectComponent
 import com.techys.designsystem.theme.Dimen
 import com.techys.onboarding.R
+import com.techys.pausa.core.R as coreR
 
 @Composable
 fun AlarmPermissionScreen(modifier: Modifier = Modifier) {
@@ -42,30 +39,15 @@ fun AlarmPermissionScreen(modifier: Modifier = Modifier) {
         mutableStateOf(PermissionUtil.hasBatteryPermission(context))
     }
     var requestPermission by remember { mutableStateOf(false) }
-    var requestScreenIntent by remember {
-        mutableStateOf(false)
-    }
-    if (requestPermission) {
-        PermissionHandler(
-            permissions = arrayOf(android.Manifest.permission.SCHEDULE_EXACT_ALARM),
-            onAllGranted = {
-                hasPermission = true
-                requestPermission = false
-            },
-            onDenied = {
-                hasPermission = false
-                requestPermission = false
-                requestScreenIntent = true
-            }
-        )
-    } else if (requestScreenIntent) {
+
+    if(requestPermission) {
         SettingsRedirectComponent(
-            permissionName = "Notification",
+            permissionName = stringResource(coreR.string.permission_alarm),
             onRedirectClick = {
-                requestScreenIntent = false
+                requestPermission = false
                 PermissionUtil.openAlarmSettings(context)
             },
-            onDismissed = { requestScreenIntent = false }
+            onDismissed = { requestPermission = false }
         )
     }
     Box(modifier = modifier.fillMaxSize()) {

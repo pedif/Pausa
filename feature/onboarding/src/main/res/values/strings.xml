@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="onboarding_introduction_title">
-        Meet Pausa.
-    </string>
-    <string name="onboarding_introduction_subtitle">
-        Your timers, your way.
-    </string>
+    <string name="onboarding_introduction_title">Meet Pausa.</string>
+    <string name="onboarding_introduction_subtitle">Your timers, your way.</string>
     <string name="onboarding_introduction_eye">Eye Care 👀 : Every 20 minutes, pause and look 20
         feet away for 20 seconds. Your eyes will thank you.</string>
     <string name="onboarding_introduction_focus">Focus 🧘 : Set it, forget it, get notified when
@@ -16,36 +12,38 @@
     <string name="onboarding_introduction_end">Designed to be fast. Launch timers from the
         notification itself — no app opening required.</string>
 
-    <string name="action_request_permission">
-        Grant permission
-    </string>
-    <string name="permission_granted">Permission is granted</string>
+    <string name="action_request_permission">Grant permission</string>
+    <string name="permission_granted">Permission granted</string>
     <string name="onboarding_action_finish">Finish</string>
     <string name="onboarding_action_next">Next</string>
     <string name="onboarding_action_prev">Previous</string>
 
-    <string name="onboarding_notification_title">I need to bug you.</string>
-    <string name="onboarding_notification_subtitle">(In the best way possible!)</string>
-    <string name="onboarding_notification_text">Pausa sends you notifications when your timers
-        finish or when it\'s time for an eye break. Without this permission,
-        it\'s just a very quiet app sitting on your phone doing nothing.</string>
-    <string name="onboarding_notification_end">Tap below to enable notifications.
-        If you skip, you can always grant access later from Settings. </string>
+    <!-- Notification + Full Screen Intent screen -->
+    <string name="onboarding_notification_title">Heads up — literally.</string>
+    <string name="onboarding_notification_subtitle">(We promise not to spam you.)</string>
+    <string name="onboarding_notification_text">Pausa needs to reach you when it matters —
+    when your timer ends or it\'s time for an eye break. This includes notifications
+    and, if your phone is locked, showing an alert right on your lock screen.
+    Without these, you\'ll miss every timer. Just a clock nobody hears.</string>
+    <string name="onboarding_notification_end">Tap below to enable permissions</string>
+    <string name="onboarding_action_grant_notifications">Enable notifications</string>
+    <string name="onboarding_action_grant_fullscreen">Enable lock screen alerts</string>
 
+    <!-- Exact Alarm screen -->
     <string name="onboarding_alarm_title">Punctuality is my thing.</string>
     <string name="onboarding_alarm_subtitle">(without it, I\'m basically useless!)</string>
-    <string name="onboarding_alarm_text">To ring exactly when scheduled, Pausa needs permission
-    to set exact alarms. without it, Android may delay alarms, reminders, and timers when
-    your device is idle</string>
-    <string name="onboarding_alarm_end">Tap below to enable alarms.
-        If you skip, you can always grant access later from Settings. </string>
+    <string name="onboarding_alarm_text">To fire exactly on time, Pausa needs permission to set
+        exact alarms. Without it, Android might delay your timers when the device is idle —
+        and a late timer is basically a broken timer.</string>
+    <string name="onboarding_alarm_end">Tap below to enable exact alarms.</string>
 
-
+    <!-- Battery Optimization screen -->
     <string name="onboarding_battery_title">Don\'t let timers sleep on the job.</string>
-    <string name="onboarding_battery_text">Android\'s battery optimization can shut down
-        background apps to save power. Since Pausa runs a foreground service 24/7 to keep your
-        timers alive, it needs to be exempted from battery optimization. Otherwise, your timers
-        might simply stop working.</string>
-    <string name="onboarding_battery_end">This one\'s optional. The app works without it,
-        just slightly less punctual. </string>
+    <string name="onboarding_battery_text">Android\'s battery optimization can shut down background
+        apps to save power. Since Pausa runs a foreground service to keep your timers alive,
+        it needs to be exempted. Skip this and your timers might stop firing altogether
+        when the screen is off.</string>
+    <string name="onboarding_battery_end">Strongly recommended. Tap below to exempt Pausa
+        from battery optimization.</string>
+
 </resources>

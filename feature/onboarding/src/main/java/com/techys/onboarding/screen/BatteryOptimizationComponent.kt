@@ -1,7 +1,5 @@
 package com.techys.onboarding.screen
 
-import android.Manifest
-import android.provider.Settings
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -27,10 +25,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.techys.core.permission.PermissionUtil
-import com.techys.designsystem.component.PermissionHandler
 import com.techys.designsystem.component.SettingsRedirectComponent
 import com.techys.designsystem.theme.Dimen
 import com.techys.onboarding.R
+import com.techys.pausa.core.R as coreR
 
 @Composable
 fun BatteryOptimizationComponent(modifier: Modifier = Modifier) {
@@ -41,30 +39,15 @@ fun BatteryOptimizationComponent(modifier: Modifier = Modifier) {
         mutableStateOf(PermissionUtil.hasBatteryPermission(context))
     }
     var requestPermission by remember { mutableStateOf(false) }
-    var requestScreenIntent by remember {
-        mutableStateOf(false)
-    }
+
     if (requestPermission) {
-        PermissionHandler(
-            permissions = arrayOf(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS),
-            onAllGranted = {
-                hasPermission = true
-                requestPermission = false
-            },
-            onDenied = {
-                hasPermission = false
-                requestPermission = false
-                requestScreenIntent = true
-            }
-        )
-    } else if (requestScreenIntent) {
         SettingsRedirectComponent(
-            permissionName = "Notification",
+            permissionName = stringResource(coreR.string.permission_battery),
             onRedirectClick = {
-                requestScreenIntent = false
+                requestPermission = false
                 PermissionUtil.openBatterySettings(context)
             },
-            onDismissed = { requestScreenIntent = false }
+            onDismissed = { requestPermission = false }
         )
     }
     Box(modifier = modifier.fillMaxSize()) {
