@@ -47,6 +47,7 @@ class TimerHelperManager(
                 quickTimers.forEach { quickTimer -> quickTimer.updateTimerState(state) }
             }
         }
+        updatePausaState()
     }
 
     fun updateTimerInfo(id: Int, title: String?, interval: Int?) {
@@ -79,16 +80,19 @@ class TimerHelperManager(
                     eyeTimer.onTick()
                     quickTimers.forEach { quickTimer -> quickTimer.onTick() }
                     focusTimer.onTick()
-                    PausaService.updatePausaState {
-                        copy(
-                            eyeTimer = this@TimerHelperManager.eyeTimer.getState(),
-                            focusTimer = this@TimerHelperManager.focusTimer.getState(),
-                            quickTimers = this@TimerHelperManager.quickTimers.map { quickTimer -> quickTimer.getState() }
-                        )
-                    }
+                    updatePausaState()
                 }
-
             }, TICK_IN_MILLIS, TICK_IN_MILLIS)
+        }
+    }
+
+    private fun updatePausaState() {
+        PausaService.updatePausaState {
+            copy(
+                eyeTimer = this@TimerHelperManager.eyeTimer.getState(),
+                focusTimer = this@TimerHelperManager.focusTimer.getState(),
+                quickTimers = this@TimerHelperManager.quickTimers.map { quickTimer -> quickTimer.getState() }
+            )
         }
     }
 
