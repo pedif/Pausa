@@ -89,18 +89,18 @@ fun SoundCard(
                 style = MaterialTheme.typography.titleMedium
             )
 
-            RingtoneItem(
-                label = stringResource(R.string.alarm_sound_eye),
-                item = eyeSoundItem) {
-                ringtoneTarget = TimerType.EyeBreak
-                with(intent) {
-                    putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, eyeSoundItem.uri)
-                    launcher.launch(intent)
-                }
-            }
-
-
-            HorizontalDivider(modifier = Modifier.padding(horizontal = Dimen.medium))
+//            RingtoneItem(
+//                label = stringResource(R.string.alarm_sound_eye),
+//                item = eyeSoundItem) {
+//                ringtoneTarget = TimerType.EyeBreak
+//                with(intent) {
+//                    putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, eyeSoundItem.uri)
+//                    launcher.launch(intent)
+//                }
+//            }
+//
+//
+//            HorizontalDivider(modifier = Modifier.padding(horizontal = Dimen.medium))
 
 
             RingtoneItem(
