@@ -59,7 +59,6 @@ class NotificationManager @Inject constructor(
             .setOnlyAlertOnce(true)
             .setOngoing(true)
             .setAutoCancel(false)
-            .setColorized(true)
 
         return notification
     }
@@ -272,7 +271,7 @@ class NotificationManager @Inject constructor(
     fun showEyeTimerEndNotification(id: Int) {
         val notif = getTimerEndNotification(
             TimerType.EyeBreak,
-            title = context.getString(R.string.timer_end_eye_title),
+            context.getString(R.string.timer_end_eye_title),
             description = context.getString(R.string.timer_end_eye_desc)
         )
         val intent = PendingIntent.getActivity(
@@ -281,6 +280,7 @@ class NotificationManager @Inject constructor(
             timerEndContract.getEyeTimerEndAction(),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
+
         notif.setFullScreenIntent(
             intent, true
         )

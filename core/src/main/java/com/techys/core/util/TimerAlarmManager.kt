@@ -9,9 +9,7 @@ import com.techys.core.service.TimerEndService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class TimerAlarmManager @Inject constructor(
-    @param:ApplicationContext val context: Context
-) {
+class TimerAlarmManager @Inject constructor(@param:ApplicationContext val context: Context) {
     fun scheduleAlarm(id: Int, alarmTime: Long, type: TimerType) {
         val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
