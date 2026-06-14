@@ -1,7 +1,6 @@
 package com.techys.core.util
 
 import android.os.SystemClock
-import android.util.Log
 import com.techys.core.model.TimerState
 import com.techys.core.model.TimerStateType
 import com.techys.core.model.TimerType
@@ -102,7 +101,7 @@ open class TimerHelper @Inject constructor(
             id = notificationId,
             title = notificationTitle,
             startTime = startTime,
-            progress = progress,
+            progress = interval - progress,
             max = interval,
             updateStartTime = updateStartTime
         )
