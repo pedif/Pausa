@@ -43,4 +43,11 @@
 
 
     <string name="notification_timer_end_service_name">Time\'s up!</string>
+
+    <!-- Permissions -->
+    <string name="permission_notification">Notification</string>
+    <string name="permission_battery">Battery Optimization</string>
+    <string name="permission_alarm">Alarm</string>
+    <string name="permission_fullscreen_intent">Full Screen Intent</string>
+    <!-- -->
 </resources>

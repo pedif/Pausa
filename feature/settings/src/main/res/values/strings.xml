@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="permission_notification">Notification Permission</string>
-    <string name="permission_battery">Battery Optimization Permission</string>
+    <string name="permission_section_title">App Permissions</string>
     <string name="permission_notification_desc" >Needed to display notifications about the timers</string>
     <string name="permission_battery_desc">Enabling this permission would allow the app to be more robust against system forced shut downs</string>
     <string name="version">version: %s</string>
-    <string name="permission_alarm">Alarm Permission</string>
     <string name="permission_alarm_desc" >Needed to schedule alarms about the timers</string>
+    <string name="permission_fullscreen_intent_desc" >Needed to Display a full screen overlay to you when your timers finish when your phone is locked</string>
     <string name="alarm_section_title">Sounds for timers</string>
     <string name="alarm_sound_eye">Eye Care :</string>
     <string name="alarm_sound_focus">Zen Mode :</string>

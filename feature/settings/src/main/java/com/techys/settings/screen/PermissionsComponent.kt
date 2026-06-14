@@ -1,6 +1,6 @@
 package com.techys.settings.screen
 
-import android.provider.Settings
+import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,6 +39,7 @@ import com.techys.designsystem.component.SettingsRedirectComponent
 import com.techys.designsystem.theme.AppTheme
 import com.techys.designsystem.theme.Dimen
 import com.techys.settings.R
+import com.techys.pausa.core.R as coreR
 
 @Composable
 fun PermissionsComponent(modifier: Modifier = Modifier) {
@@ -49,6 +50,12 @@ fun PermissionsComponent(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.padding(Dimen.medium)
         ) {
+
+            Text(
+                text = stringResource(R.string.permission_section_title),
+                style = MaterialTheme.typography.titleMedium
+            )
+
             NotificationItem()
 
             HorizontalDivider(modifier = Modifier.padding(horizontal = Dimen.medium))
@@ -57,9 +64,60 @@ fun PermissionsComponent(modifier: Modifier = Modifier) {
 
             HorizontalDivider(modifier = Modifier.padding(horizontal = Dimen.medium))
 
+            // Only showing it for devices that have this permission
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE){
+                FullScreenIntentItem()
+                HorizontalDivider(modifier = Modifier.padding(horizontal = Dimen.medium))
+            }
+
             BatteryItem()
         }
     }
+}
+
+@Composable
+fun FullScreenIntentItem(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    var hasPermission by remember {
+        mutableStateOf(PermissionUtil.hasFullScreenIntentPermission(context))
+    }
+
+    var requestScreenIntent by remember {
+        mutableStateOf(false)
+    }
+    var requestPermission by remember { mutableStateOf(false) }
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                hasPermission = PermissionUtil.hasFullScreenIntentPermission(context)
+            }
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    if (requestScreenIntent) {
+        SettingsRedirectComponent(
+            permissionName = stringResource(coreR.string.permission_fullscreen_intent),
+            onRedirectClick = {
+                requestScreenIntent = false
+                PermissionUtil.openFullScreenIntentSettings(context)
+            },
+            onDismissed = { requestScreenIntent = false }
+        )
+    }
+    PermissionUi(
+        title = stringResource(coreR.string.permission_fullscreen_intent),
+        description =  stringResource(R.string.permission_fullscreen_intent_desc),
+        hasPermission = hasPermission,
+        modifier = modifier,
+        onRequestPermission = { requestPermission = true }
+    )
 }
 
 @Composable
@@ -68,15 +126,11 @@ fun AlarmItem(modifier: Modifier = Modifier) {
     var hasPermission by remember {
         mutableStateOf(PermissionUtil.hasAlarmPermission(context))
     }
-    PermissionItem(
-        permissionId = android.Manifest.permission.SCHEDULE_EXACT_ALARM,
-        title = stringResource(R.string.permission_alarm),
-        description = stringResource(R.string.permission_alarm_desc),
-        hasPermission = hasPermission,
-        onPermissionChanged = { hasPermission = it },
-        onPermissionSettingsRequested = {
-            PermissionUtil.openAlarmSettings(context) }
-    )
+    var requestScreenIntent by remember {
+        mutableStateOf(false)
+    }
+    var requestPermission by remember { mutableStateOf(false) }
+
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -90,6 +144,24 @@ fun AlarmItem(modifier: Modifier = Modifier) {
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
+
+    if (requestScreenIntent) {
+        SettingsRedirectComponent(
+            permissionName = stringResource(coreR.string.permission_alarm),
+            onRedirectClick = {
+                requestScreenIntent = false
+                PermissionUtil.openAlarmSettings(context)
+            },
+            onDismissed = { requestScreenIntent = false }
+        )
+    }
+    PermissionUi(
+        title = stringResource(coreR.string.permission_alarm),
+        description =  stringResource(R.string.permission_alarm_desc),
+        hasPermission = hasPermission,
+        modifier = modifier,
+        onRequestPermission = { requestPermission = true }
+    )
 }
 
 @Composable
@@ -98,14 +170,6 @@ fun NotificationItem(modifier: Modifier = Modifier) {
     var hasPermission by remember {
         mutableStateOf(PermissionUtil.hasNotificationPermission(context))
     }
-    PermissionItem(
-        permissionId = android.Manifest.permission.POST_NOTIFICATIONS,
-        title = stringResource(R.string.permission_notification),
-        description = stringResource(R.string.permission_notification_desc),
-        hasPermission = hasPermission,
-        onPermissionChanged = { hasPermission = it },
-        onPermissionSettingsRequested = { PermissionUtil.openNotificationSettings(context) }
-    )
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -119,6 +183,42 @@ fun NotificationItem(modifier: Modifier = Modifier) {
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
+
+    var requestPermission by remember { mutableStateOf(false) }
+    var requestScreenIntent by remember {
+        mutableStateOf(false)
+    }
+    if (requestPermission) {
+        PermissionHandler(
+            permissions = arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+            onAllGranted = {
+                hasPermission = true
+                requestPermission = false
+            },
+            onDenied = {
+                hasPermission = false
+                requestPermission = false
+                requestScreenIntent = true
+            }
+        )
+    }
+    else if (requestScreenIntent) {
+        SettingsRedirectComponent(
+            permissionName = stringResource(coreR.string.permission_notification),
+            onRedirectClick = {
+                requestScreenIntent = false
+                PermissionUtil.openNotificationSettings(context)
+            },
+            onDismissed = { requestScreenIntent = false }
+        )
+    }
+    PermissionUi(
+        title = stringResource(coreR.string.permission_notification),
+        description =  stringResource(R.string.permission_notification_desc),
+        hasPermission = hasPermission,
+        modifier = modifier,
+        onRequestPermission = { requestPermission = true }
+    )
 }
 
 @Composable
@@ -127,15 +227,11 @@ fun BatteryItem(modifier: Modifier = Modifier) {
     var hasPermission by remember {
         mutableStateOf(PermissionUtil.hasBatteryPermission(context))
     }
-    PermissionItem(
-        permissionId = Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS,
-        title = stringResource(R.string.permission_battery),
-        description = stringResource(R.string.permission_battery),
-        hasPermission = hasPermission,
-        onPermissionChanged = { hasPermission = it },
-        onPermissionSettingsRequested = {
-            PermissionUtil.openBatterySettings(context) }
-    )
+    var requestScreenIntent by remember {
+        mutableStateOf(false)
+    }
+    var requestPermission by remember { mutableStateOf(false) }
+
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -149,54 +245,26 @@ fun BatteryItem(modifier: Modifier = Modifier) {
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
-}
 
-@Composable
-private fun PermissionItem(
-    permissionId: String,
-    title: String,
-    description: String,
-    hasPermission: Boolean,
-    modifier: Modifier = Modifier,
-    onPermissionChanged: (Boolean) -> Unit = {},
-    onPermissionSettingsRequested: () -> Unit = {}
-) {
-    var requestPermission by remember { mutableStateOf(false) }
-    var requestScreenIntent by remember {
-        mutableStateOf(false)
-    }
-    if (requestPermission) {
-        PermissionHandler(
-            permissions = arrayOf(permissionId),
-            onAllGranted = {
-                onPermissionChanged(true)
-                requestPermission = false
-            },
-            onDenied = {
-                onPermissionChanged(false)
-                requestPermission = false
-                requestScreenIntent = true
-            }
-        )
-    }
-    else if (requestScreenIntent) {
+    if (requestScreenIntent) {
         SettingsRedirectComponent(
-            permissionName = "Notification",
+            permissionName = stringResource(coreR.string.permission_battery),
             onRedirectClick = {
                 requestScreenIntent = false
-                onPermissionSettingsRequested()
+                PermissionUtil.openBatterySettings(context)
             },
             onDismissed = { requestScreenIntent = false }
         )
     }
     PermissionUi(
-        title = title,
-        description = description,
+        title = stringResource(coreR.string.permission_battery),
+        description =  stringResource(R.string.permission_battery_desc),
         hasPermission = hasPermission,
         modifier = modifier,
         onRequestPermission = { requestPermission = true }
     )
 }
+
 
 @Composable
 private fun PermissionUi(
