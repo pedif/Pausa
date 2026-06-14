@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="permission_required_message">دسترسی مورد نیاز است. لطفا از طریق تنظیمات اقدام نمایید.</string>
+    <string name="permission_required_message">دسترسی %s نیاز است. لطفا از طریق تنظیمات اقدام نمایید.</string>
     <string name="permission_action_open_settings">بازکردن تنظیمات</string>
 </resources>

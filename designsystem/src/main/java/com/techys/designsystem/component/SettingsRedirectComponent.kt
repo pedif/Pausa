@@ -29,7 +29,7 @@ fun SettingsRedirectComponent(
                     .fillMaxWidth()
                     .padding(Dimen.paddingScreen)
             ) {
-                Text(stringResource(R.string.permission_required_message))
+                Text(stringResource(R.string.permission_required_message, permissionName))
                 Spacer(modifier= Modifier.height(Dimen.large))
                 Button(onClick = onRedirectClick) {
                     Text(stringResource(R.string.permission_action_open_settings))
