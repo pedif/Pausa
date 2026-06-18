@@ -33,10 +33,10 @@ object PermissionUtil {
     fun hasAlarmPermission(
         context: Context
     ): Boolean {
-        val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager?
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            return alarmMgr.canScheduleExactAlarms()
+            return alarmMgr?.canScheduleExactAlarms() == true
         }
         return true
     }

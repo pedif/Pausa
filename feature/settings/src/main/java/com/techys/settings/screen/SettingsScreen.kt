@@ -51,7 +51,8 @@ fun SettingsScreen(
             quickSoundItem = state.quickSoundItem,
             onEyeSoundChange = viewModel::setEyeSound,
             onFocusSoundChange = viewModel::setFocusSound,
-            onQuickSoundChange = viewModel::setQuickSound
+            onQuickSoundChange = viewModel::setQuickSound,
+            onContactUsClick = viewModel::sendEmail
         )
     }
 }
@@ -65,6 +66,7 @@ private fun SettingsScreen(
     onEyeSoundChange: (Uri) -> Unit = {},
     onFocusSoundChange: (Uri) -> Unit = {},
     onQuickSoundChange: (Uri) -> Unit = {},
+    onContactUsClick: () -> Unit = {}
 ) {
 
     val scroll = rememberScrollState()
@@ -89,6 +91,10 @@ private fun SettingsScreen(
                 onEyeSoundChange = onEyeSoundChange,
                 onFocusSoundChange = onFocusSoundChange,
                 onQuickSoundChange = onQuickSoundChange
+            )
+            ContactUsComponent(
+                modifier = Modifier.fillMaxWidth(),
+                onCLick = onContactUsClick
             )
             Spacer(modifier = Modifier.weight(1f))
             Text(

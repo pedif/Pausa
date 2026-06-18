@@ -1,13 +1,17 @@
 package com.techys.settings.viewModel
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.media.RingtoneManager
 import android.net.Uri
+import android.os.Build
 import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.techys.core.data.UserPreferencesManager
+import com.techys.core.util.AppConstants
 import com.techys.settings.model.SettingsState
 import com.techys.settings.model.SoundItem
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -73,4 +77,25 @@ class SettingsViewModel @Inject constructor(
         )
     }
 
+    fun sendEmail() {
+        val intent = Intent(Intent.ACTION_SENDTO).apply {
+            data = "mailto:".toUri()
+            putExtra(Intent.EXTRA_EMAIL, arrayOf("support.techys@email.com"))
+            putExtra(Intent.EXTRA_SUBJECT, "Pausa Feedback")
+            putExtra(
+                Intent.EXTRA_TEXT, """
+    
+    
+    --- App Info ---
+    Version: ${AppConstants.versionName}
+    Android: ${Build.VERSION.RELEASE}
+    Device: ${Build.MANUFACTURER} ${Build.MODEL}
+""".trimIndent()
+            )
+        }
+        try {
+            context.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+        }
+    }
 }

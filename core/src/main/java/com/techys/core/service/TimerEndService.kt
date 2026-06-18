@@ -143,7 +143,7 @@ class TimerEndService() : Service() {
         if (isPLaying)
             return
         isPLaying = true
-        val uri = if (filePath.isEmpty())
+        val uri = if (filePath.trim().isEmpty())
             RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
         else
             filePath.toUri()
@@ -167,7 +167,7 @@ class TimerEndService() : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-
+        isPLaying = false
         serviceScope.cancel()
         ringtonePlayer?.let {
             it.stop()

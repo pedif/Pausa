@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-// Extension to create DataStore
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_preferences")
 
 class UserPreferencesManager @Inject constructor(@param:ApplicationContext val context: Context) {
@@ -24,7 +23,6 @@ class UserPreferencesManager @Inject constructor(@param:ApplicationContext val c
         private val QUICK_TIMER_END_SOUND = stringPreferencesKey("end_sound_quick")
     }
 
-    // Read: Flow<Boolean> - emits value whenever preferences change
     val onboardingCompleted: Flow<Boolean> = context.dataStore.data
         .map { preferences ->
             preferences[ONBOARDING_COMPLETED] ?: false
